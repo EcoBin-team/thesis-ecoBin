@@ -1,6 +1,5 @@
 import React from 'react';
 import { Image, View } from 'react-native';
-import { useFonts } from "expo-font"
 import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createStackNavigator } from "@react-navigation/stack"

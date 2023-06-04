@@ -9,7 +9,8 @@ function App() {
   const [fontsLoaded] = useFonts({
     Montserrat: require("./fonts/Montserrat-Light.ttf"),
     MontserratBold: require("./fonts/Montserrat-Bold.ttf"),
-    MontserratRegular: require("./fonts/Montserrat-Regular.ttf")
+    MontserratRegular: require("./fonts/Montserrat-Regular.ttf"),
+    MontserratMedium: require("./fonts/Montserrat-Medium.ttf")
   })
 
   const onLayoutRootView = useCallback(async () => {

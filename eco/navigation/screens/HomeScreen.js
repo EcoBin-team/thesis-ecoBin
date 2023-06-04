@@ -3,10 +3,13 @@ import { View, Text } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import Home from './Home';
+import Login from './Login';
+import Signup from './Signup';
 
 export default function HomeScreen({ navigation }) {
     
     const [currentUser,setCurrentUser] = useState(null)
+
     useEffect(() => {
         getUser()
     },[])
@@ -26,7 +29,7 @@ export default function HomeScreen({ navigation }) {
             
             : 
             
-            <Home/>
+            <Signup/>
                 
             }
             

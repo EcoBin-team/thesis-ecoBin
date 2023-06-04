@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { View, Text, SafeAreaView, Image, Alert, ActivityIndicator } from "react-native"
+import { View, Text, SafeAreaView, Image, Alert, ActivityIndicator, TouchableOpacity } from "react-native"
 import { useNavigation } from "@react-navigation/native";
 import axios from "axios"
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -19,6 +19,11 @@ const Login = () => {
   const [password,setPassword] = useState("") // the email the user wrote in the text field
   const [isLoading,setIsLoading] = useState(false) // loading tracker to activate the activityIndicator when app is loading
 
+  // hiding header
+  React.useLayoutEffect(() => {
+    navigation.setOptions({ headerShown: false })
+},[navigation])
+
   // login function to set the user's id and token in the localstorage
   const handleSubmit = async () => {
 
@@ -33,7 +38,8 @@ const Login = () => {
     setIsLoading(true) // Displaying the ActivityIndicator (Spinner)
 
     // sending an http request to the server to return an id and a token
-    const response = await axios.post(`http://10.0.2.2:3001/users/login`,{email: email, password: password})
+    const response = await axios.post(`http://10.0.2.2:3000/users/login`,{email: email, password: password})
+    console.log(response.data)
 
     // alert if email written is not found in the database
     if(response.data === "auth/user-not-found"){
@@ -55,31 +61,52 @@ const Login = () => {
 
   return (
     <SafeAreaView>
+
+      <View style={SpinnerStyles.container}>
+        {isLoading && <ActivityIndicator size={70} color="09E4AF"/>}
+      </View>
+
       <View>
 
-        <BackButton fn={() => navigation.navigate("Home")}/>
+        <View style={{display: "flex", justifyContent: "center", alignItems: "center"}}>
+          <BackButton fn={() => navigation.navigate("Home")}/>
+          <Image source={require("../../assets/Earth.png")}/>
+          <Text style={{fontFamily: "MontserratBold", color: "#2DCC70", fontSize: 30, marginTop: 20}}>Welcome Back</Text>
 
-        <View style={{
-        }}>
-          <Image source={require("../../assets/Earth.png")} />
-          <Text>Welcome Back</Text>
-
-
-          <Facebook text="Login With FACEBOOK"/>
           <View style={{marginTop: 20}}>
-            <Google text="Login With GOOGLE"/>
+            <Facebook text="Login With FACEBOOK"/>
+            <View style={{marginTop: 20}}>
+              <Google text="Login With GOOGLE"/>
+            </View>
           </View>
 
-            <View style={SpinnerStyles.container}>
-              {isLoading && <ActivityIndicator size={70} color="09E4AF"/>}
-            </View>
-          <Text style={{fontFamily: "Montserrat"}}>or LOGIN WITH EMAIL</Text>
 
-          <InputField placeholder="Email address" fn={setEmail}/>
-          <InputField placeholder="Password" fn={setPassword} isPassword={true}/>
+          <Text style={{fontFamily: "Montserrat", marginTop: 20}}>or LOGIN WITH EMAIL</Text>
 
-          <AuthButton text="Sign In" fn={handleSubmit}/>
-
+          <InputField placeholder="Email address" fn={setEmail} styling={{
+            marginTop: 20,
+            backgroundColor: "#e1e1e3",
+            borderRadius: 15, 
+            width: 300, 
+            height: 50.53,
+            paddingLeft: 20,
+            fontFamily: "MontserratMedium"
+          }}/>
+          <InputField placeholder="Password" fn={setPassword} isPassword={true} styling={{
+            marginBottom: 20,
+            backgroundColor: "#e1e1e3",
+            borderRadius: 15, 
+            width: 300, 
+            height: 50.53,
+            paddingLeft: 20,
+            fontFamily: "MontserratMedium"
+          }}/>
+          <AuthButton text="Sign In" fn={handleSubmit} style={{
+            marginTop: 20,
+            width: 300, 
+            height: 50.53,
+            borderRadius: 38,
+          }}/>
         </View>
       </View>
     </SafeAreaView>

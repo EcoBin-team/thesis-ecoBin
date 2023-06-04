@@ -1,10 +1,10 @@
 import React from "react";
 import { Image, TouchableOpacity } from "react-native"
 
-const BackButton = ({fn}) => {
+const BackButton = ({fn,style}) => {
   return (
-    <TouchableOpacity onPress={fn} style={{padding: 20, paddingTop: 40}}>
-      <Image source={require("../../assets/BackButton.png")}/>
+    <TouchableOpacity>
+      <Image source={require("../../assets/BackButton.png")} style={{marginRight: 270, ...style}}/>
     </TouchableOpacity>
   )
 }

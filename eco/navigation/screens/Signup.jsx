@@ -14,6 +14,11 @@ import SpinnerStyles from "../../styles/ActivityIndicator.styles"
 
 const Signup = () => {
 
+  // hiding header
+  React.useLayoutEffect(() => {
+    navigation.setOptions({ headerShown: false })
+},[navigation])
+
   const navigation = useNavigation()
   const [name,setName] = useState("")
   const [email,setEmail] = useState("")
@@ -27,7 +32,7 @@ const Signup = () => {
     setIsLoading(true)
 
     // sending an http request to the server to create the account
-    const response = await axios.post("http://10.0.2.2:3001/users/signup", {
+    const response = await axios.post("http://10.0.2.2:3000/users/signup", {
       email: email,
       password: password,
       name: name,
@@ -58,36 +63,37 @@ const Signup = () => {
 
   return (
     <SafeAreaView>
+
+      <View style={SpinnerStyles.container}>
+        {isLoading && <ActivityIndicator size={70} color="09E4AF"/>}
+      </View>
+
       <View>
 
-        <BackButton fn={() => navigation.navigate("Home")}/>
+        <View style={{display: "flex", justifyContent: "center", alignItems: "center"}}>
+          <BackButton fn={() => navigation.navigate("Home")} style={{top: 30}}/>
+          <Image source={require("../../assets/Earth.png")}/>
+          <Text style={{fontFamily: "MontserratBold", color: "#2DCC70", fontSize: 26, marginTop: 20}}>Create Your Account</Text>
 
-        <View style={{
-        }}>
-          <Image source={require("../../assets/Earth.png")} />
-          <Text>Welcome Back</Text>
-
-
-          <Facebook text="Sign up With FACEBOOK"/>
           <View style={{marginTop: 20}}>
-            <Google text="Sign up With GOOGLE"/>
+            <Facebook text="Sign Up with FACEBOOK"/>
+            <View style={{marginTop: 15}}>
+              <Google text="Sign Up with GOOGLE"/>
+            </View>
           </View>
 
-            <View style={SpinnerStyles.container}>
-              {isLoading && <ActivityIndicator size={70} color="09E4AF"/>}
-            </View>
-          <Text style={{fontFamily: "Montserrat"}}>or SIGN UP WITH EMAIL</Text>
 
-          <InputField placeholder="Name" fn={setName}/>
+          <Text style={{fontFamily: "Montserrat", marginTop: 20}}>or Sign Up WITH EMAIL</Text>
+
+          <InputField placeholder="Full Name" fn={setName}/>
           <InputField placeholder="Email address" fn={setEmail}/>
           <InputField placeholder="Password" fn={setPassword} isPassword={true}/>
-          
-          <View>
-            <Text>I have read the privacy policy.</Text>
-          </View>
-
-          <AuthButton text="Sign Up" fn={handleSubmit}/>
-
+          <AuthButton text="Sign Up" fn={handleSubmit} style={{
+            marginTop: 20,
+            width: 300, 
+            height: 50.53,
+            borderRadius: 38,
+          }}/>
         </View>
       </View>
     </SafeAreaView>
