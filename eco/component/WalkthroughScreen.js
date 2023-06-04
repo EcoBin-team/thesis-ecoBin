@@ -5,7 +5,7 @@ import Swiper from "react-native-swiper";
 
 export default function WalkthroughScreen() {
   const walkthroughtList = [
-    { id: 1, title: "reccle1", image: Images.img1 },
+    { id: 1, title: "Dire consequences of plastic pollution on ecosystems",description:"Marine life threat. Microplastic contamination. Environmental pollution and climate impact.", image: Images.img1 },
     { id: 2, title: "reccle2", image: Images.img2 },
     { id: 3, title: "reccle3", image: Images.img3 },
   ];
