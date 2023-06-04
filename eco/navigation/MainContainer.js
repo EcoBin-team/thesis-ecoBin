@@ -4,14 +4,14 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import { Image, View } from 'react-native';
 // Screens
-import HomeScreen from './screens/HomeScreen';
+import News from '../navigation/screens/News';
 import DetailsScreen from './screens/DetailsScreen';
 import SettingsScreen from './screens/SettingsScreen';
 import Account from './screens/Account';
 import Recycle from './screens/Recycle';
 
 // Screen names
-const homeName = "Home";
+const NewsName = "News";
 const detailsName = "Details";
 const RecycleName = 'Recycle';
 const settingsName = "Settings";
@@ -22,13 +22,13 @@ const Tab = createBottomTabNavigator();
 function MainContainer() {
   return (
     <Tab.Navigator
-      initialRouteName={homeName}
+      initialRouteName={NewsName}
       screenOptions={({ route }) => ({
         tabBarIcon: ({ focused, color, size }) => {
           let iconName;
           let rn = route.name;
 
-          if (rn === homeName) {
+          if (rn === NewsName) {
             iconName = focused ? 'home' : 'home-outline';
 
           } else if (rn === detailsName) {
@@ -52,7 +52,7 @@ function MainContainer() {
         labelStyle: { paddingBottom: 10, fontSize: 10 },
         style: { padding: 40, height: 70 }
       }}>
-      <Tab.Screen name={homeName} component={HomeScreen} />
+      <Tab.Screen name={NewsName} component={News} />
       <Tab.Screen name={detailsName} component={DetailsScreen} />
       <Tab.Screen name={RecycleName} component={Recycle} />
       <Tab.Screen name={settingsName} component={SettingsScreen} />
