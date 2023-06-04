@@ -3,19 +3,21 @@ const app = express();
 const cors = require("cors");
 
 const feedRouter = require("./routes/feedsRout");
+const userRouter = require("./routes/routerUser")
+const itemRouter = require("./routes/routerItem")
+const depotRouter = require("./routes/routerDepot")
 
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(cors());
 const connectDB = require("./prisma/connection");
-connectDB()
+// connectDB()
 
 
-app.use(feedRouter)
-
-app.get('/', (req, res) => {
-    res.send('Hello World!')
-  })
+app.use("/feed", feedRouter)
+app.use("/users", userRouter)
+app.use("/items", itemRouter)
+app.use("/depots", depotRouter)
 
 
   app.listen(3000, () => {
