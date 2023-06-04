@@ -22,8 +22,8 @@ const Home = () => {
                     <Logo/>
                     <View style={{top: 50, display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "center"}}>
                         <Text style={{fontFamily: "MontserratBold", fontSize: 28, color: "#2DCC70"}}>Welcome</Text>
-                        <Text style={{marginTop: 20, color: "#80D48F"}}>Care about waste management</Text>
-                        <Text style={{color: "#80D48F"}}>Care about the future</Text>
+                        <Text style={{marginTop: 20, color: "#80D48F", fontFamily: "Montserrat"}}>Care about waste management</Text>
+                        <Text style={{color: "#80D48F", fontFamily: "Montserrat"}}>Care about the future</Text>
                         <TouchableOpacity style={{borderRadius: 38, backgroundColor: "#09E4AF", alignItems: "center", padding: 10, width: 300, marginTop: 20}} onPress={() => navigation.navigate("Login")}>
                             <Text style={{fontFamily: "MontserratRegular", color: "white", fontSize: 20}}>Sign In</Text>
                         </TouchableOpacity>
