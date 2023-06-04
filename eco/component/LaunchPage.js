@@ -1,24 +1,33 @@
 import React, { useEffect, useRef } from 'react';
 import { Animated, Image, View } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
 
 const LaunchPage = () => {
   const logoRotation = useRef(new Animated.Value(0)).current;
   const fadeAnimation = useRef(new Animated.Value(0)).current;
+  const navigation = useNavigation();
 
   useEffect(() => {
+    const navigateToMainContainer = () => {
+      navigation.navigate('MainContainer');
+    };
+
     Animated.parallel([
       Animated.timing(logoRotation, {
-        toValue: 2, // Rotate 2 times (720 degrees)
-        duration: 3000, // Adjust the duration as needed
+        toValue: 2,
+        duration: 3000,
         useNativeDriver: true,
       }),
       Animated.timing(fadeAnimation, {
         toValue: 1,
-        duration: 3000, // Adjust the duration as needed
+        duration: 3000,
         useNativeDriver: true,
       }),
-    ]).start();
-  }, []);
+    ]).start(() => {
+      // Navigate to MainContainer after animations complete
+      setTimeout(navigateToMainContainer, 2000); // Delay navigation by 2 seconds
+    });
+  }, [navigation, fadeAnimation, logoRotation]);
 
   return (
     <View style={{ alignItems: 'center' }}>
@@ -35,7 +44,7 @@ const LaunchPage = () => {
         }}
       >
         <Image
-          source={require('../../src/images/img1.png')}
+          source={require('../assets/img1.png')}
           style={{ width: 200, height: 200 }}
         />
       </Animated.View>
@@ -46,7 +55,7 @@ const LaunchPage = () => {
         }}
       >
         <Image
-          source={require('../../src/images/logo.png')} 
+          source={require('../assets/logo.png')}
           style={{ width: 250, height: 250 }}
         />
       </Animated.View>

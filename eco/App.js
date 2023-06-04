@@ -1,13 +1,30 @@
 import * as React from 'react';
+import { NavigationContainer } from '@react-navigation/native';
+import { createStackNavigator } from '@react-navigation/stack';
+
+// Import your screens
+import LaunchPage from './component/LaunchPage';
 import MainContainer from './navigation/MainContainer';
 
-function App() {
+const Stack = createStackNavigator();
+
+const App = () => {
   return (
- 
-
-    <MainContainer/>
-
+    <NavigationContainer>
+      <Stack.Navigator>
+        <Stack.Screen
+          name="LaunchPage"
+          component={LaunchPage}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="MainContainer"
+          component={MainContainer}
+          options={{ headerShown: false }}
+        />
+      </Stack.Navigator>
+    </NavigationContainer>
   );
-}
+};
 
 export default App;
