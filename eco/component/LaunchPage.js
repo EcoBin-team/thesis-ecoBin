@@ -9,7 +9,7 @@ const LaunchPage = () => {
 
   useEffect(() => {
     const navigateToMainContainer = () => {
-      navigation.navigate('MainContainer');
+      navigation.navigate('WalkthroughScreen');
     };
 
     Animated.parallel([
