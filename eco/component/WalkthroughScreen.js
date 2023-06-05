@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { View, Text, Image, StyleSheet, TouchableOpacity, ScrollView, Dimensions } from "react-native";
-import Images from "../images";
+import Images from "../assets/image";
 import Swiper from "react-native-swiper";
 
 const { width, height } = Dimensions.get("window");
@@ -94,9 +94,7 @@ export default function WalkthroughScreen() {
         <TouchableOpacity style={styles.buttonStyle} onPress={handleGetStarted}>
           <Text style={styles.textStartedStyle}>Get Started</Text>
         </TouchableOpacity>
-        <TouchableOpacity>
-          <Text>Skip</Text>
-        </TouchableOpacity>
+       
       </View>
     )}
   </View>
