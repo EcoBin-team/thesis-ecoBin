@@ -1,7 +1,9 @@
 import React, { useState } from "react";
-import { View, Text, Image, StyleSheet, TouchableOpacity } from "react-native";
+import { View, Text, Image, StyleSheet, TouchableOpacity, ScrollView, Dimensions } from "react-native";
 import Images from "../images";
 import Swiper from "react-native-swiper";
+
+const { width, height } = Dimensions.get("window");
 
 export default function WalkthroughScreen() {
   const walkthroughtList = [
@@ -47,71 +49,96 @@ export default function WalkthroughScreen() {
 
   const handleGetStarted = () => {
     // Perform action when "Get Started" button is pressed
-    // Example: navigate to the main screen of your application
+    //  navigate to the main screen of my application
   };
 
   return (
-    <View style={{ flex: 1 }}>
-      <Swiper
-        loop={false} // Set loop prop to false
-        paginationStyle={{
-          position: "absolute",
-          bottom: "20%",
-        }}
-        activeDotColor="#09E4AF"
-        activeDotStyle={{ width: 20, height: 8 }}
-        onIndexChanged={handleSwiperIndexChanged}
-      >
-        {walkthroughtList.map((item, index) => (
-          <View
-            key={item.id}
-            style={{
-              justifyContent: "center",
-              alignItems: "center",
-              height: "100%",
-            }}
-          >
-            <Text style={styles.textStyle}>{item.title}</Text>
-            <Image source={item.image} style={styles.imageContainer} />
-          </View>
-        ))}
-      </Swiper>
-
-      {currentIndex === walkthroughtList.length - 1 && (
-        <View
-          style={{
+    <View style={styles.container}>
+    <ScrollView>
+      <View style={styles.imageContainer}>
+        <Swiper
+          loop={false}
+          paginationStyle={{
             position: "absolute",
-            bottom: "5%",
-            left: 0,
-            right: 0,
-            justifyContent: "center",
-            alignItems: "center",
+            bottom: "25%",
           }}
+          activeDotColor="#09E4AF"
+          activeDotStyle={{ width: 20, height: 8 }}
+          onIndexChanged={handleSwiperIndexChanged}
         >
-          <TouchableOpacity style={styles.buttonStyle} onPress={handleGetStarted}>
-            <Text style={styles.textStartedStyle}>Get Started</Text>
-          </TouchableOpacity>
-          <TouchableOpacity>
-            <Text>Skip</Text>
-          </TouchableOpacity>
-        </View>
-      )}
-    </View>
+          {walkthroughtList.map((item, index) => (
+            <View key={item.id} style={styles.slide}>
+              <Image source={item.image} style={styles.image} resizeMode="contain" />
+              <View style={styles.bottomContent}>
+                <Image source={item.img} />
+                <Text style={styles.title}>{item.title}</Text>
+                <Text style={styles.description}>{item.description}</Text>
+              </View>
+            </View>
+          ))}
+        </Swiper>
+      </View>
+    </ScrollView>
+  
+    {currentIndex === walkthroughtList.length - 1 && (
+      <View
+        style={{
+          position: "absolute",
+          bottom: "5%",
+          left: 0,
+          right: 0,
+          justifyContent: "center",
+          alignItems: "center",
+        }}
+      >
+        <TouchableOpacity style={styles.buttonStyle} onPress={handleGetStarted}>
+          <Text style={styles.textStartedStyle}>Get Started</Text>
+        </TouchableOpacity>
+        <TouchableOpacity>
+          <Text>Skip</Text>
+        </TouchableOpacity>
+      </View>
+    )}
+  </View>
+  
   );
 }
 
 const styles = StyleSheet.create({
-  textStyle: {
-    fontSize: 25,
-    fontWeight: "bold",
-    width: "40%",
-    textAlign: "center",
+  container: {
+    flex: 1,
   },
   imageContainer: {
-    height: "70%",
-    width: "90%",
-    resizeMode: "contain",
-    marginHorizontal: 15,
+    height: height * 0.9,
+  },
+  slide: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    width,
+  },
+  image: {
+    width: "100%",
+    height: "80%",
+  },
+  title: {
+    fontSize: 20,
+    fontWeight: "bold",
+    width: "80%",
+    textAlign: "center",
+    marginTop: 5,
+    position: "absolute",
+    bottom: "60%",
+    zIndex: 1,
+  },
+  description: {
+    fontSize: 13,
+    width: "80%",
+    textAlign: "center",
+    marginTop: 20,
+    position: "absolute",
+    bottom: "30%",
+    zIndex: 1,
   },
   buttonStyle: {
     backgroundColor: "#2DCC70",
@@ -124,5 +151,10 @@ const styles = StyleSheet.create({
   },
   textStartedStyle: {
     fontWeight: "bold",
+  },
+  bottomContent: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
   },
 });
