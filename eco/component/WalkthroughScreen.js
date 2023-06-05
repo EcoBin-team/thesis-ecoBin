@@ -5,9 +5,38 @@ import Swiper from "react-native-swiper";
 
 export default function WalkthroughScreen() {
   const walkthroughtList = [
-    { id: 1, title: "Dire consequences of plastic pollution on ecosystems",description:"Marine life threat. Microplastic contamination. Environmental pollution and climate impact.", image: Images.img1 },
-    { id: 2, title: "reccle2", image: Images.img2 },
-    { id: 3, title: "reccle3", image: Images.img3 },
+    {
+      id: 1,
+      title: "Easy Sale of Waste",
+      description:
+        "Selling Waste, Dispose of Your Trash at Designated Locations and Earn Rewards",
+      image: Images.img1,
+      img: Images.vector,
+    },
+    {
+      id: 2,
+      title: "Everything Can Be Recycled",
+      description:
+        "By Recycling, You Contribute to Earth Conservation and Community Well-being",
+      image: Images.img2,
+      img: Images.vector,
+    },
+    {
+      id: 3,
+      title: "Recycle at the Nearest Location",
+      description:
+        "By recycling, you contribute to the conservation of the Earth and the well-being of society",
+      image: Images.img3,
+      img: Images.vector,
+    },
+    {
+      id: 4,
+      title: "Join Us",
+      description:
+        "Together, Let's Become Agents of Waste Management Caring for the Future",
+      image: Images.img4,
+      img: Images.vector,
+    },
   ];
 
   const [currentIndex, setCurrentIndex] = useState(0);
