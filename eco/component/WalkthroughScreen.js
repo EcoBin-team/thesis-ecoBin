@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { View, Text, Image, StyleSheet, TouchableOpacity, ScrollView, Dimensions } from "react-native";
 import Images from "../assets/image";
 import Swiper from "react-native-swiper";
+import { useNavigation } from '@react-navigation/native';
 
 const { width, height } = Dimensions.get("window");
 
@@ -46,11 +47,12 @@ export default function WalkthroughScreen() {
   const handleSwiperIndexChanged = (index) => {
     setCurrentIndex(index);
   };
-
+  const navigation = useNavigation();
   const handleGetStarted = () => {
-    // Perform action when "Get Started" button is pressed
-    //  navigate to the main screen of my application
+   
+    navigation.navigate('MainContainer');
   };
+  
 
   return (
     <View style={styles.container}>
