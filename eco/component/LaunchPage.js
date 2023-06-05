@@ -30,7 +30,7 @@ const LaunchPage = () => {
   }, [navigation, fadeAnimation, logoRotation]);
 
   return (
-    <View style={{ alignItems: 'center' }}>
+    <View style={{ alignItems: 'center', justifyContent: 'center', flex: 1, backgroundColor: '#9CFFE7' }}>
       <Animated.View
         style={{
           transform: [
@@ -56,7 +56,7 @@ const LaunchPage = () => {
       >
         <Image
           source={require('../assets/logo.png')}
-          style={{ width: 250, height: 250 }}
+          style={{ width: 250, height: 250}}
         />
       </Animated.View>
     </View>
