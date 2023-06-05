@@ -1,36 +1,37 @@
-import React, { useCallback } from 'react';
-import { SplashScreen } from "expo-router"
-import { useFonts } from 'expo-font';
-import { MainContainer, StackNavigator } from './navigation/MainContainer';
 
-function App() {
+import * as React from 'react';
+import { NavigationContainer } from '@react-navigation/native';
+import { createStackNavigator } from '@react-navigation/stack';
 
-  // importing the fonts
-  const [fontsLoaded] = useFonts({
-    Montserrat: require("./fonts/Montserrat-Light.ttf"),
-    MontserratBold: require("./fonts/Montserrat-Bold.ttf"),
-    MontserratRegular: require("./fonts/Montserrat-Regular.ttf"),
-    MontserratMedium: require("./fonts/Montserrat-Medium.ttf")
-  })
+// Import your screens
+import LaunchPage from './component/LaunchPage';
+import MainContainer from './navigation/MainContainer';
+import WalkthroughScreen from './component/WalkthroughScreen';
+const Stack = createStackNavigator();
 
-  const onLayoutRootView = useCallback(async () => {
-    if(fontsLoaded){
-      SplashScreen.hideAsync()
-    }
-  })
-
-  if(!fontsLoaded){
-    return null
-  }
-
-  onLayoutRootView()
-
+const App = () => {
   return (
-    <>
-      {/* <StackNavigator/> */}
-      <MainContainer/>
-    </>
+    <NavigationContainer>
+      <Stack.Navigator>
+        <Stack.Screen
+          name="LaunchPage"
+          component={LaunchPage}
+          options={{ headerShown: false }}
+        />
+         <Stack.Screen
+          name="WalkthroughScreen"
+          component={WalkthroughScreen}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="MainContainer"
+          component={MainContainer}
+          options={{ headerShown: false }}
+        />
+      </Stack.Navigator>
+    </NavigationContainer>
   );
-}
+};
 
 export default App;
+
