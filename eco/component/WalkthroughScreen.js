@@ -50,7 +50,7 @@ export default function WalkthroughScreen() {
   const navigation = useNavigation();
   const handleGetStarted = () => {
    
-    navigation.navigate('MainContainer');
+    navigation.navigate('Home');
   };
   
 
