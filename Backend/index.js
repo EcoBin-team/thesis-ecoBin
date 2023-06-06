@@ -2,8 +2,8 @@ require("dotenv").config();
 const express = require('express');
 const app = express();
 const cors = require("cors");
-const supabaseConnect = require("./supabaseConnect/Supabase_Connect");
-const ee = require("./routes/Depot_Routes")
+const supabaseConnect = require("./supabase/Supabase_Connect");
+
 
 
 //
@@ -21,7 +21,7 @@ app.use((req, res, next) => {
 
 // Routes
 
-app.use("/" , ee )
+
 app.get('/', (req, res) => {
   res.send('Welcome my Freind!');
 });
