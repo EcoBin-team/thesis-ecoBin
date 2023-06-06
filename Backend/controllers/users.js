@@ -2,13 +2,17 @@ require("dotenv").config()
 const { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword } = require("firebase/auth") 
 
 const { app } = require("../firebase/FirebaseApp")
+const supabase = require("../supabase/Supabase_Connect")
 
 module.exports = {
   
   // method to retrieve all users in the database
   getAll: async (req,res) => {
-    const users = await prisma.user.findMany()
-    res.send(users)
+    const { data, error } = await supabase
+    .from("users")
+    .select("*")
+    
+    res.send(data)
   }, 
 
   // method to create a user in the database
@@ -35,7 +39,6 @@ module.exports = {
       const errorCode = error.code
       res.send(errorCode)
     }
-
   },
 
   // login function to return the id and a token
