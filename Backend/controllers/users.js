@@ -32,7 +32,7 @@ module.exports = {
         email: email,
       })
       
-      res.send(data)
+      res.send("Account Created!")
     }
 
     catch(error) {
