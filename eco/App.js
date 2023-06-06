@@ -1,5 +1,6 @@
-
-import * as React from 'react';
+import React, { useCallback } from "react"
+import { SplashScreen } from "expo-router";
+import { useFonts } from "expo-font";
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 
@@ -13,6 +14,26 @@ import Signup from './navigation/screens/Signup'
 const Stack = createStackNavigator();
 
 const App = () => {
+  
+  const [fontsLoaded] = useFonts({
+    Montserrat: require("./fonts/Montserrat-Light.ttf"),
+    MontserratBold: require("./fonts/Montserrat-Bold.ttf"),
+    MontserratRegular: require("./fonts/Montserrat-Regular.ttf"),
+    MontserratMedium: require("./fonts/Montserrat-Medium.ttf")
+  })
+
+  const onLayoutRootView = useCallback(async () => {
+    if(fontsLoaded){
+      SplashScreen.hideAsync()
+    }
+  })
+
+  if(!fontsLoaded){
+    return null
+  }
+
+  onLayoutRootView()
+
   return (
     <NavigationContainer>
       <Stack.Navigator>
