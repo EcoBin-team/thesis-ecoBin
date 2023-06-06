@@ -21,11 +21,12 @@ module.exports = {
 
       const { email, password, name } = req.body
       const auth = getAuth()
-  
+
+      // creating and storing the user in firebase auth
       const userCredentials = await createUserWithEmailAndPassword(auth, email, password)
       const user = userCredentials.user
 
-      // supabase insertion
+      // inserting a row with the new user with the id that firebase returned
       const { data, error } = await supabase
       .from("users")
       .insert({
