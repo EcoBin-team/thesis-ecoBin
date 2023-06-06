@@ -24,9 +24,10 @@ const Login = () => {
     navigation.setOptions({ headerShown: false })
 },[navigation])
 
+
   // login function to set the user's id and token in the localstorage
   const handleSubmit = async () => {
-
+    navigation.navigate('News');
     // regular expressions to check inputs with
     const regexpEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
 
@@ -53,7 +54,7 @@ const Login = () => {
 
     else{
       await AsyncStorage.setItem("currentUser",JSON.stringify(response.data)) // storing the id and token in the local storage
-      navigation.navigate("Home") // navigates to homepage
+      navigation.navigate("MainContainer") // navigates to Newspage
     }
 
     setIsLoading(false) // hiding the ActivityIndicator (Spinner) after the data loads
@@ -69,7 +70,7 @@ const Login = () => {
       <View>
 
         <View style={{display: "flex", justifyContent: "center", alignItems: "center"}}>
-          <BackButton fn={() => navigation.navigate("Home")}/>
+          <BackButton style={{top:50}} fn={() => navigation.navigate("Home")}/>
           <Image source={require("../../assets/Earth.png")}/>
           <Text style={{fontFamily: "MontserratBold", color: "#2DCC70", fontSize: 30, marginTop: 20}}>Welcome Back</Text>
 
