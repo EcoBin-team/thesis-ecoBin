@@ -11,6 +11,7 @@ import Google from "../../components/LoginWith/Google";
 import AuthButton from "../../components/AuthButton/AuthButton";
 
 import SpinnerStyles from "../../styles/ActivityIndicator.styles"
+import SignupSuccess from "../../components/SignupSuccess/SignupSuccess";
 
 const Signup = () => {
 
@@ -63,7 +64,6 @@ const Signup = () => {
 
   return (
     <SafeAreaView>
-
       <View style={SpinnerStyles.container}>
         {isLoading && <ActivityIndicator size={70} color="09E4AF"/>}
       </View>
@@ -96,6 +96,18 @@ const Signup = () => {
           }}/>
         </View>
       </View>
+
+      <View style={{
+        position: "absolute",
+        top: 0,
+        bottom: 0,
+        right: 0,
+        left: 0
+      }}
+      >
+        <SignupSuccess/>
+      </View>
+      
     </SafeAreaView>
   )
 }
