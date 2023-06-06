@@ -1,23 +1,32 @@
+require("dotenv").config();
 const express = require('express');
 const app = express();
 const cors = require("cors");
+const supabaseConnect = require("./supabaseConnect/Supabase_Connect");
+const ee = require("./routes/Depot_Routes")
 
-const feedRouter = require("./routes/feedsRout");
-
+//
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(cors());
-const connectDB = require("./prisma/connection");
-connectDB()
 
+// Mount Supabase middleware
+app.use((req, res, next) => {
+  req.supabase = supabaseConnect;
+  next();
+});
 
-app.use(feedRouter)
+// Routes
 
+app.use("/" , ee )
 app.get('/', (req, res) => {
-    res.send('Hello World!')
-  })
+  res.send('Welcome my Freind!');
+});
 
 
-  app.listen(3000, () => {
-    console.log('Server is running on http://localhost:3000');
-  });
+
+
+//Connect
+app.listen(3000, () => {
+  console.log('> Ready on http://localhost:3000');
+});
