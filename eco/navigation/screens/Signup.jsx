@@ -96,6 +96,7 @@ const Signup = () => {
           }}/>
         </View>
       </View>
+
       <View style={{
         position: "absolute",
         top: 0,
@@ -106,6 +107,7 @@ const Signup = () => {
       >
         <SignupSuccess/>
       </View>
+      
     </SafeAreaView>
   )
 }
