@@ -62,7 +62,7 @@ export default function WalkthroughScreen() {
           loop={false}
           paginationStyle={{
             position: "absolute",
-            bottom: "25%",
+            bottom: "40%",
           }}
           activeDotColor="#09E4AF"
           activeDotStyle={{ width: 20, height: 8 }}
@@ -75,18 +75,18 @@ export default function WalkthroughScreen() {
                 <Image source={item.img} />
                 <Text style={styles.title}>{item.title}</Text>
                 <Text style={styles.description}>{item.description}</Text>
+                
               </View>
             </View>
           ))}
         </Swiper>
       </View>
     </ScrollView>
-  
     {currentIndex === walkthroughtList.length - 1 && (
       <View
         style={{
           position: "absolute",
-          bottom: "5%",
+          bottom: "7%",
           left: 0,
           right: 0,
           justifyContent: "center",
@@ -99,6 +99,7 @@ export default function WalkthroughScreen() {
        
       </View>
     )}
+    
   </View>
   
   );
@@ -109,36 +110,43 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   imageContainer: {
-    height: height * 0.9,
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
   },
   slide: {
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
     width,
+    paddingBottom: 100,
   },
   image: {
     width: "100%",
     height: "80%",
   },
   title: {
-    fontSize: 20,
+    fontSize: 22,
+    fontFamily: "Montserrat",
     fontWeight: "bold",
     width: "80%",
     textAlign: "center",
     marginTop: 5,
     position: "absolute",
-    bottom: "60%",
+    bottom: "90%",
     zIndex: 1,
+    color: "#2DCC70",
   },
   description: {
-    fontSize: 13,
-    width: "80%",
+    fontSize: 15,
+    fontFamily: "Montserrat",
+    width: "90%",
     textAlign: "center",
     marginTop: 20,
     position: "absolute",
-    bottom: "30%",
+    bottom: "50%",
     zIndex: 1,
+    color: "#2DCC70",
   },
   buttonStyle: {
     backgroundColor: "#2DCC70",
@@ -147,7 +155,6 @@ const styles = StyleSheet.create({
     alignItems: "center",
     paddingVertical: 20,
     borderRadius: 20,
-    marginBottom: 20,
   },
   textStartedStyle: {
     fontWeight: "bold",
