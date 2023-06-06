@@ -24,6 +24,8 @@ module.exports = {
   
       const userCredentials = await createUserWithEmailAndPassword(auth, email, password)
       const user = userCredentials.user
+
+      // supabase insertion
       const { data, error } = await supabase
       .from("users")
       .insert({
