@@ -27,7 +27,7 @@ const Login = () => {
 
   // login function to set the user's id and token in the localstorage
   const handleSubmit = async () => {
-    navigation.navigate('News');
+    // navigation.navigate('News');
     // regular expressions to check inputs with
     const regexpEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
 

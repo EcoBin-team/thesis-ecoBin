@@ -105,7 +105,7 @@ const Signup = () => {
         left: 0
       }}
       >
-        <SignupSuccess/>
+        {/* <SignupSuccess/> */}
       </View>
       
     </SafeAreaView>
