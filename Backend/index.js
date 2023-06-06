@@ -4,33 +4,18 @@ const app = express();
 const cors = require("cors");
 const supabaseConnect = require("./supabase/Supabase_Connect");
 
+const userRouter = require("./routes/routerUser")
 
-
-//
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(cors());
 
-
-// Mount Supabase middleware
 app.use((req, res, next) => {
   req.supabase = supabaseConnect;
   next();
 });
+app.use("/users", userRouter)
 
-
-// Routes
-
-
-app.get('/', (req, res) => {
-  res.send('Welcome my Freind!');
-});
-
-
-
-
-
-//Connect
 app.listen(3000, () => {
   console.log('> Ready on http://localhost:3000');
 });
