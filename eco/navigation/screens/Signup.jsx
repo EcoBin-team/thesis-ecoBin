@@ -4,14 +4,17 @@ import { useNavigation } from "@react-navigation/native";
 import axios from "axios";
 import CheckBox from "@react-native-community/checkbox" // TODO: add a checkbox
 
+// components imports
 import InputField from "../../components/InputField/InputField";
 import BackButton from "../../components/BackButton/BackButton";
 import Facebook from "../../components/LoginWith/Facebook";
 import Google from "../../components/LoginWith/Google";
 import AuthButton from "../../components/AuthButton/AuthButton";
-
-import SpinnerStyles from "../../styles/ActivityIndicator.styles"
 import SignupSuccess from "../../components/SignupSuccess/SignupSuccess";
+
+// styles imports
+import SpinnerStyles from "../../styles/ActivityIndicator.styles"
+import modal from "../../styles/modalBackground.styles"
 
 const Signup = () => {
 
@@ -26,6 +29,7 @@ const Signup = () => {
   const [password,setPassword] = useState("")
   const [isChecked,setIsChecked] = useState(false)
   const [isLoading,setIsLoading] = useState(false)
+  const [signupSuccess,setSignupSuccess] = useState(false)
   const regexpName = /[a-z]/gi
 
   const handleSubmit = async () => {
@@ -55,7 +59,7 @@ const Signup = () => {
     }
     
     else{
-      navigation.navigate("Home") // navigates to homepage
+      setSignupSuccess(true) // changes a state to show the sign up success modal
     }
 
     setIsLoading(false) // hiding the ActivityIndicator (Spinner) after the data loads
@@ -105,7 +109,7 @@ const Signup = () => {
         left: 0
       }}
       >
-        {/* <SignupSuccess/> */}
+        <SignupSuccess/>
       </View>
       
     </SafeAreaView>
