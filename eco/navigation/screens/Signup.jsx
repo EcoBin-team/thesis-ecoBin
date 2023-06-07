@@ -63,7 +63,7 @@ const Signup = () => {
     }
 
     setIsLoading(false) // hiding the ActivityIndicator (Spinner) after the data loads
-    
+
   }
 
   return (
@@ -81,7 +81,7 @@ const Signup = () => {
           <InputField placeholder="Password" fn={setPassword} isPassword={true}/>
           <AuthButton text="Sign Up" fn={handleSubmit} style={{
             marginTop: 40,
-            marginBottom: 100,
+            marginBottom: 150,
             width: 300, 
             height: 50.53,
             borderRadius: 38,
