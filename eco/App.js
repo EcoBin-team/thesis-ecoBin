@@ -39,7 +39,7 @@ const App = () => {
   return (
     <NavigationContainer>
       <Stack.Navigator>
-        {/* <Stack.Screen
+        <Stack.Screen
           name="LaunchPage"
           component={LaunchPage}
           options={{ headerShown: false }}
@@ -64,7 +64,7 @@ const App = () => {
           name="WalkthroughScreen"
           component={WalkthroughScreen}
           options={{ headerShown: false }}
-        /> */}
+        />
         <Stack.Screen
           name="MainContainer"
           component={MainContainer}
