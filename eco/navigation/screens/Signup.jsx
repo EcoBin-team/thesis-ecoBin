@@ -68,9 +68,6 @@ const Signup = () => {
 
   return (
     <SafeAreaView>
-      <View style={SpinnerStyles.container}>
-        {isLoading && <ActivityIndicator size={70} color="09E4AF"/>}
-      </View>
 
       <View>
 
@@ -116,7 +113,13 @@ const Signup = () => {
         </View>
       </>
       }
-      
+
+      {isLoading && 
+        <View style={SpinnerStyles.container}>
+          <ActivityIndicator size={70} color="09E4AF"/>
+        </View>
+      }
+          
     </SafeAreaView>
   )
 }
