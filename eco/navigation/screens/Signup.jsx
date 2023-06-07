@@ -71,26 +71,17 @@ const Signup = () => {
 
       <View>
 
-        <View style={{display: "flex", justifyContent: "center", alignItems: "center"}}>
+        <View style={{display: "flex", justifyContent: "center", alignItems: "center", marginTop: 25}}>
           <BackButton fn={() => navigation.navigate("Home")} style={{top: 30}}/>
           <Image source={require("../../assets/Earth.png")}/>
-          <Text style={{fontFamily: "MontserratBold", color: "#2DCC70", fontSize: 26, marginTop: 20}}>Create Your Account</Text>
-
-          <View style={{marginTop: 20}}>
-            <Facebook text="Sign Up with FACEBOOK"/>
-            <View style={{marginTop: 15}}>
-              <Google text="Sign Up with GOOGLE"/>
-            </View>
-          </View>
-
-
-          <Text style={{fontFamily: "Montserrat", marginTop: 20}}>or Sign Up WITH EMAIL</Text>
+          <Text style={{fontFamily: "MontserratBold", color: "#2DCC70", fontSize: 26, marginTop: 20, marginBottom: 20}}>Create Your Account</Text>
 
           <InputField placeholder="Full Name" fn={setName}/>
           <InputField placeholder="Email address" fn={setEmail}/>
           <InputField placeholder="Password" fn={setPassword} isPassword={true}/>
           <AuthButton text="Sign Up" fn={handleSubmit} style={{
-            marginTop: 20,
+            marginTop: 40,
+            marginBottom: 100,
             width: 300, 
             height: 50.53,
             borderRadius: 38,
@@ -99,19 +90,19 @@ const Signup = () => {
       </View>
 
       {signupSuccess && 
-      <>
-        <View style={modal.overlay}></View>
-        <View style={{
-          position: "absolute",
-          top: 0,
-          bottom: 0,
-          right: 0,
-          left: 0
-        }}
-        >
-          <SignupSuccess/>
-        </View>
-      </>
+        <>
+          <View style={modal.overlay}></View>
+          <View style={{
+            position: "absolute",
+            top: 0,
+            bottom: 0,
+            right: 0,
+            left: 0
+          }}
+          >
+            <SignupSuccess/>
+          </View>
+        </>
       }
 
       {isLoading && 

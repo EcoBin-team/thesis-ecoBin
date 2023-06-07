@@ -63,26 +63,12 @@ const Login = () => {
   return (
     <SafeAreaView>
 
-      <View style={SpinnerStyles.container}>
-        {isLoading && <ActivityIndicator size={70} color="09E4AF"/>}
-      </View>
-
       <View>
 
-        <View style={{display: "flex", justifyContent: "center", alignItems: "center"}}>
-          <BackButton style={{top:50}} fn={() => navigation.navigate("Home")}/>
+        <View style={{display: "flex", justifyContent: "center", alignItems: "center", marginTop: 25}}>
+          <BackButton fn={() => navigation.navigate("Home")} style={{top: 30}}/>
           <Image source={require("../../assets/Earth.png")}/>
-          <Text style={{fontFamily: "MontserratBold", color: "#2DCC70", fontSize: 30, marginTop: 20}}>Welcome Back</Text>
-
-          <View style={{marginTop: 20}}>
-            <Facebook text="Login With FACEBOOK"/>
-            <View style={{marginTop: 20}}>
-              <Google text="Login With GOOGLE"/>
-            </View>
-          </View>
-
-
-          <Text style={{fontFamily: "Montserrat", marginTop: 20}}>or LOGIN WITH EMAIL</Text>
+          <Text style={{fontFamily: "MontserratBold", color: "#2DCC70", fontSize: 30, marginTop: 20, marginBottom: 20}}>Welcome Back</Text>
 
           <InputField placeholder="Email address" fn={setEmail} styling={{
             marginTop: 20,
@@ -96,20 +82,27 @@ const Login = () => {
           <InputField placeholder="Password" fn={setPassword} isPassword={true} styling={{
             marginBottom: 20,
             backgroundColor: "#e1e1e3",
-            borderRadius: 15, 
+            borderRadius: 15,
             width: 300, 
             height: 50.53,
             paddingLeft: 20,
             fontFamily: "MontserratMedium"
           }}/>
           <AuthButton text="Sign In" fn={handleSubmit} style={{
-            marginTop: 20,
+            marginTop: 40,
             width: 300, 
             height: 50.53,
             borderRadius: 38,
           }}/>
         </View>
       </View>
+
+      {isLoading && 
+        <View style={SpinnerStyles.container}>
+          <ActivityIndicator size={70} color="09E4AF"/>
+        </View>
+      }
+
     </SafeAreaView>
   )
 }
