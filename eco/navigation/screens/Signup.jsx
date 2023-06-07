@@ -101,16 +101,21 @@ const Signup = () => {
         </View>
       </View>
 
-      <View style={{
-        position: "absolute",
-        top: 0,
-        bottom: 0,
-        right: 0,
-        left: 0
-      }}
-      >
-        <SignupSuccess/>
-      </View>
+      {signupSuccess && 
+      <>
+        <View style={modal.overlay}></View>
+        <View style={{
+          position: "absolute",
+          top: 0,
+          bottom: 0,
+          right: 0,
+          left: 0
+        }}
+        >
+          <SignupSuccess/>
+        </View>
+      </>
+      }
       
     </SafeAreaView>
   )
