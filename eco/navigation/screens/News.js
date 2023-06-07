@@ -1,9 +1,9 @@
 import { StatusBar } from 'expo-status-bar';
-import { Image, Text, View, Button, StyleSheet, ScrollView } from 'react-native';
+import { Image, Text, View, Button, StyleSheet, ScrollView,TouchableOpacity  } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-
+import { Alert } from 'react-native';
 function News() {
   const navigation = useNavigation();
   const [data, setData] = useState([]);
@@ -20,6 +20,8 @@ function News() {
       console.error('Error fetching data:', error);
     }
   };
+  
+
 
   return (
     <View style={styles.container}>
@@ -33,16 +35,20 @@ function News() {
         <View style={styles.newsContainer}>
           {data.map((item, index) => (
             <View key={index} style={styles.newsItem}>
-              <Image source={{ uri: item.image }} style={styles.newsImage} />
-              <View style={styles.overlayImages}>
-                <Image source={require('../../assets/comment.png')} style={styles.overlayImage} />
-                <Image source={require('../../assets/jaime.png')} style={styles.overlayImage} />
-              </View>
-              <View style={styles.newsInfo}>
+               <View style={styles.newsInfo}>
                 <Text style={styles.newsDate}>{item.date}</Text>
                 <Text style={styles.newsTitle}>{item.title}</Text>
                 <Text style={styles.newsSubtitle}>{item.subtitle}</Text> 
               </View>
+              <Image source={{ uri: item.image }} style={styles.newsImage} />
+              <View style={styles.overlayImages}>
+              
+                  
+     
+                <Image source={require('../../assets/jaime.png')} style={styles.jaimeImage} />
+                <Image source={require('../../assets/comment.png')} style={styles.overlayImage} />
+              </View>
+             
             </View> 
           ))}
         </View>
@@ -98,27 +104,31 @@ const styles = StyleSheet.create({
     height: 480,
     top: -150,
   },
-  jaimeImage: {
-    width: 50,
-    height: 50,
-    marginBottom: 10,
-  },
+  
   newsDate: {
     fontSize: 15,
     textAlign: 'right',
-    marginRight: 10,
-    top: -135,
+    marginleft: 20,
+    top: -50,
   },
   overlayImages: {
     position: 'absolute',
-    top: 340,
-    left: 0,
+    top: 485,
+    left: 15,
     flexDirection: 'row',
     alignItems: 'center',
   },
   overlayImage: {
-    width: 50
-  }
+    width: 30,
+    height: 30,
+    left: 20,
+    marginBottom: 20,
+  },
+  jaimeImage: {
+    width: 35,
+    height: 35,
+    marginBottom: 20,
+  },
 });
 
 export default News;
