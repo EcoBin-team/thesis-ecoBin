@@ -1,7 +1,7 @@
 import React from "react"
-import { View, Text, TouchableOpacity } from "react-native"
+import { View, Text, TouchableOpacity, SafeAreaView } from "react-native"
 import ImagePicker from "expo-image-picker"
-import { storage } from "../../../Backend/firebase/FirebaseApp"
+import { storage } from "../../../Backend/firebase/FirebaseApp.js"
 
 const ConfirmSignup = () => {
 
@@ -22,23 +22,17 @@ const ConfirmSignup = () => {
   }
 
   const uploadImage = async () => {
-    const response = await fetch(image.uri)
-    const blob = await response.blob()
-    const filename = image.uri.substring(image.uri.lastIndexOf("/")+1)
-    var ref = storage.ref().child(filename).put(blob)
+    await axios.post("https://ecobin.onrender.com/users/upload",{
+      image: image
+    }) // TODO : needs to be finished
 
-    try{
-      await ref
-    }
-    catch(error){
-      console.log(error)
-    }
   }
 
   return (
-    <View>
-
-    </View>
+    <SafeAreaView>
+      <TouchableOpacity onPress={pickImage}>pick image</TouchableOpacity>
+      <TouchableOpacity onPress={uploadImage}>upload image</TouchableOpacity>
+    </SafeAreaView>
   )
 }
 
