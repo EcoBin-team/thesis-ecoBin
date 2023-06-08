@@ -1,7 +1,7 @@
 import React from "react"
 import { View, Text, TouchableOpacity, SafeAreaView } from "react-native"
 import ImagePicker from "expo-image-picker"
-import { storage } from "../../../Backend/firebase/FirebaseApp.js"
+//import { storage } from "../../../Backend/firebase/FirebaseApp.js"
 
 const ConfirmSignup = () => {
 

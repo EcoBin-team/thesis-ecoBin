@@ -158,6 +158,8 @@ const styles = StyleSheet.create({
   },
   textStartedStyle: {
     fontWeight: "bold",
+    color: "white",
+    
   },
   bottomContent: {
     flex: 1,
