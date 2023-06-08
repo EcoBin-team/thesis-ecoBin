@@ -7,28 +7,25 @@ import axios from 'axios';
 import { Pressable } from "react-native";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 
-function news() {
+function News() {
   const navigation = useNavigation();
   const [liked, setLiked] = useState(false);
   const [data, setData] = useState([]);
   const [count, setCount] = useState(0);
   const [show, setShow] = useState(false);
-  
+
   useEffect(() => {
     fetchData();
   }, []);
 
   const fetchData = async () => {
     try {
-      const response = await axios.get('http://192.168.43.71:3000/feeds');
+      const response = await axios.get('http://192.168.100.6:3000/feeds');
       setData(response.data);
     } catch (error) {
       console.error('Error fetching data:', error);
     }
   };
-
-
- 
 
   const handleClose = () => {
     setShow(false);
@@ -38,63 +35,45 @@ function news() {
     setShow(true);
   };
 
-  
-
- 
-
   return (
     <View style={styles.container}>
+    
+             
       <StatusBar style="auto" />
-      <Image source={require('../assets/logo.png')} style={styles.logoImage} />
-      <View style={styles.overlayImages}>
-                <TouchableWithoutFeedback onPress={handleShow}>
-                  <Image source={require('../assets/comment.png')} style={styles.overlayImage} />
-                </TouchableWithoutFeedback>
-                  <Pressable onPress={() => setLiked((isLiked) => !isLiked)}>
-      <MaterialCommunityIcons
-        name={liked ? "heart" : "heart-outline"}
-        size={32}
-        color={liked ? "red" : "#2DCC70"}
-      />
-    </Pressable>
-              </View>
-
+     
+   
       <ScrollView contentContainerStyle={styles.scrollContainer}>
         <View style={styles.logoContainer}></View>
+        <Image source={require('../../assets/logo.png')} style={styles.logoImage} />
 
         <View style={styles.newsContainer}>
+        
           {data.map((item, index) => (
             <View key={index} style={styles.newsItem}>
-              <Image source={{ uri: item.image }} style={styles.newsImage} />
-              <View style={styles.overlayImages}>
-                <TouchableWithoutFeedback onPress={handleShow}>
-                  <Image source={require('../assets/comment.png')}  />
-                </TouchableWithoutFeedback>
-                <View style={styles.newsInfo}>
-                <Text style={styles.newsDate}>{item.name}</Text>
-                <Text style={styles.newsTitle}>{item.title}</Text>
-                <Text style={styles.newsSubtitle}>{item.subtitle}</Text>
-              </View>
-                <Pressable onPress={() => setLiked((isLiked) => !isLiked)}>
-      <MaterialCommunityIcons
-        name={liked ? "heart" : "heart-outline"}
-        size={32}
-        color={liked ? "red" : "#2DCC70"}
-      />
-    </Pressable>
-                {/* <TouchableWithoutFeedback onPress={handle}>
-          <Image source={require('../assets/jaime.png')} style={[styles.overlayImage, { backgroundColor: jaimeBackground }]} />
-        </TouchableWithoutFeedback> */}
-
-      
-                
-           
-              </View>
+              
+              
               <View style={styles.newsInfo}>
                 <Text style={styles.newsDate}>{item.date}</Text>
-                <Text style={styles.newsTitle}>{item.title}</Text>
-                <Text style={styles.newsSubtitle}>{item.subtitle}</Text>
+                <Text style={styles.newsTitle}>{item.Title}</Text>
+                <Text style={styles.newsSubtitle}>{item.Subtitle}</Text>
               </View>
+           
+              <Image source={{ uri: item.Image }} style={styles.newsImage} />
+
+              
+              <TouchableWithoutFeedback onPress={handleShow}>
+                <Image source={require('../../assets/comment.png')} />
+              </TouchableWithoutFeedback>
+           
+              <Pressable onPress={() => setLiked((isLiked) => !isLiked)}>
+                <MaterialCommunityIcons
+                  name={liked ? "heart" : "heart-outline"}
+                  size={32}
+                  color={liked ? "red" : "#2DCC70"}
+                />
+              </Pressable>
+
+             
             </View>
           ))}
         </View>
@@ -103,18 +82,15 @@ function news() {
           <View style={styles.modalContainer}>
             <View style={styles.modalContent}>
               <Text>Write your comment</Text>
-            
               <TextInput
                 style={styles.input}
                 placeholder="Enter your comment"
                 // value={updatedMovie.name}
                 // onChangeText={(text) => setUpdatedMovie({ ...updatedMovie, name: text })}
               />
-  
               <View style={styles.buttonContainer}>
                 <Button title="Close" onPress={handleClose} />
-                <Button title="post"/>
-             
+                <Button title="Post" />
               </View>
             </View>
           </View>
@@ -128,9 +104,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
   },
-//   overImage:{
-// backgroundColor:'red'
-//   },
   scrollContainer: {
     flexGrow: 1,
     alignItems: 'center',
@@ -148,16 +121,37 @@ const styles = StyleSheet.create({
     backgroundColor: '#9CFFE7',
   },
   newsContainer: {
-   
-
     paddingTop: 150, // Adjust this value based on the logo height and desired spacing
     paddingBottom: 20,
     alignItems: 'center',
   },
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
+  newsItem: {
+    marginBottom: 20,
+  },
+  overlayImage: {
+    position: 'absolute',
+    top: 10,
+    right: 10,
+    width: 32,
+    height: 32,
+  },
+  newsImage: {
+    width: 200,
+    height: 200,
+  },
+  newsInfo: {
+    marginTop: 10,
+  },
+  newsDate: {
+    fontSize: 16,
+    fontWeight: 'bold',
+  },
+  newsTitle: {
+    fontSize: 18,
+    fontWeight: 'bold',
+  },
+  newsSubtitle: {
+    fontSize: 14,
   },
   modalContainer: {
     flex: 1,
@@ -181,6 +175,6 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-around',
   },
+});
 
-})
-export default news;
+export default News;
