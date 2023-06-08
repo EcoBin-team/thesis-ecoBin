@@ -1,5 +1,4 @@
 import React from 'react';
-
 import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import Ionicons from 'react-native-vector-icons/Ionicons';
@@ -7,16 +6,18 @@ import { Image, View } from 'react-native';
 // Screens
 import News from '../navigation/screens/News';
 import DetailsScreen from './screens/DetailsScreen';
-import SettingsScreen from './screens/SettingsScreen';
+import Search from './screens/Search';
 import Account from './screens/Account';
 import Recycle from './screens/Recycle';
+import DepotProfile from './screens/DepotProfile';
 
 // Screen names
 const NewsName = "News";
 const detailsName = "Details";
 const RecycleName = 'Recycle';
-const settingsName = "Settings";
+const SearchName = "Search";
 const AccountName = 'Account';
+const DepotName = "DepotProfile"
 
 const Tab = createBottomTabNavigator();
 
@@ -37,8 +38,8 @@ function MainContainer() {
 
           } else if (rn === RecycleName) {
             return <CustomRecycleIcon />;
-          } else if (rn === settingsName) {
-            iconName = focused ? 'settings' : 'settings-outline';
+          } else if (rn === SearchName) {
+            iconName = focused ? 'Search' : 'Search-outline';
           } else if (rn === AccountName) {
             iconName = focused ? 'person' : 'person-outline';
           }
@@ -56,8 +57,9 @@ function MainContainer() {
       <Tab.Screen name={NewsName} component={News} />
       <Tab.Screen name={detailsName} component={DetailsScreen} />
       <Tab.Screen name={RecycleName} component={Recycle} />
-      <Tab.Screen name={settingsName} component={SettingsScreen} />
+      <Tab.Screen name={SearchName} component={Search} />
       <Tab.Screen name={AccountName} component={Account} />
+      <Tab.Screen name={DepotName} component={DepotProfile} />
     </Tab.Navigator>
   );
 }
