@@ -5,8 +5,7 @@ import axios from "axios"
 import { v4 as uuidv4 } from "uuid";
 import 'react-native-get-random-values';
 import { uploadBytes, getDownloadURL, ref } from "firebase/storage"
-
-import { apiKey } from "../../secret" // .env alternative
+import ImagePicker from "expo-image-picker"
 import { app, storage } from "../../firebase/FirebaseApp"
 
 // this function will let the user pick an image from his phone to upload as a profile picture
