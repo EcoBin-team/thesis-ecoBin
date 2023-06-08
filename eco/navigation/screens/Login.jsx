@@ -39,7 +39,7 @@ const Login = () => {
     setIsLoading(true) // Displaying the ActivityIndicator (Spinner)
 
     // sending an http request to the server to return an id and a token
-    const response = await axios.post(`http://10.0.2.2:3000/users/login`,{email: email, password: password})
+    const response = await axios.post(`https://ecobin.onrender.com/users/login`,{email: email, password: password})
     console.log(response.data)
 
     // alert if email written is not found in the database

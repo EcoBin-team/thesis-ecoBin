@@ -14,6 +14,7 @@ import SignupSuccess from "../../components/SignupSuccess/SignupSuccess";
 import SpinnerStyles from "../../styles/ActivityIndicator.styles"
 import modal from "../../styles/modalBackground.styles"
 import ConfirmSignup from "./ConfirmSignup";
+import Logo from "../../components/Logo/Logo";
 
 const Signup = () => {
 
@@ -75,8 +76,7 @@ const Signup = () => {
 
           <View style={{display: "flex", justifyContent: "center", alignItems: "center", marginTop: 25}}>
             <BackButton fn={() => navigation.navigate("Home")} style={{top: 30}}/>
-            <Image source={require("../../assets/Earth.png")}/>
-            <Text style={{fontFamily: "MontserratBold", color: "#2DCC70", fontSize: 26, marginTop: 20, marginBottom: 20}}>Create Your Account</Text>
+            {/* <Logo/> */}
 
             <InputField placeholder="Full Name" fn={setName}/>
             <InputField placeholder="Email address" fn={setEmail}/>
@@ -113,8 +113,11 @@ const Signup = () => {
           </View>
         }
       </>
+
     :
+
     <ConfirmSignup/>
+
     }
           
     </SafeAreaView>

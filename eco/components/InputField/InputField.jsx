@@ -10,7 +10,7 @@ const InputField = ({fn,placeholder,isPassword,styling}) => {
       secureTextEntry={isPassword}
       style={{
         marginTop: 20,
-        backgroundColor: "#e1e1e3",
+        backgroundColor: "#ECECEC",
         borderRadius: 15, 
         width: 300, 
         height: 50.53,
