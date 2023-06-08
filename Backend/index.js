@@ -5,6 +5,7 @@ const cors = require("cors");
 const supabaseConnect = require("./supabase/Supabase_Connect");
 const userRouter = require("./routes/routerUser")
 const depotRouter = require("./routes/depotRouter")
+const SearchRouter = require("./routes/searchRouter")
 
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
@@ -16,7 +17,7 @@ app.use((req, res, next) => {
 });
 app.use("/users", userRouter)
 app.use("/", depotRouter)
-
+app.use("/", SearchRouter)
 
 
 
