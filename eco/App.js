@@ -12,6 +12,7 @@ import Login from './navigation/screens/Login';
 import Home from './navigation/screens/Home'
 import Signup from './navigation/screens/Signup'
 import ConfirmSignup from "./navigation/screens/ConfirmSignup";
+import Map from "./navigation/screens/Map";
 const Stack = createStackNavigator();
 
 const App = () => {
@@ -61,6 +62,11 @@ const App = () => {
         <Stack.Screen
           name="ConfirmSignup"
           component={ConfirmSignup}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="Map"
+          component={Map}
           options={{ headerShown: false }}
         />
          <Stack.Screen
