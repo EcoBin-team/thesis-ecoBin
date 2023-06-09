@@ -8,7 +8,7 @@ const DepotProfile = () => {
   useEffect(() => {
     // Axios GET request to fetch depot data from the backend
     axios
-      .get("http://192.168.1.100:3000/depots")
+      .get("http://192.168.104.7:3000/depots")
       .then((response) => {
         setDepots(response.data);
       })

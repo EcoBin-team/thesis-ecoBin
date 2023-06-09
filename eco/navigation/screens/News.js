@@ -20,7 +20,7 @@ function News() {
 
   const fetchData = async () => {
     try {
-      const response = await axios.get('http://192.168.100.6:3000/feeds');
+      const response = await axios.get('http://192.168.104.7:3000/feeds');
       setData(response.data);
     } catch (error) {
       console.error('Error fetching data:', error);
