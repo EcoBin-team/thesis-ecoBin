@@ -1,5 +1,6 @@
 require("dotenv").config()
 const { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword } = require("firebase/auth")
+const { ref, uploadBytes, getDownloadURL } = require("firebase/storage")
 
 const { app, storage } = require("../firebase/FirebaseApp")
 const supabase = require("../supabase/Supabase_Connect")
@@ -64,25 +65,5 @@ module.exports = {
       res.send(errorCode)
     }
   },
-
-  uploadImage: async (req,res) => {
-
-    const { image } = req.body
-
-    const response = await fetch(image.uri)
-    const blob = await response.blob()
-    const filename = image.uri.substring(image.uri.lastIndexOf("/")+1)
-    var ref = storage.ref().child(filename).put(blob)
-
-    try{
-      await ref
-      res.send("image uploaded")
-    }
-    catch(error){
-      console.log(error)
-      res.send("upload failed")
-    }
-
-  }
 
 }

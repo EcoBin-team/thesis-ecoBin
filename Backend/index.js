@@ -9,9 +9,15 @@ const feedsRouter = require("./routes/routerfeeds")
 
 const depotRouter = require("./routes/depotRouter")
 const SearchRouter = require("./routes/searchRouter")
+
 const cartRouter = require("./routes/routerCart")
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
+
+
+app.use(express.urlencoded({ extended: true, limit: "10mb" }));
+app.use(express.json({limit: "10mb"}));
+
 app.use(cors());
 
 app.use((req, res, next) => {
