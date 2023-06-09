@@ -1,11 +1,17 @@
 import React from "react"
 import { View, TouchableOpacity, Image } from "react-native"
 
-const Camera = ({fn}) => {
+const Camera = ({fn,image}) => {
   
   return(
     <View>
-      <Image source={require("../../assets/ImageContainer.png")}/>
+      {image ? 
+        <Image source={{uri: image}} style={{width: 208, height: 208, borderRadius: 100}}/>
+      :
+        <Image source={require("../../assets/ImageContainer.png")}/>
+      
+      }
+
       <TouchableOpacity style={{
         position: "absolute",
         top: 150,

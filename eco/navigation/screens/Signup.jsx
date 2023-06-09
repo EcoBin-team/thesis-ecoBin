@@ -3,16 +3,15 @@ import { View, Text, SafeAreaView, Image, ActivityIndicator, Alert } from "react
 import { useNavigation } from "@react-navigation/native";
 import axios from "axios";
 import CheckBox from "@react-native-community/checkbox" // TODO: add a checkbox
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 // components imports
 import InputField from "../../components/InputField/InputField";
 import BackButton from "../../components/BackButton/BackButton";
 import AuthButton from "../../components/AuthButton/AuthButton";
-import SignupSuccess from "../../components/SignupSuccess/SignupSuccess";
 
 // styles imports
 import SpinnerStyles from "../../styles/ActivityIndicator.styles"
-import modal from "../../styles/modalBackground.styles"
 import ConfirmSignup from "./ConfirmSignup";
 import Logo from "../../components/Logo/Logo";
 
@@ -30,7 +29,6 @@ const Signup = () => {
   const [isChecked,setIsChecked] = useState(false)
   const [isLoading,setIsLoading] = useState(false)
   const [done,setDone] = useState(false)
-  const [signupSuccess,setSignupSuccess] = useState(false)
   const regexpName = /[a-z]/gi
 
   const handleSubmit = async () => {
@@ -38,7 +36,7 @@ const Signup = () => {
     setIsLoading(true)
 
     // sending an http request to the server to create the account
-    const response = await axios.post("https://ecobin.onrender.com/users/signup", {
+    const response = await axios.post("http://10.0.2.2:3000/users/signup", {
       email: email,
       password: password,
       name: name,
@@ -60,7 +58,8 @@ const Signup = () => {
     }
     
     else{
-      setSignupSuccess(true) // changes a state to show the sign up success modal
+      setDone(true) // changes a state to show the sign up success modal
+      AsyncStorage.setItem("currentUser", response.data)
     }
 
     setIsLoading(false) // hiding the ActivityIndicator (Spinner) after the data loads
@@ -69,7 +68,7 @@ const Signup = () => {
 
   return (
     <SafeAreaView>
-      {done ?
+      {!done ?
       
       <>
         <View>
@@ -90,22 +89,6 @@ const Signup = () => {
             }}/>
           </View>
         </View>
-
-        {signupSuccess && 
-          <>
-            <View style={modal.overlay}></View>
-            <View style={{
-              position: "absolute",
-              top: 0,
-              bottom: 0,
-              right: 0,
-              left: 0
-            }}
-            >
-              <SignupSuccess/>
-            </View>
-          </>
-        }
 
         {isLoading && 
           <View style={SpinnerStyles.container}>
