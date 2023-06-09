@@ -12,6 +12,7 @@ import Camera from "../../components/Camera/Camera";
 import InputField from "../../components/InputField/InputField"
 import AuthButton from "../../components/AuthButton/AuthButton"
 import SignupSuccess from "../../components/SignupSuccess/SignupSuccess"
+import { server_url } from "../../secret";
 
 import modal from "../../styles/modalBackground.styles"
 
@@ -68,6 +69,7 @@ const ConfirmSignup = () => {
     blob.close()
 
     const url = await getDownloadURL(fileRef)
+    console.log(url)
     setImageUrl(url)
 
     setUploadedImage(true)
@@ -78,7 +80,7 @@ const ConfirmSignup = () => {
     const id = AsyncStorage.getItem("currentUser")
     console.log(id)
 
-    axios.put("http://10.0.2.2:3000/users/nextSignup",{
+    axios.put(`${server_url}/users/nextSignup`,{
       id: id,
       image: imageUrl,
       phone: phone,

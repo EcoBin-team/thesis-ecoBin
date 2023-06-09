@@ -9,6 +9,7 @@ import BackButton from "../../components/BackButton/BackButton";
 import Facebook from "../../components/LoginWith/Facebook";
 import Google from "../../components/LoginWith/Google";
 import AuthButton from "../../components/AuthButton/AuthButton";
+import { server_url } from "../../secret";
 
 import SpinnerStyles from "../../styles/ActivityIndicator.styles";
 
@@ -39,7 +40,7 @@ const Login = () => {
     setIsLoading(true) // Displaying the ActivityIndicator (Spinner)
 
     // sending an http request to the server to return an id and a token
-    const response = await axios.post(`https://ecobin.onrender.com/users/login`,{email: email, password: password})
+    const response = await axios.post(`${server_url}/users/login`,{email: email, password: password})
     console.log(response.data)
 
     // alert if email written is not found in the database

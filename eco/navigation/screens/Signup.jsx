@@ -10,6 +10,9 @@ import InputField from "../../components/InputField/InputField";
 import BackButton from "../../components/BackButton/BackButton";
 import AuthButton from "../../components/AuthButton/AuthButton";
 
+// secret file import
+import { server_url } from "../../secret"; 
+
 // styles imports
 import SpinnerStyles from "../../styles/ActivityIndicator.styles"
 import ConfirmSignup from "./ConfirmSignup";
@@ -36,7 +39,7 @@ const Signup = () => {
     setIsLoading(true)
 
     // sending an http request to the server to create the account
-    const response = await axios.post("http://10.0.2.2:3000/users/signup", {
+    const response = await axios.post(`${server_url}/users/signup`, {
       email: email,
       password: password,
       name: name,
