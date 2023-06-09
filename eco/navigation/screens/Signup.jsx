@@ -62,7 +62,7 @@ const Signup = () => {
     
     else{
       setDone(true) // changes a state to show the sign up success modal
-      AsyncStorage.setItem("currentUser", response.data)
+      await AsyncStorage.setItem("currentUser", response.data)
     }
 
     setIsLoading(false) // hiding the ActivityIndicator (Spinner) after the data loads

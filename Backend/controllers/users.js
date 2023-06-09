@@ -45,16 +45,22 @@ module.exports = {
     }
   },
 
+  // 2nd phase of signup
   nextSignUp: async (req,res) => {
     
-    const { id, image, phone, address } = req.body
+    const { id, image, phone, address, role } = req.body
 
     const { data, error } = await supabase
     .from("users")
-    .update({image: image, phone: phone, address: address})
+    .update({
+      image: image, 
+      phone: phone, 
+      address: address,
+      role: role
+    })
     .eq("id", id)
     
-    res.send(data)
+    res.send(`updated user ${id}`)
   },
 
   // login function to return the id and a token

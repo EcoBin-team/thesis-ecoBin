@@ -1,5 +1,5 @@
 import React, { useState } from "react"
-import { View, Text, TouchableOpacity, SafeAreaView, Image, StyleSheet } from "react-native"
+import { View, Text, TouchableOpacity, SafeAreaView, ActivityIndicator, StyleSheet, Alert } from "react-native"
 import * as ImagePicker from 'expo-image-picker'
 import axios from "axios"
 import { v4 as uuidv4 } from "uuid";
@@ -15,39 +15,46 @@ import SignupSuccess from "../../components/SignupSuccess/SignupSuccess"
 import { server_url } from "../../secret";
 
 import modal from "../../styles/modalBackground.styles"
+import SpinnerStyles from "../../styles/ActivityIndicator.styles"
 
 
 // this function will let the user pick an image from his phone to upload as a profile picture
 const ConfirmSignup = () => {
 
   //2nd phase of signing up
-  const [image,setImage] = useState(null) // image that user will upload as a profile picture
-  const [imageUrl,setImageUrl] = useState("")
-  const [uploadedImage,setUploadedImage] = useState(false)
+  const [imageUrl,setImageUrl] = useState("") // image url that will be retrieved from firebase storage after uploading
   const [phone,setPhone] = useState("")
   const [address,setAddress] = useState("")
-  const [selected,setSelected] = useState("basic")
+  const [selected,setSelected] = useState("basic") // account role that user selected
   const [isLoading,setIsLoading] = useState(false)
-  const [signupSuccess,setsignupSuccess] = useState(false)
+  const [signupSuccess,setSignupSuccess] = useState(false)
 
   const pickImage = async () => {
+
+    // asking for the user's permission to access his image library
+    const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync()
+    if(status !== "granted"){
+      Alert.alert("Access Denied", "Library access revoked.")
+    }
+
     // allowing the user pick an image as a profile picture
     var result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.All,
       allowsEditing: true,
       aspect: [4,3],
-      quality: 0.3
+      quality: 0.2
     })
 
     if (!result.canceled) {
-      setImage(result.assets[0].uri)
+      uploadImage(result.assets[0].uri) // invoking upload function to upload image to firebase storage
     }
 
-    uploadImage() // invoking upload function to upload image to firebase storage
   }
 
   // this function sends a post request to the server to upload the image picked by the user
-  const uploadImage = async () => {
+  const uploadImage = async (imageUri) => {
+
+    setIsLoading(true)
 
     const blob = await new Promise((resolve, reject) => {
       const xhr = new XMLHttpRequest()
@@ -59,7 +66,7 @@ const ConfirmSignup = () => {
         reject(new TypeError("Network request failed"))
       }
       xhr.responseType = "blob"
-      xhr.open("GET", image, true)
+      xhr.open("GET", imageUri, true)
       xhr.send(null)
     })
   
@@ -69,29 +76,43 @@ const ConfirmSignup = () => {
     blob.close()
 
     const url = await getDownloadURL(fileRef)
-    console.log(url)
     setImageUrl(url)
 
-    setUploadedImage(true)
+    setIsLoading(false)
+
   }
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
 
-    const id = AsyncStorage.getItem("currentUser")
-    console.log(id)
+    // returning alert if user did not write needed details
+    if(imageUrl === ""){
+      return Alert.alert("Signup Failed", "Please choose an image.")
+    }
+    else if(phone.length < 6){
+      return Alert.alert("Signup Failed", "Please type a phone number.")
+    }
+    else if(address.length === 0){
+      return Alert.alert("Signup Failed", "Please type an address.")
+    }
+    
 
-    axios.put(`${server_url}/users/nextSignup`,{
+    const id = await AsyncStorage.getItem("currentUser")
+
+    await axios.put(`${server_url}/users/nextSignup`,{
       id: id,
       image: imageUrl,
       phone: phone,
-      address: address
+      address: address,
+      role: selected
     })
+
+    setSignupSuccess(true) // showing sign up success modal
   }
 
   return (
     <SafeAreaView>
       <View style={{justifyContent: "center", alignItems: "center", marginTop: 50}}>
-          <Camera fn={pickImage} image={uploadedImage ? imageUrl : null}/>
+          <Camera fn={pickImage} image={imageUrl!== null ? imageUrl : null}/>
 
           <InputField fn={setPhone} placeholder="Phone"/>
           <InputField fn={setAddress} placeholder="Address"/>
