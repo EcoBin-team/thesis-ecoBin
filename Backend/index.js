@@ -22,8 +22,8 @@ app.use(cors());
 
 app.use((req, res, next) => {
   req.supabase = supabaseConnect;
-  next();
-});
+  next()
+})
 app.use("/users", userRouter)
 
 

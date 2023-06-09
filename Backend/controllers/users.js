@@ -36,13 +36,25 @@ module.exports = {
         email: email,
       })
       
-      res.send("Account Created!")
+      res.send(user.uid)
     }
 
     catch(error) {
       const errorCode = error.code
       res.send(errorCode)
     }
+  },
+
+  nextSignUp: async (req,res) => {
+    
+    const { id, image, phone, address } = req.body
+
+    const { data, error } = await supabase
+    .from("users")
+    .update({image: image, phone: phone, address: address})
+    .eq("id", id)
+    
+    res.send(data)
   },
 
   // login function to return the id and a token
