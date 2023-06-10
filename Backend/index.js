@@ -32,7 +32,7 @@ app.use("/", feedsRouter)
 
 app.use("/", depotRouter)
 app.use("/", SearchRouter)
-app.use('/carts', cartRouter)
+app.use('/', cartRouter)
 
 
 app.listen(3000, () => {
