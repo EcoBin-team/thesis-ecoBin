@@ -5,7 +5,7 @@ const supabase = require("../supabase/Supabase_Connect")
 const depotController = {
   getAllDepots: async (req ,res) => {
     try {
-        const { data: depots, error } = await supabase.from('Depot').select('*');
+        const { data: depots, error } = await supabase.from('depot').select('*');
     
         if (error) {
           throw new Error(error.message);
@@ -22,7 +22,7 @@ const depotController = {
 
     try {
       const feed = await supabase
-        .from('Depot')
+        .from('depot')
         .select('*')
         .eq('id', id)
         .single();
