@@ -1,131 +1,213 @@
-import React from 'react';
+import React, { useContext, useState, useEffect } from 'react';
 import { View, Image, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import { MaterialIcons, FontAwesome } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
+import { Feather } from '@expo/vector-icons';
+import { UserContext } from '../MainContainer';
 
-const ProfileDetails = ({ name, bio, profileImage, address, email }) => {
+const ProfileDetails = () => {
+  const [userDetails, setUserDetails] = useState(null);
+  const userData = useContext(UserContext);
   const navigation = useNavigation();
+
+  useEffect(() => {
+    fetchUserDetails();
+  }, []);
+
+  const fetchUserDetails = async () => {
+    try {
+      const response = await fetch(`http://10.0.2.2:3000/users/user/${userData.id}`);
+      const data = await response.json();
+      setUserDetails(data);
+    } catch (error) {
+      console.log('Error fetching user details:', error);
+    }
+  };
+
+  console.log(userData);
   const handleAboutMePress = () => {
-    navigation.navigate('AboutMe',{
+    navigation.navigate('AboutMe', {
       userDetails: {
-        name,
-        bio,
-        profileImage,
-        address,
-        email,
+        id: userDetails?.id,
+        name: userDetails?.name,
+        balance: userDetails?.balance,
+        image: userDetails?.profileImage,
+        address: userDetails?.address,
+        email: userDetails?.email,
+        phone: userDetails?.phone,
       },
-    })
-  }
+    });
+  };
+  const handleSignOut = () => {
+    setUserDetails(null);
+    userData(null);
+    navigation.navigate('Home');
+  };
+
+  useEffect(() => {
+    if (userData) {
+      fetchUserDetails();
+    }
+  }, [userData]);
 
   return (
     <View style={styles.container}>
-      <Image
-        source={{
-          uri:
-            'https://images.prismic.io/utopix-next-website/Mzk0NGJkOWEtY2ZlYS00MjVjLTkwNTAtOGY5OWQzN2IzNGVi_762cec57-2eaf-4eaf-9a0d-2e7860147e48_profilhomme7.jpg?ixlib=js-3.7.1&w=3840&auto=format&fit=max',
-        }}
-        style={styles.profileImage}
-      />
-      <Text style={styles.name}>bosri</Text>
-      <Text style={styles.bio}>
-        <FontAwesome name="dollar" size={20} color="#09E4AF" /> 10 ECOBIN Points
-      </Text>
-
+      <View>
+        <View style={styles.profileImageContainer}>
+          <Image
+            source={
+              userDetails?.image
+                ? { uri: userDetails.image }
+                : require('../../assets/avatarVide.png')
+            }
+            style={styles.profileImage}
+          />
+          <TouchableOpacity style={styles.cameraIcon}>
+            <FontAwesome name="camera" size={24} color="white" />
+          </TouchableOpacity>
+        </View>
+        <Text style={styles.name}>{userDetails?.name}</Text>
+        <Text style={styles.bio}>
+          <FontAwesome name="dollar" size={20} color="#09E4AF" /> {userDetails?.balance} ECOBIN Points
+        </Text>
+      </View>
       <View style={styles.infoContainer}>
         <View style={styles.info}>
-        <MaterialIcons name="person" size={24} color="gray" />
+          <MaterialIcons name="person" size={24} color="gray" />
           <Text style={styles.infoTitle}>About Me</Text>
-          <TouchableOpacity style={styles.infoButton} onPress={ handleAboutMePress}>
+          <TouchableOpacity style={styles.infoButton} onPress={handleAboutMePress}>
             <MaterialIcons name="keyboard-arrow-right" size={24} color="gray" />
           </TouchableOpacity>
         </View>
 
         <View style={styles.info}>
-        <MaterialIcons name="credit-card" size={24} color="gray" />
+          <MaterialIcons name="credit-card" size={24} color="gray" />
           <Text style={styles.infoTitle}>Debit Card</Text>
-          <TouchableOpacity style={styles.infoButton} onPress={() => console.log('handleChangePassword')}>
+          <TouchableOpacity
+            style={styles.infoButton}
+            onPress={() => console.log('handleChangePassword')}
+          >
             <MaterialIcons name="keyboard-arrow-right" size={24} color="gray" />
           </TouchableOpacity>
         </View>
 
         <View style={styles.info}>
-        <MaterialIcons name="shopping-cart" size={24} color="gray" />
+          <MaterialIcons name="shopping-cart" size={24} color="gray" />
           <Text style={styles.infoTitle}>My Orders</Text>
-          <TouchableOpacity style={styles.infoButton} onPress={() => console.log('onPressMyOrders')}>
+          <TouchableOpacity
+            style={styles.infoButton}
+            onPress={() => console.log('onPressMyOrders')}
+          >
             <MaterialIcons name="keyboard-arrow-right" size={24} color="gray" />
           </TouchableOpacity>
         </View>
 
         <View style={styles.info}>
-        <MaterialIcons name="notifications" size={24} color="gray" />
+          <MaterialIcons name="notifications" size={24} color="gray" />
           <Text style={styles.infoTitle}>Notifications</Text>
-          <TouchableOpacity style={styles.infoButton} onPress={() => console.log('onPressNotifications')}>
+          <TouchableOpacity
+            style={styles.infoButton}
+            onPress={() => console.log('onPressNotifications')}
+          >
             <MaterialIcons name="keyboard-arrow-right" size={24} color="gray" />
           </TouchableOpacity>
         </View>
       </View>
-
-      <TouchableOpacity style={styles.signOutButton} onPress={() => console.log('onPressSignOut')}>
-        <Text style={styles.signOutButtonText}>Sign Out</Text>
-      </TouchableOpacity>
-      
-    
+      <View style={styles.signOutContainer}>
+        <TouchableOpacity style={styles.signOutButton} onPress={handleSignOut}>
+          <Feather style={styles.signOutButtonText} name="log-out" size={20} color="black" />
+          <Text style={styles.signOutButtonText}>Sign Out</Text>
+        </TouchableOpacity>
+      </View>
     </View>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
-    alignItems: 'center',
-    justifyContent: 'center',
-    padding: 16,
+    position: 'relative',
+    width: 430,
+    backgroundColor: '#F2F3F7',
+  },
+  profileImageContainer: {
+    top: 50,
+    position: 'relative',
+    width: 114,
+    height: 117,
+    alignSelf: 'center',
+    marginTop: 16,
   },
   profileImage: {
-    width: 130,
-    height: 130,
-    borderRadius: 75,
-    marginBottom: 16,
+    borderRadius: 50,
+    width: 114,
+    height: 117,
+  },
+  cameraIcon: {
+    position: 'absolute',
+    bottom: 0,
+    right: 0,
+    backgroundColor: '#28B446',
+    borderRadius: 12,
+    padding: 4,
   },
   name: {
-    fontSize: 30,
-    fontWeight: 'bold',
-    marginBottom: 8,
+    top: 60,
+    alignSelf: 'center',
+    marginTop: 8,
+    fontSize: 15,
+    fontWeight: '600',
   },
   bio: {
+    top: 80,
+    alignSelf: 'center',
+    marginTop: 8,
     color: '#09E4AF',
     fontSize: 20,
-    textAlign: 'center',
-    marginBottom: 16,
   },
   infoContainer: {
-    alignItems: 'flex-start',
-    marginBottom: 16,
-    width: '100%',
+    position: 'absolute',
+    top: 347,
+    backgroundColor: 'white',
+    width: 430,
+    height: 200,
   },
   info: {
+    top: 10,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
     marginBottom: 20,
-    width: '100%',
+    marginHorizontal: 10,
+    left: 0,
   },
   infoTitle: {
-    marginLeft: 8,
-    fontSize: 16,
     flex: 1,
+    marginLeft: 8,
+    fontSize: 15,
+    fontWeight: '600',
   },
   infoButton: {
+    width: 50,
     marginLeft: 8,
   },
+  signOutContainer: {
+    position: 'absolute',
+    width: 430,
+    top: 610,
+  },
   signOutButton: {
-    backgroundColor: 'red',
-    padding: 12,
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: 'white',
+    height: 48,
     borderRadius: 8,
   },
   signOutButtonText: {
-    color: 'white',
+    left: 20,
+    marginLeft: 8,
     fontSize: 16,
     fontWeight: 'bold',
+    color: 'red',
   },
 });
 

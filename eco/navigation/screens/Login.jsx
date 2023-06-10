@@ -40,7 +40,7 @@ const Login = () => {
 
     // sending an http request to the server to return an id and a token
     const response = await axios.post(`http://10.0.2.2:3000/users/login`,{email: email, password: password})
-    console.log(response.data)
+    
 
     // alert if email written is not found in the database
     if(response.data === "auth/user-not-found"){
@@ -54,7 +54,8 @@ const Login = () => {
 
     else{
       await AsyncStorage.setItem("currentUser",JSON.stringify(response.data)) // storing the id and token in the local storage
-      navigation.navigate("MainContainer") // navigates to Newspage
+      navigation.navigate("MainContainer",{ userData: response.data }) // navigates to Newspage and send it to MainContainer component
+      console.log(userData)
     }
 
     setIsLoading(false) // hiding the ActivityIndicator (Spinner) after the data loads
