@@ -95,6 +95,55 @@ const cartController = {
       return res.status(500).json({ error: "Internal server error" });
     }
   },
+  getCartProducts: async (req, res) => {
+    const { userId } = req.params; // Retrieve the userId from request parameters
+  
+    try {
+      const { data: user, error } = await supabase
+        .from('users')
+        .select('cart')
+        .eq('id', userId)
+        .single();
+  
+      if (error || !user) {
+        return res.status(404).json({ error: 'User not found' });
+      }
+  
+      const cart = user.cart || []; // Get the cart array from the user data
+      const { data: products, error: productError } = await supabase
+        .from('Shop')
+        .select()
+        .in('id', cart);
+  
+      if (productError || !products) {
+        console.error('Failed to fetch cart products:', productError);
+        return res.status(500).json({ error: 'Failed to fetch cart products' });
+      }
+  
+      return res.json(products);
+    } catch (error) {
+      console.error('Error retrieving cart products:', error);
+      return res.status(500).json({ error: 'Internal server error' });
+    }
+  }
+,  
+getAllProducts: async (req, res) => {
+    try {
+      const { data: products, error } = await supabase
+        .from("Shop")
+        .select();
+
+      if (error || !products) {
+        console.error("Failed to fetch products:", error);
+        return res.status(500).json({ error: "Failed to fetch products" });
+      }
+
+      return res.json(products);
+    } catch (error) {
+      console.error("Error retrieving products:", error);
+      return res.status(500).json({ error: "Internal server error" });
+    }
+  }
 };
 
 module.exports = cartController;
