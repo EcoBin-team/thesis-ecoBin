@@ -17,13 +17,14 @@ const Map = () => {
   },[])
 
   const userLocation = async () => {
-    let { status } = await Location.requestForegroundPermissionsAsync()
+
+    var { status } = await Location.requestForegroundPermissionsAsync()
 
     if(status !== "granted"){
       Alert.alert("Location access denied", "Location access revoked.")
     }
 
-    var location = await Location.getCurrentPositionAsync({ enableHighAccuracy: true })
+    const location = await Location.getCurrentPositionAsync({ enableHighAccuracy: true })
     setMapRegion({
       latitude: location.coords.latitude,
       longitude: location.coords.longitude,
@@ -48,7 +49,7 @@ const Map = () => {
 const styles = StyleSheet.create({
   map: {
     width: "100%",
-    height: "100%"
+    height: "80%"
   }
 })
 
