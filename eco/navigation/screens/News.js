@@ -48,8 +48,12 @@ function News() {
 
   const fetchData = async () => {
     try {
+
       const response = await axios.get('http://10.0.2.2:3000/feeds');
       console.log('Fetched data:', response.data);
+
+      const response = await axios.get('http://192.168.104.7:3000/feeds');
+
       setData(response.data);
     } catch (error) {
       console.error('Error fetching data:', error);

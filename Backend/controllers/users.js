@@ -1,5 +1,6 @@
 require("dotenv").config()
 const { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword } = require("firebase/auth")
+const { ref, uploadBytes, getDownloadURL } = require("firebase/storage")
 
 const { app, storage } = require("../firebase/FirebaseApp")
 const supabase = require("../supabase/Supabase_Connect")
@@ -35,13 +36,31 @@ module.exports = {
         email: email,
       })
       
-      res.send("Account Created!")
+      res.send(user.uid)
     }
 
     catch(error) {
       const errorCode = error.code
       res.send(errorCode)
     }
+  },
+
+  // 2nd phase of signup
+  nextSignUp: async (req,res) => {
+    
+    const { id, image, phone, address, role } = req.body
+
+    const { data, error } = await supabase
+    .from("users")
+    .update({
+      image: image, 
+      phone: phone, 
+      address: address,
+      role: role
+    })
+    .eq("id", id)
+    
+    res.send(`updated user ${id}`)
   },
 
   // login function to return the id and a token
@@ -64,6 +83,7 @@ module.exports = {
       res.send(errorCode)
     }
   },
+
 
   uploadImage: async (req,res) => {
 
@@ -104,5 +124,6 @@ module.exports = {
       }
     }
   },
+
 
 }

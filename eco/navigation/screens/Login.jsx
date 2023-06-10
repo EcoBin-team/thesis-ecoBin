@@ -9,8 +9,10 @@ import BackButton from "../../components/BackButton/BackButton";
 import Facebook from "../../components/LoginWith/Facebook";
 import Google from "../../components/LoginWith/Google";
 import AuthButton from "../../components/AuthButton/AuthButton";
+import { server_url } from "../../secret";
 
 import SpinnerStyles from "../../styles/ActivityIndicator.styles";
+import styles from "../../styles/Signup.styles";
 
 const Login = () => {
 
@@ -39,7 +41,7 @@ const Login = () => {
     setIsLoading(true) // Displaying the ActivityIndicator (Spinner)
 
     // sending an http request to the server to return an id and a token
-    const response = await axios.post(`http://10.0.2.2:3000/users/login`,{email: email, password: password})
+    const response = await axios.post(`${server_url}/users/login`,{email: email, password: password})
     console.log(response.data)
 
     // alert if email written is not found in the database
@@ -66,34 +68,13 @@ const Login = () => {
       <View>
 
         <View style={{display: "flex", justifyContent: "center", alignItems: "center", marginTop: 25}}>
-          <BackButton fn={() => navigation.navigate("Home")} style={{top: 30}}/>
+          <BackButton fn={() => navigation.navigate("Home")} style={{marginRight: 270, top: 30}}/>
           <Image source={require("../../assets/Earth.png")}/>
           <Text style={{fontFamily: "MontserratBold", color: "#2DCC70", fontSize: 30, marginTop: 20, marginBottom: 20}}>Welcome Back</Text>
 
-          <InputField placeholder="Email address" fn={setEmail} styling={{
-            marginTop: 20,
-            backgroundColor: "#e1e1e3",
-            borderRadius: 15, 
-            width: 300, 
-            height: 50.53,
-            paddingLeft: 20,
-            fontFamily: "MontserratMedium"
-          }}/>
-          <InputField placeholder="Password" fn={setPassword} isPassword={true} styling={{
-            marginBottom: 20,
-            backgroundColor: "#e1e1e3",
-            borderRadius: 15,
-            width: 300, 
-            height: 50.53,
-            paddingLeft: 20,
-            fontFamily: "MontserratMedium"
-          }}/>
-          <AuthButton text="Sign In" fn={handleSubmit} style={{
-            marginTop: 40,
-            width: 300, 
-            height: 50.53,
-            borderRadius: 38,
-          }}/>
+          <InputField placeholder="Email address" fn={setEmail}/>
+          <InputField placeholder="Password" fn={setPassword} isPassword={true}/>
+          <AuthButton text="Sign In" fn={handleSubmit} style={styles.auth}/>
         </View>
       </View>
 
