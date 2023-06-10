@@ -77,19 +77,13 @@ const Signup = () => {
         <View>
 
           <View style={{display: "flex", justifyContent: "center", alignItems: "center", marginTop: 25}}>
-            <BackButton fn={() => navigation.navigate("Home")} style={{top: 30}}/>
+            <BackButton fn={() => navigation.navigate("Home")} style={{marginRight: 270, top: 30}}/>
             {/* <Logo/> */}
 
             <InputField placeholder="Full Name" fn={setName}/>
             <InputField placeholder="Email address" fn={setEmail}/>
             <InputField placeholder="Password" fn={setPassword} isPassword={true}/>
-            <AuthButton text="Sign Up" fn={handleSubmit} style={{
-              marginTop: 40,
-              marginBottom: 150,
-              width: 300, 
-              height: 50.53,
-              borderRadius: 38,
-            }}/>
+            <AuthButton text="Sign Up" fn={handleSubmit} style={styles.signupAuth}/>
           </View>
         </View>
 
