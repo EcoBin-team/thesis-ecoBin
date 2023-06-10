@@ -53,10 +53,10 @@ const Login = () => {
     else if(response.data === "auth/wrong-password"){
       Alert.alert("Login Failed", "Wrong Password.")
     }
-
+   
     else{
       await AsyncStorage.setItem("currentUser",JSON.stringify(response.data)) // storing the id and token in the local storage
-      navigation.navigate("MainContainer") // navigates to Newspage
+      navigation.navigate("MainContainer",{ userData: response.data }) // navigates to Newspage
     }
 
     setIsLoading(false) // hiding the ActivityIndicator (Spinner) after the data loads
