@@ -30,7 +30,7 @@ app.use("/users", userRouter)
 
 app.use("/", feedsRouter)
 
-app.use("/", depotRouter)
+app.use("/depots", depotRouter)
 app.use("/", SearchRouter)
 app.use('/carts', cartRouter)
 
