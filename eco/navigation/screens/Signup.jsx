@@ -3,17 +3,20 @@ import { View, Text, SafeAreaView, Image, ActivityIndicator, Alert } from "react
 import { useNavigation } from "@react-navigation/native";
 import axios from "axios";
 import CheckBox from "@react-native-community/checkbox" // TODO: add a checkbox
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 // components imports
 import InputField from "../../components/InputField/InputField";
 import BackButton from "../../components/BackButton/BackButton";
 import AuthButton from "../../components/AuthButton/AuthButton";
-import SignupSuccess from "../../components/SignupSuccess/SignupSuccess";
+
+// secret file import
+import { server_url } from "../../secret"; 
 
 // styles imports
 import SpinnerStyles from "../../styles/ActivityIndicator.styles"
-import modal from "../../styles/modalBackground.styles"
 import ConfirmSignup from "./ConfirmSignup";
+import Logo from "../../components/Logo/Logo";
 
 const Signup = () => {
 
@@ -29,7 +32,6 @@ const Signup = () => {
   const [isChecked,setIsChecked] = useState(false)
   const [isLoading,setIsLoading] = useState(false)
   const [done,setDone] = useState(false)
-  const [signupSuccess,setSignupSuccess] = useState(false)
   const regexpName = /[a-z]/gi
 
   const handleSubmit = async () => {
@@ -37,7 +39,7 @@ const Signup = () => {
     setIsLoading(true)
 
     // sending an http request to the server to create the account
-    const response = await axios.post("https://ecobin.onrender.com/users/signup", {
+    const response = await axios.post(`${server_url}/users/signup`, {
       email: email,
       password: password,
       name: name,
@@ -59,7 +61,8 @@ const Signup = () => {
     }
     
     else{
-      setSignupSuccess(true) // changes a state to show the sign up success modal
+      setDone(true) // changes a state to show the sign up success modal
+      await AsyncStorage.setItem("currentUser", response.data)
     }
 
     setIsLoading(false) // hiding the ActivityIndicator (Spinner) after the data loads
@@ -68,44 +71,21 @@ const Signup = () => {
 
   return (
     <SafeAreaView>
-      {done ?
+      {!done ?
       
       <>
         <View>
 
           <View style={{display: "flex", justifyContent: "center", alignItems: "center", marginTop: 25}}>
-            <BackButton fn={() => navigation.navigate("Home")} style={{top: 30}}/>
-            <Image source={require("../../assets/Earth.png")}/>
-            <Text style={{fontFamily: "MontserratBold", color: "#2DCC70", fontSize: 26, marginTop: 20, marginBottom: 20}}>Create Your Account</Text>
+            <BackButton fn={() => navigation.navigate("Home")} style={{marginRight: 270, top: 30}}/>
+            {/* <Logo/> */}
 
             <InputField placeholder="Full Name" fn={setName}/>
             <InputField placeholder="Email address" fn={setEmail}/>
             <InputField placeholder="Password" fn={setPassword} isPassword={true}/>
-            <AuthButton text="Sign Up" fn={handleSubmit} style={{
-              marginTop: 40,
-              marginBottom: 150,
-              width: 300, 
-              height: 50.53,
-              borderRadius: 38,
-            }}/>
+            <AuthButton text="Sign Up" fn={handleSubmit} style={styles.signupAuth}/>
           </View>
         </View>
-
-        {signupSuccess && 
-          <>
-            <View style={modal.overlay}></View>
-            <View style={{
-              position: "absolute",
-              top: 0,
-              bottom: 0,
-              right: 0,
-              left: 0
-            }}
-            >
-              <SignupSuccess/>
-            </View>
-          </>
-        }
 
         {isLoading && 
           <View style={SpinnerStyles.container}>
@@ -113,8 +93,11 @@ const Signup = () => {
           </View>
         }
       </>
+
     :
+
     <ConfirmSignup/>
+
     }
           
     </SafeAreaView>

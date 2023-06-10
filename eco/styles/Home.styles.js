@@ -6,6 +6,10 @@ const styles = StyleSheet.create({
     display: "flex",
     alignItems: "center",
     justifyContent: "center"
+  },
+  lowerText: {
+    fontFamily: "Montserrat",
+    fontSize: 10
   }
 })
 
