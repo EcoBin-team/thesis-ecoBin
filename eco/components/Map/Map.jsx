@@ -56,6 +56,7 @@ const Map = ({mapRegion,setMapRegion}) => {
           longitudeDelta: 0.0421
         }}
           image={depot}
+          title={e.name}
         />)}
 
       </MapView>

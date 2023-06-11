@@ -60,10 +60,15 @@ const Nearby = () => {
       </View>
 
       <ScrollView style={{height: "60%"}}>
+
         {isLoading && <Text> Loading...</Text>}
+
         {data.map( (e,i) => {
           return <Depot key={i} name={e.name} setMapRegion={setMapRegion} latitude={e.latitude} longitude={e.longitude} />
         })}
+
+        {!data.length && !isLoading && <Text>No</Text>}
+        
       </ScrollView>
       
       <Map mapRegion={mapRegion} setMapRegion={setMapRegion}/>

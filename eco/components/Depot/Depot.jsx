@@ -7,7 +7,7 @@ import styles from "../../styles/Depot.styles";
 const Depot = ({name, setMapRegion, latitude, longitude}) => {
 
   return(
-    <TouchableOpacity onPress={setMapRegion({
+    <TouchableOpacity onPress={() => setMapRegion({
       latitude: latitude,
       longitude: longitude,
       latitudeDelta: 0.0922,
