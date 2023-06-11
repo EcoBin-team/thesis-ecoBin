@@ -1,12 +1,29 @@
 import React, { useState } from "react";
-import { View, Text, SafeAreaView, StyleSheet, TextInput } from "react-native"
+import { View, Text, SafeAreaView, StyleSheet, TextInput, ScrollView, Alert } from "react-native"
+import axios from "axios";
 
+// common components imports
 import Map from "../../components/Map/Map";
 import BackButton from "../../components/BackButton/BackButton";
+
+// secret variable import
+import { server_url } from "../../secret";
 
 const Nearby = () => {
 
   const [query,setQuery] = useState("")
+  const [data,setData] = useState([])
+
+  const onQueryChange = (text) => {
+    setQuery(text)
+    searchDepot()
+  }
+
+  const searchDepot = async () => {
+
+    const response = await axios.get(`${server_url}/depots/searchDepot?${query}`)
+    setData(response.data)
+  }
 
   return(
     <SafeAreaView>
@@ -20,15 +37,17 @@ const Nearby = () => {
 
         <TextInput
           placeholder="Search Depots"
-          onChangeText={setQuery}
+          onChangeText={text => onQueryChange(text)}
           style={{margin: 20}}
         />
 
       </View>
 
-      <View>
-        
-      </View>
+      <ScrollView>
+        {data.length > 0 && data.map( (e,i) => {
+          return <Text key={i}>{e}</Text>
+        })}
+      </ScrollView>
       
       <Map/>
     </SafeAreaView>
