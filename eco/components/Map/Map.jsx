@@ -1,7 +1,13 @@
 import React, { useState, useEffect } from "react";
-import { View, Text, Dimensions, Alert, StyleSheet } from "react-native"
+import { View, Text, Alert, StyleSheet, FlatList } from "react-native"
 import MapView, { Marker } from "react-native-maps"
 import * as Location from "expo-location"
+import axios from "axios"
+
+// secret variable import
+import { server_url } from "../../secret"
+
+import depot from "../../assets/depot.png"
 
 const Map = () => {
 
@@ -11,10 +17,17 @@ const Map = () => {
     latitudeDelta: 0.0922,
     longitudeDelta: 0.0421
   })
+  const [depots,setDepots] = useState([])
 
   useEffect(() => {
-    userLocation()
+    userLocation() // getting user's location with gps
+    fetchDepots() // getting depots from database
   },[])
+
+  const fetchDepots = async () => {
+    const response = await axios.get(`${server_url}/depots/getAll`)
+    setDepots(response.data)
+  }
 
   const userLocation = async () => {
 
@@ -40,7 +53,17 @@ const Map = () => {
         style={styles.map}
         region={mapRegion}
       >
-        <Marker coordinate={mapRegion} title="Marker"/>
+        <Marker coordinate={mapRegion} title="You"/>
+
+        {depots.map( (e,i) => <Marker key={i} coordinate={{
+          latitude: e.latitude,
+          longitude: e.longitude,
+          latitudeDelta: 0.0922,
+          longitudeDelta: 0.0421
+        }}
+          image={depot}
+        />)}
+
       </MapView>
     </View>
   )

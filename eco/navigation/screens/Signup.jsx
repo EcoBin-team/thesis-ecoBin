@@ -17,6 +17,7 @@ import { server_url } from "../../secret";
 import SpinnerStyles from "../../styles/ActivityIndicator.styles"
 import ConfirmSignup from "./ConfirmSignup";
 import Logo from "../../components/Logo/Logo";
+import styles from "../../styles/Signup.styles"
 
 const Signup = () => {
 
@@ -83,7 +84,7 @@ const Signup = () => {
             <InputField placeholder="Full Name" fn={setName}/>
             <InputField placeholder="Email address" fn={setEmail}/>
             <InputField placeholder="Password" fn={setPassword} isPassword={true}/>
-            <AuthButton text="Sign Up" fn={handleSubmit} style={styles.signupAuth}/>
+            <AuthButton text="Sign Up" fn={handleSubmit} style={styles.auth}/>
           </View>
         </View>
 
