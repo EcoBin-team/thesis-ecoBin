@@ -13,9 +13,6 @@ import WalkthroughScreen from './component/WalkthroughScreen';
 import Login from './navigation/screens/Login';
 import Home from './navigation/screens/Home'
 import Signup from './navigation/screens/Signup'
-import ConfirmSignup from "./navigation/screens/ConfirmSignup";
-import Nearby from "./navigation/screens/Nearby";
-
 const Stack = createStackNavigator();
 
 const App = () => {
@@ -48,8 +45,6 @@ const App = () => {
           options={{ headerShown: false }}
         /> */}
           <Stack.Screen
-        /> 
-         <Stack.Screen
           name="Login"
           component={Login}
           options={{ headerShown: false }}
@@ -66,25 +61,10 @@ const App = () => {
         />  */}
 
          {/* <Stack.Screen
-
-
-        <Stack.Screen
-          name="ConfirmSignup"
-          component={ConfirmSignup}
-          options={{ headerShown: false }}
-        />
-        <Stack.Screen
-          name="Nearby"
-          component={Nearby}
-          options={{ headerShown: false }}
-        />
-
-         <Stack.Screen
           name="WalkthroughScreen"
           component={WalkthroughScreen}
           options={{ headerShown: false }}
         /> */}
-        /> 
         <Stack.Screen
           name="MainContainer"
           component={MainContainer}

@@ -1,5 +1,6 @@
 
-
+const express = require('express');
+const router = express.Router();
 const { login, signUp, getAll, nextSignUp, getUserById,updateUserById } = require("../controllers/users")
 
 router.get("/getAll", getAll) // route to retrieve all users

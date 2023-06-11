@@ -1,23 +1,45 @@
-import { StatusBar } from 'expo-status-bar';
-import { Image, Text, View, Button, StyleSheet, ScrollView } from 'react-native';
+import React, { useContext, useState, useEffect } from 'react';
+import { View, Text, StyleSheet, ScrollView, Image, Modal, TextInput, TouchableOpacity, Pressable, Alert,Dimensions } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { UserContext } from '../MainContainer';
 import axios from 'axios';
-
+import { StatusBar } from 'expo-status-bar';
+import { MaterialCommunityIcons } from '@expo/vector-icons';
+import Comments from '../../components/comments/Comments'
+const windowWidth = Dimensions.get('window').width;
+const windowHeight = Dimensions.get('window').height;
 function News() {
   const userData = useContext(UserContext);
   const navigation = useNavigation();
   const [liked, setLiked] = useState(false);
   const [data, setData] = useState([]);
+  const [show, setShow] = useState(false);
+  const [commentText, setCommentText] = useState('');
+  const [userDetails, setUserDetails] = useState(null);
+  const [postId, setPostId] = useState("");
+
+  console.log('userData.id:', userData.id);
 
   useEffect(() => {
     fetchData();
     fetchUserDetails();
   }, []);
 
+  const fetchUserDetails = async () => {
+    try {
+      const response = await fetch(`http://10.0.2.2:3000/users/user/${userData.id}`);
+      const data = await response.json();
+      console.log('User details:', data);
+      setUserDetails(data);
+    } catch (error) {
+      console.log('Error fetching user details:', error);
+    }
+  };
+
   const fetchData = async () => {
     try {
-      const response = await axios.get('http://192.168.43.71:3000/feeds');
+      const response = await axios.get('http://10.0.2.2:3000/feeds');
+      console.log('Fetched data:', response.data);
       setData(response.data);
     } catch (error) {
       console.error('Error fetching data:', error);
@@ -64,9 +86,8 @@ function News() {
     
       <StatusBar style="auto" />
       <ScrollView contentContainerStyle={styles.scrollContainer}>
-        <View style={styles.logoContainer}>
-       
-        </View>
+        <View style={styles.logoContainer}></View>
+        <Image source={require('../../assets/logo.png')} style={styles.logoImage} />
 
         <View style={styles.newsContainer}>
           {data.map((item, index) => (
@@ -75,8 +96,25 @@ function News() {
                 <Text style={styles.newsTitle}>{item.Title}</Text>
                 <Text style={styles.newsSubtitle}>{item.Subtitle}</Text>
                 <Text style={styles.newsDate}>{item.date}</Text>
-                <Text style={styles.newsTitle}>{item.title}</Text>
-                <Text style={styles.newsSubtitle}>{item.subtitle}</Text> 
+              </View>
+
+              <Image source={{ uri: item.Image }} style={styles.newsImage} />
+
+              <View style={styles.actionsContainer}>
+              <View style={styles.commentContainer}>
+  <Pressable onPress={() => handleShow(item.id)}  >
+    <MaterialCommunityIcons name="comment" size={24} color="black" />
+  </Pressable>
+</View>
+
+<TouchableOpacity onPress={() => setLiked((isLiked) => !isLiked)} style={styles.like}>
+  <MaterialCommunityIcons
+    name={liked ? 'thumb-up' : 'thumb-up-outline'} // Replace with the desired like icon from MaterialCommunityIcons
+    size={24}
+    color={liked ? '#6CC51D' : 'black'}
+  />
+  <Text style={styles.likeText}>{liked ? 'Liked' : 'Like'}</Text>
+</TouchableOpacity>
               </View>
             </View>
           ))}
