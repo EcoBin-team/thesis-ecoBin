@@ -4,15 +4,16 @@ import { MaterialIcons, FontAwesome } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 import { Feather } from '@expo/vector-icons';
 import { UserContext } from '../MainContainer';
-
+import { useRoute } from '@react-navigation/native';
 const ProfileDetails = () => {
   const [userDetails, setUserDetails] = useState(null);
   const userData = useContext(UserContext);
   const navigation = useNavigation();
+  const route = useRoute();
+  // const updatedUser = route.params?.updatedUser
+  
+  
 
-  useEffect(() => {
-    fetchUserDetails();
-  }, []);
 
   const fetchUserDetails = async () => {
     try {
@@ -29,13 +30,8 @@ const ProfileDetails = () => {
     navigation.navigate('AboutMe', {
       userDetails: {
         id: userDetails?.id,
-        name: userDetails?.name,
-        balance: userDetails?.balance,
-        image: userDetails?.profileImage,
-        address: userDetails?.address,
-        email: userDetails?.email,
-        phone: userDetails?.phone,
       },
+       // Add the updatedUser parameter
     });
   };
   const handleSignOut = () => {
@@ -45,10 +41,10 @@ const ProfileDetails = () => {
   };
 
   useEffect(() => {
-    if (userData) {
+ 
       fetchUserDetails();
-    }
-  }, [userData]);
+    
+  }, []);
 
   return (
     <View style={styles.container}>
@@ -68,7 +64,7 @@ const ProfileDetails = () => {
         </View>
         <Text style={styles.name}>{userDetails?.name}</Text>
         <Text style={styles.bio}>
-          <FontAwesome name="dollar" size={20} color="#09E4AF" /> {userDetails?.balance} ECOBIN Points
+          <FontAwesome name="dollar" size={20} color="#6CC51D" /> {userDetails?.balance} ECOBIN Points
         </Text>
       </View>
       <View style={styles.infoContainer}>
@@ -81,8 +77,8 @@ const ProfileDetails = () => {
         </View>
 
         <View style={styles.info}>
-          <MaterialIcons name="credit-card" size={24} color="gray" />
-          <Text style={styles.infoTitle}>Debit Card</Text>
+          <MaterialIcons name="attach-money" size={24} color="gray" />
+          <Text style={styles.infoTitle}>transaction</Text>
           <TouchableOpacity
             style={styles.infoButton}
             onPress={() => console.log('handleChangePassword')}
@@ -161,7 +157,7 @@ const styles = StyleSheet.create({
     top: 80,
     alignSelf: 'center',
     marginTop: 8,
-    color: '#09E4AF',
+    color: '#6CC51D',
     fontSize: 20,
   },
   infoContainer: {

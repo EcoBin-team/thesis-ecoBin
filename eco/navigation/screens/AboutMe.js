@@ -7,14 +7,14 @@ import BackButton from "../../components/BackButton/BackButton";
 const AboutMe = () => {
   const navigation = useNavigation();
   const route = useRoute();
-  const { userDetails } = route.params;
-  const [name, setName] = useState(userDetails.name);
-  const [phone, setPhone] = useState(userDetails.phone);
-  const [address, setAddress] = useState(userDetails.address);
-  const [email, setEmail] = useState(userDetails.email);
+  const { userDetails, } = route.params;
+  const [name, setName] = useState(null);
+  const [phone, setPhone] = useState(null);
+  const [address, setAddress] = useState(null);
+  const [email, setEmail] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
-
- 
+  
+  
   useEffect(() => {
     
       fetchUserDetails(); // Fetch the user details when the screen comes into focus
@@ -31,6 +31,7 @@ const AboutMe = () => {
       setPhone(data.phone);
       setAddress(data.address);
       setEmail(data.email);
+     
     } catch (error) {
       console.log('Error fetching user details:', error);
     }
@@ -60,6 +61,7 @@ const AboutMe = () => {
         setPhone(updatedData.phone);
         setAddress(updatedData.address);
         setEmail(updatedData.email);
+        console.log(updatedUser)
 
         Alert.alert('Success', 'Settings saved successfully', [
           {
@@ -83,7 +85,7 @@ const AboutMe = () => {
           text: 'OK',
           onPress: async () => {
            ;
-            navigation.goBack({ // Pass the updated user details when navigating back
+           navigation.goBack({ // Pass the updated user details when navigating back
               params: {
                 updatedUser: {
                   name,
@@ -96,6 +98,7 @@ const AboutMe = () => {
           },
         },
       ]);
+      
     } finally {
       setIsLoading(false);
     }
