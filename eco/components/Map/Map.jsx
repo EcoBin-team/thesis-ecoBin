@@ -9,14 +9,8 @@ import { server_url } from "../../secret"
 
 import depot from "../../assets/depot.png"
 
-const Map = () => {
+const Map = ({mapRegion,setMapRegion}) => {
 
-  const [mapRegion,setMapRegion] = useState({
-    latitude: 0,
-    longitude: 0,
-    latitudeDelta: 0.0922,
-    longitudeDelta: 0.0421
-  })
   const [depots,setDepots] = useState([])
 
   useEffect(() => {
@@ -72,7 +66,7 @@ const Map = () => {
 const styles = StyleSheet.create({
   map: {
     width: "100%",
-    height: "80%"
+    height: "65%",
   }
 })
 
