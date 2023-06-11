@@ -1,5 +1,6 @@
 require("dotenv").config()
 const { initializeApp } = require("firebase/app")
+const { getStorage } = require("firebase/storage")
 
 // firebase config with secret variables
 const firebaseConfig = {
@@ -12,5 +13,6 @@ const firebaseConfig = {
 }
 
 const app = initializeApp(firebaseConfig) // initializing a firebase app to call in controllers
+const storage = getStorage(app) // getting a firebase storage instance
 
-module.exports = app
+module.exports = { app, storage }

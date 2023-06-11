@@ -87,4 +87,7 @@ const postComment = async (req, res) => {
 
 
 
+
+
 module.exports = { getOneFeed, getAllFeeds,postComment,getAllComments };
+
