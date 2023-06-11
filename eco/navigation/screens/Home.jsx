@@ -28,7 +28,7 @@ const Home = () => {
                         <Text style={{fontFamily: "MontserratBold", fontSize: 28, color: "#2DCC70"}}>Welcome</Text>
                         <Text style={{marginTop: 20, color: "#80D48F", fontFamily: "Montserrat"}}>Care about waste management</Text>
                         <Text style={{color: "#80D48F", fontFamily: "Montserrat"}}>Care about the future</Text>
-                        <TouchableOpacity style={{borderRadius: 38, backgroundColor: "#09E4AF", alignItems: "center", padding: 10, width: 300, marginTop: 20}} onPress={() => navigation.navigate("Login")}>
+                        <TouchableOpacity style={{borderRadius: 38, backgroundColor: "#09E4AF", alignItems: "center", padding: 10, width: 300, marginTop: 20}} onPress={() => navigation.navigate("Nearby")}>
                             <Text style={{fontFamily: "MontserratRegular", color: "white", fontSize: 20}}>Sign In</Text>
                         </TouchableOpacity>
                         <TouchableOpacity style={{borderRadius: 38, backgroundColor: "inherit", alignItems: "center", padding: 10, width: 300, borderColor: "#09E4AF", borderWidth: 2, marginTop: 10}} onPress={() => navigation.navigate("Signup")}>
