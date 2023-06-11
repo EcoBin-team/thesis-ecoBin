@@ -135,33 +135,7 @@ const postLike = async (req, res) => {
 
 
 
-const deleteLike = async (req, res) => {
-  const { postId, userId } = req.params;
 
-  console.log('Received deleteLike request with postId:', postId);
-  console.log('Received deleteLike request with userId:', userId);
-
-  try {
-    // Delete the like from the database
-    const { data: like, error } = await supabase
-      .from('likes')
-      .delete()
-      .match({ postid: postId, userid: userId })
-      .single();
-
-    if (error) {
-      console.error(error); // Log the error to the console for debugging
-      throw new Error(error.message);
-    }
-
-    console.log('Deleted like:', like);
-
-    res.status(200).json(like);
-  } catch (error) {
-    console.error(error); // Log the error to the console for debugging
-    res.status(500).json({ error: error.message });
-  }
-};
 
 const getAllLikesByPostId = async (req, res) => {
   const { postId } = req.params;
@@ -186,6 +160,32 @@ const getAllLikesByPostId = async (req, res) => {
   }
 };
 
+const deleteLike = async (req, res) => {
+  const { postId, userId } = req.params;
+
+  console.log('Received deleteLike request with postId:', postId);
+  console.log('Received deleteLike request with userId:', userId);
+
+  try {
+    // Delete the like from the database
+    const { data: likes, error } = await supabase
+      .from('likes')
+      .delete()
+      .match({ postid: postId, userid: userId });
+
+    if (error) {
+      console.error(error); // Log the error to the console for debugging
+      throw new Error(error.message);
+    }
+
+    console.log('Deleted like:', likes);
+
+    res.status(200).json({ message: 'Like deleted successfully' });
+  } catch (error) {
+    console.error(error); // Log the error to the console for debugging
+    res.status(500).json({ error: error.message });
+  }
+};
 
 
 

@@ -1,34 +1,36 @@
 import React, { useContext, useState, useEffect } from 'react';
-import { View, Text, StyleSheet, ScrollView, Image, Modal, TextInput, TouchableOpacity, Pressable, Alert,Dimensions } from 'react-native';
+import {
+  View,
+  Text,
+  StyleSheet,
+  ScrollView,
+  Image,
+  Modal,
+  TextInput,
+  TouchableOpacity,
+  Pressable,
+  Alert,
+  Dimensions,
+} from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { UserContext } from '../MainContainer';
 import axios from 'axios';
 import { StatusBar } from 'expo-status-bar';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
-import Comments from '../../components/Comments/Comments'
+import Comments from '../../components/Comments/Comments';
+
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
+
 function News() {
   const userData = useContext(UserContext);
   const navigation = useNavigation();
-  const [liked, setLiked] = useState(false);
   const [data, setData] = useState([]);
   const [show, setShow] = useState(false);
   const [commentText, setCommentText] = useState('');
   const [userDetails, setUserDetails] = useState(null);
-  const [postId, setPostId] = useState("")
-  const [likeCount, setLikeCount] = useState(0);
- 
-  const handleLike = () => {
-    if (liked) {
-      setLikeCount(likeCount - 1);
-    } else {
-      setLikeCount(likeCount + 1);
-    }
-    setLiked(!liked);
-  };
-
-  console.log('userData.id:', userData.id);
+  const [postId, setPostId] = useState("");
+  const [likeStatus, setLikeStatus] = useState({});
 
   useEffect(() => {
     fetchData();
@@ -51,6 +53,12 @@ function News() {
       const response = await axios.get('http://10.0.2.2:3000/feeds');
       console.log('Fetched data:', response.data);
       setData(response.data);
+
+      const initialLikeStatus = {};
+      response.data.forEach((post) => {
+        initialLikeStatus[post.id] = false;
+      });
+      setLikeStatus(initialLikeStatus);
     } catch (error) {
       console.error('Error fetching data:', error);
     }
@@ -65,6 +73,27 @@ function News() {
     setPostId(id);
   };
 
+  const handleLike = async (postId) => {
+    try {
+      // Check if the post is already liked
+      if (likeStatus[postId]) {
+        // Dislike the post
+        await axios.delete(`http://10.0.2.2:3000/likes/${postId}/${userData.id}`);
+      } else {
+        // Like the post
+        await axios.post(`http://10.0.2.2:3000/feeds/${postId}/postLike`, { userId: userData.id });
+      }
+
+      // Toggle the like status
+      setLikeStatus((prevStatus) => ({
+        ...prevStatus,
+        [postId]: !prevStatus[postId],
+      }));
+    } catch (error) {
+      console.error('Error handling like:', error);
+    }
+  };
+
   const handlePostComment = async (postId) => {
     setCommentText("");
     try {
@@ -77,6 +106,10 @@ function News() {
       });
 
       if (!response.ok) {
+       
+
+
+   
         throw new Error('Error posting comment');
       }
 
@@ -118,16 +151,14 @@ function News() {
   </Pressable>
 </View>
 
-<TouchableOpacity onPress={() => handleLike()} style={styles.like}>
-    <MaterialCommunityIcons
-      name={liked ? 'thumb-up' : 'thumb-up-outline'}
-      size={24}
-      color={liked ? '#6CC51D' : 'black'}
-    />
-    <Text style={styles.likeText}>{liked ? 'Liked' : 'Like'}</Text>
-    <Text style={styles.likeCount}>{likeCount}</Text>
-  </TouchableOpacity>
-
+<TouchableOpacity onPress={() => handleLike(item.id)} style={styles.like}>
+              <MaterialCommunityIcons
+                name={likeStatus[item.id] ? 'thumb-up' : 'thumb-up-outline'}
+                size={24}
+                color={likeStatus[item.id] ? 'blue' : 'black'}
+              />
+              <Text style={styles.likeText}>{likeStatus[item.id] ? 'Liked' : 'Like'}</Text>
+            </TouchableOpacity>
               </View>
             </View>
           ))}

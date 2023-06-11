@@ -18,7 +18,7 @@ const Comments = ({ postId }) => {
     try {
       const response = await fetch(`http://10.0.2.2:3000/feeds/${postId}/comments`);
       const data = await response.json();
-      console.log(data);
+      // console.log(data);
 
       if (Array.isArray(data)) {
         const commentsWithUserDetails = await Promise.all(
