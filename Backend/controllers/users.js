@@ -84,4 +84,46 @@ module.exports = {
     }
   },
 
+
+  uploadImage: async (req,res) => {
+
+    const { image } = req.body
+
+    const response = await fetch(image.uri)
+    const blob = await response.blob()
+    const filename = image.uri.substring(image.uri.lastIndexOf("/")+1)
+    var ref = storage.ref().child(filename).put(blob)
+
+    try{
+      await ref
+      res.send("image uploaded")
+    }
+    catch(error){
+      console.log(error)
+      res.send("upload failed")
+    }
+
+  },
+  getUserById: async (req, res) => {
+    const { id } = req.params;
+  
+    const { data, error } = await supabase
+      .from("users")
+      .select("*")
+      .eq("id", id);
+  
+    if (error) {
+      res.status(500).send(error);
+    } else {
+      if (data.length === 1) {
+        res.send(data[0]); // Return the single user object
+      } else if (data.length === 0) {
+        res.status(404).send("User not found");
+      } else {
+        res.status(500).send("Multiple users found"); // Handle the case of multiple users with the same ID
+      }
+    }
+  },
+
+
 }

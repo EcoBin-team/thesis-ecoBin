@@ -44,7 +44,7 @@ const App = () => {
           name="LaunchPage"
           component={LaunchPage}
           options={{ headerShown: false }}
-        />
+        /> 
          <Stack.Screen
           name="Login"
           component={Login}
@@ -60,6 +60,9 @@ const App = () => {
           component={Signup}
           options={{ headerShown: false }}
         />
+
+
+
         <Stack.Screen
           name="ConfirmSignup"
           component={ConfirmSignup}
@@ -70,11 +73,12 @@ const App = () => {
           component={Nearby}
           options={{ headerShown: false }}
         />
+
          <Stack.Screen
           name="WalkthroughScreen"
           component={WalkthroughScreen}
           options={{ headerShown: false }}
-        />
+        /> 
         <Stack.Screen
           name="MainContainer"
           component={MainContainer}
