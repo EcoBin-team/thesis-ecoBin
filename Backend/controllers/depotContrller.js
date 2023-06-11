@@ -35,7 +35,25 @@ const depotController = {
     } catch (error) {
       res.status(500).json({ error: error.message });
     }
-} }
+  },
+
+  searchDepot: async (req,res) => {
+
+    const { query } = req.query
+
+    const { data, error } = await supabase
+    .from("depot")
+    .select()
+    .textSearch("name", query)
+
+    if(error){
+      console.log(error)
+    }
+
+    res.send(data)
+
+  }
+}
   
 
 module.exports = depotController

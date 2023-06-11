@@ -1,19 +1,29 @@
-import React from "react";
-import { View, Text, SafeAreaView, StyleSheet } from "react-native"
+import React, { useState } from "react";
+import { View, Text, SafeAreaView, StyleSheet, TextInput } from "react-native"
 
 import Map from "../../components/Map/Map";
 import BackButton from "../../components/BackButton/BackButton";
 
 const Nearby = () => {
 
+  const [query,setQuery] = useState("")
+
   return(
     <SafeAreaView>
       
       <View style={{backgroundColor: "white"}}>
+
         <View style={styles.upperContainer}>
           <BackButton style={{margin: 15}}/>
           <Text style={styles.nearby}>Nearby</Text>
         </View>
+
+        <TextInput
+          placeholder="Search Depots"
+          onChangeText={setQuery}
+          style={{margin: 20}}
+        />
+
       </View>
 
       <View>
