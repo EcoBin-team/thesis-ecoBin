@@ -8,12 +8,12 @@ const AboutMe = () => {
   const navigation = useNavigation();
   const route = useRoute();
   const { userDetails, } = route.params;
-  const [name, setName] = useState(userDetails.name);
-  const [phone, setPhone] = useState(userDetails.phone);
-  const [address, setAddress] = useState(userDetails.address);
-  const [email, setEmail] = useState(userDetails.email);
+  const [name, setName] = useState(null);
+  const [phone, setPhone] = useState(null);
+  const [address, setAddress] = useState(null);
+  const [email, setEmail] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
-  const [updatedUser, setUpdatedUser] = useState(null);
+  
   
   useEffect(() => {
     
@@ -31,7 +31,7 @@ const AboutMe = () => {
       setPhone(data.phone);
       setAddress(data.address);
       setEmail(data.email);
-      setUpdatedUser(data);
+     
     } catch (error) {
       console.log('Error fetching user details:', error);
     }
@@ -61,6 +61,7 @@ const AboutMe = () => {
         setPhone(updatedData.phone);
         setAddress(updatedData.address);
         setEmail(updatedData.email);
+        console.log(updatedUser)
 
         Alert.alert('Success', 'Settings saved successfully', [
           {
@@ -97,6 +98,7 @@ const AboutMe = () => {
           },
         },
       ]);
+      
     } finally {
       setIsLoading(false);
     }

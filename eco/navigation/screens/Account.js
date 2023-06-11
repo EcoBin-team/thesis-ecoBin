@@ -30,14 +30,8 @@ const ProfileDetails = () => {
     navigation.navigate('AboutMe', {
       userDetails: {
         id: userDetails?.id,
-        name: userDetails?.name,
-        balance: userDetails?.balance,
-        image: userDetails?.profileImage,
-        address: userDetails?.address,
-        email: userDetails?.email,
-        phone: userDetails?.phone,
       },
-      // Add the updatedUser parameter
+       // Add the updatedUser parameter
     });
   };
   const handleSignOut = () => {
@@ -70,7 +64,7 @@ const ProfileDetails = () => {
         </View>
         <Text style={styles.name}>{userDetails?.name}</Text>
         <Text style={styles.bio}>
-          <FontAwesome name="dollar" size={20} color="#09E4AF" /> {userDetails?.balance} ECOBIN Points
+          <FontAwesome name="dollar" size={20} color="#6CC51D" /> {userDetails?.balance} ECOBIN Points
         </Text>
       </View>
       <View style={styles.infoContainer}>
@@ -163,7 +157,7 @@ const styles = StyleSheet.create({
     top: 80,
     alignSelf: 'center',
     marginTop: 8,
-    color: '#09E4AF',
+    color: '#6CC51D',
     fontSize: 20,
   },
   infoContainer: {
