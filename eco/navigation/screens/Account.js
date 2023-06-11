@@ -4,15 +4,16 @@ import { MaterialIcons, FontAwesome } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 import { Feather } from '@expo/vector-icons';
 import { UserContext } from '../MainContainer';
-
+import { useRoute } from '@react-navigation/native';
 const ProfileDetails = () => {
   const [userDetails, setUserDetails] = useState(null);
   const userData = useContext(UserContext);
   const navigation = useNavigation();
+  const route = useRoute();
+  // const updatedUser = route.params?.updatedUser
+  
+  
 
-  useEffect(() => {
-    fetchUserDetails();
-  }, []);
 
   const fetchUserDetails = async () => {
     try {
@@ -36,6 +37,7 @@ const ProfileDetails = () => {
         email: userDetails?.email,
         phone: userDetails?.phone,
       },
+      // Add the updatedUser parameter
     });
   };
   const handleSignOut = () => {
@@ -45,10 +47,10 @@ const ProfileDetails = () => {
   };
 
   useEffect(() => {
-    if (userData) {
+ 
       fetchUserDetails();
-    }
-  }, [userData]);
+    
+  }, []);
 
   return (
     <View style={styles.container}>
@@ -81,8 +83,8 @@ const ProfileDetails = () => {
         </View>
 
         <View style={styles.info}>
-          <MaterialIcons name="credit-card" size={24} color="gray" />
-          <Text style={styles.infoTitle}>Debit Card</Text>
+          <MaterialIcons name="attach-money" size={24} color="gray" />
+          <Text style={styles.infoTitle}>transaction</Text>
           <TouchableOpacity
             style={styles.infoButton}
             onPress={() => console.log('handleChangePassword')}

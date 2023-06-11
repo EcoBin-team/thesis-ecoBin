@@ -23,7 +23,7 @@ const Comments = ({ postId }) => {
       if (Array.isArray(data)) {
         const commentsWithUserDetails = await Promise.all(
           data.map(async (comment) => {
-            const userResponse = await fetch(`http://10.0.2.2:3000/users/${comment.userid}`);
+            const userResponse = await fetch(`http://10.0.2.2:3000/users/user/${comment.userid}`);
             const userData = await userResponse.json();
             return { ...comment, username: userData.name, userImage: userData.image };
           })
