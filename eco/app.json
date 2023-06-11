@@ -11,6 +11,9 @@
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
+    "packagerOpts":{
+      "sourceExts": [ "js", "json", "ts", "tsx", "jsx", "vue"]
+    },
     "plugins": [
       [
         "expo-image-picker",
