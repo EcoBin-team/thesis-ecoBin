@@ -9,8 +9,12 @@ import LaunchPage from './component/LaunchPage';
 import MainContainer from './navigation/MainContainer';
 import WalkthroughScreen from './component/WalkthroughScreen';
 import Login from './navigation/screens/Login';
-import Home from './navigation/screens/Home'
-import Signup from './navigation/screens/Signup'
+import Home from './navigation/screens/Home';
+import Signup from './navigation/screens/Signup';
+import AboutUs from "./component/AboutUs";
+import ContactUs from "./component/ContactUs";
+import FAQ from "./component/FAQ";
+import Guide from "./component/Guide";
 const Stack = createStackNavigator();
 
 const App = () => {
