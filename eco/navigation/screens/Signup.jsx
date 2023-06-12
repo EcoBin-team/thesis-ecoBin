@@ -16,7 +16,7 @@ import { server_url } from "../../secret";
 // styles imports
 import SpinnerStyles from "../../styles/ActivityIndicator.styles"
 import ConfirmSignup from "./ConfirmSignup";
-import Logo from "../../components/Logo/Logo";
+import Logo from "../../components/Logo/Logo1";
 import styles from "../../styles/Signup.styles"
 
 const Signup = () => {
@@ -79,7 +79,7 @@ const Signup = () => {
 
           <View style={{display: "flex", justifyContent: "center", alignItems: "center", marginTop: 25}}>
             <BackButton fn={() => navigation.navigate("Home")} style={{marginRight: 270, top: 30}}/>
-            {/* <Logo/> */}
+            <Logo/>
 
             <InputField placeholder="Full Name" fn={setName}/>
             <InputField placeholder="Email address" fn={setEmail}/>
