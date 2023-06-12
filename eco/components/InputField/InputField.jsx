@@ -15,7 +15,8 @@ const InputField = ({fn,placeholder,isPassword,styling}) => {
         width: 300, 
         height: 50.53,
         paddingLeft: 20,
-        fontFamily: "MontserratMedium"
+        fontFamily: "MontserratMedium",
+        ...styling
       }}
     />
   )
