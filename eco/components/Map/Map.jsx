@@ -9,7 +9,7 @@ import { server_url } from "../../secret"
 
 import depot from "../../assets/depot.png"
 
-const Map = ({mapRegion,setMapRegion}) => {
+const Map = ({mapRegion, setMapRegion, userRegion, setUserRegion}) => {
 
   const [depots,setDepots] = useState([])
 
@@ -19,25 +19,29 @@ const Map = ({mapRegion,setMapRegion}) => {
   },[])
 
   const fetchDepots = async () => {
-    const response = await axios.get(`${server_url}/depots/getAll`)
+    const response = await axios.get(`${server_url}/depots/getAll`) // fetching all depots from database
     setDepots(response.data)
   }
 
   const userLocation = async () => {
 
-    var { status } = await Location.requestForegroundPermissionsAsync()
+    var { status } = await Location.requestForegroundPermissionsAsync() // asking user's permission to get location
 
+    // if the user has denied the requests, it returns an alert
     if(status !== "granted"){
       Alert.alert("Location access denied", "Location access revoked.")
     }
 
-    const location = await Location.getCurrentPositionAsync({ enableHighAccuracy: true })
-    setMapRegion({
+    const location = await Location.getCurrentPositionAsync({ enableHighAccuracy: true }) // getting the user's location
+
+    const foundLocation = {
       latitude: location.coords.latitude,
       longitude: location.coords.longitude,
       latitudeDelta: 0.0922,
       longitudeDelta: 0.0421
-    })
+    }
+    setMapRegion(foundLocation)
+    setUserRegion(foundLocation)
 
   }
 
@@ -47,7 +51,7 @@ const Map = ({mapRegion,setMapRegion}) => {
         style={styles.map}
         region={mapRegion}
       >
-        <Marker coordinate={mapRegion} title="You"/>
+        <Marker coordinate={userRegion} title="You"/>
 
         {depots.map( (e,i) => <Marker key={i} coordinate={{
           latitude: e.latitude,

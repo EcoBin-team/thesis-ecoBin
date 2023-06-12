@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { View, Text, SafeAreaView, TextInput, ScrollView } from "react-native"
 import axios from "axios";
+import Icon from "react-native-vector-icons/FontAwesome"
 
 // common components imports
 import Map from "../../components/Map/Map";
@@ -21,6 +22,12 @@ const Nearby = () => {
     latitudeDelta: 0.0922,
     longitudeDelta: 0.0421
   })
+  const [userRegion,setUserRegion] = useState({
+    latitude: 0,
+    longitude: 0,
+    latitudeDelta: 0.0922,
+    longitudeDelta: 0.0421
+  })
   const [query,setQuery] = useState("") // query that the user has written in the text field
   const [data,setData] = useState([]) // depots fetched from depots table
   const [isLoading,setIsLoading] = useState(false)
@@ -31,14 +38,15 @@ const Nearby = () => {
     }, 200) // adding delay so the server doesn't overload
   },[query])
 
+  // search function to filter depots according to the query written by the user
   const searchDepot = async () => {
 
-    setIsLoading(true)
+    setIsLoading(true) // showing loading indicator
 
     const response = await axios.get(`${server_url}/depots/searchDepot?query=${query}`)
-    setData(response.data)
+    setData(response.data) // sets data state to the returned depots from the server
 
-    setIsLoading(false)
+    setIsLoading(false) // hiding loading indicator
   }
 
   return(
@@ -51,27 +59,37 @@ const Nearby = () => {
           <Text style={styles.nearby}>Nearby</Text>
         </View>
 
-        <TextInput
-          placeholder="Search Depots"
-          onChangeText={setQuery}
-          style={{margin: 20}}
-        />
+        <View style={styles.searchContainer}>
+          <TextInput
+            placeholder="Search Depots"
+            onChangeText={setQuery}
+            style={styles.search}
+          />
+          <Icon name="search" size={20} style={styles.searchIcon}/>
+        </View>
 
       </View>
 
-      <ScrollView style={{height: "60%"}}>
-
-        {isLoading && <Text> Loading...</Text>}
+      <ScrollView style={{height: "60%"}} contentContainerStyle={{flexGrow: 1}}>
+        
+        <View style={styles.scrollContainer}>
+          {isLoading && <Text style={styles.loadingText}> Finding place...</Text>}
+          {!data.length && !isLoading && <Text style={styles.placeholderScroll}>Nearby depot center</Text>}
+        </View>
 
         {data.map( (e,i) => {
-          return <Depot key={i} name={e.name} setMapRegion={setMapRegion} latitude={e.latitude} longitude={e.longitude} />
+          return <Depot
+            key={i}
+            name={e.name}
+            logo={e.logo}
+            setMapRegion={setMapRegion}
+            latitude={e.latitude}
+            longitude={e.longitude} />
         })}
 
-        {!data.length && !isLoading && <Text>No</Text>}
-        
       </ScrollView>
       
-      <Map mapRegion={mapRegion} setMapRegion={setMapRegion}/>
+      <Map mapRegion={mapRegion} setMapRegion={setMapRegion} userRegion={userRegion} setUserRegion={setUserRegion}/>
     </SafeAreaView>
   )
 }

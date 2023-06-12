@@ -1,10 +1,10 @@
 import React from "react";
-import { View, Text, TouchableOpacity } from "react-native"
+import { View, Text, TouchableOpacity, Image } from "react-native"
 
 // styles import
 import styles from "../../styles/Depot.styles";
 
-const Depot = ({name, setMapRegion, latitude, longitude}) => {
+const Depot = ({name, logo, setMapRegion, latitude, longitude}) => {
 
   return(
     <TouchableOpacity onPress={() => setMapRegion({
@@ -14,7 +14,8 @@ const Depot = ({name, setMapRegion, latitude, longitude}) => {
       longitudeDelta: 0.0421
     })}>
       <View style={styles.container}>
-        <Text>{name}</Text>
+        <Image source={{uri: logo}} style={styles.logo}/>
+        <Text style={styles.name}>{name}</Text>
       </View>
     </TouchableOpacity>
   )
