@@ -1,5 +1,11 @@
 const supabase = require("../supabase/Supabase_Connect");
-
+const calculateTotalPoints = (cart) => {
+  let totalPoints = 0;
+  for (const product of cart) {
+    totalPoints += product.points;
+  }
+  return totalPoints;
+};
 const cartController = {
     addToCart: async (req, res) => {
         const { userId, productId } = req.body;
@@ -143,7 +149,63 @@ getAllProducts: async (req, res) => {
       console.error("Error retrieving products:", error);
       return res.status(500).json({ error: "Internal server error" });
     }
-  }
+  },
+  confirmPurchase: async (req, res) => {
+    const { userId } = req.params;
+    const { cart } = req.body;
+  
+    try {
+      const { data: user, error } = await supabase
+        .from('users')
+        .select('balance')
+        .eq('id', userId)
+        .single();
+  
+      if (error || !user) {
+        return res.status(404).json({ error: 'User not found' });
+      }
+  
+      const totalPoints = calculateTotalPoints(cart);
+      const updatedBalance = user.balance - totalPoints;
+  
+      if (updatedBalance < 0) {
+        return res.status(400).json({ error: 'Insufficient balance' });
+      }
+  
+      await supabase
+        .from('users')
+        .update({ balance: updatedBalance })
+        .eq('id', userId);
+  
+      return res.json({ balance: updatedBalance });
+    } catch (error) {
+      console.error('Error confirming purchase:', error);
+      return res.status(500).json({ error: 'Internal server error' });
+    }
+  },
+  
+  getUserBalance: async (req, res) => {
+    const { userId } = req.params;
+  
+    try {
+      const { data: user, error } = await supabase
+        .from("users")
+        .select("balance")
+        .eq("id", userId)
+        .single();
+  
+      if (error || !user) {
+        return res.status(404).json({ error: "User not found" });
+      }
+  
+      const balance = user.balance || 0;
+  
+      return res.json({ balance });
+    } catch (error) {
+      console.error("Error retrieving user's balance:", error);
+      return res.status(500).json({ error: "Internal server error" });
+    }
+  },
 };
 
 module.exports = cartController;
