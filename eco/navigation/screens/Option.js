@@ -10,7 +10,7 @@ export default function OptionScreen({ navigation }) {
   const userData = useContext(UserContext);
   const [userDetails, setUserDetails] = useState(null);
   const route = useRoute();
-
+  
   const fetchUserDetails = async () => {
     try {
       const response = await fetch(`http://10.0.2.2:3000/users/user/${userData.id}`);
@@ -26,7 +26,14 @@ export default function OptionScreen({ navigation }) {
   }, []);
 
   console.log(userDetails);
+  
+  const handleExchange = () => {
+    navigation.navigate('Exchange', { userId: userData.id });
+  };
 
+  const handleShopping = () => {
+    navigation.navigate('shopping', { userId: userData.id });
+  };
   return (
     <View style={styles.container}>
       <Image source={require('../../assets/nature.jpg')} style={styles.backgroundImage} />
@@ -61,8 +68,10 @@ export default function OptionScreen({ navigation }) {
         </Text>
 </View>
         <View style={styles.firstRow}>
+        <TouchableOpacity onPress={handleExchange}>
         <Image source={require('../../assets/Exchange.png')} style={styles.imageOption} />
-        <Image source={require('../../assets/Recycle1.png')} style={styles.imageOption}/>
+        </TouchableOpacity>
+        <Image source={require('../../assets/Recycle(1).png')} style={styles.imageOption}/>
           <Image source={require('../../assets/Nearby.png')} style={styles.imageOption} />
           
          
@@ -70,7 +79,11 @@ export default function OptionScreen({ navigation }) {
         
         <View style={styles.secondRow}>
           <Image source={require('../../assets/FAQ.png')} style={styles.imageOption}/>
-          <Image source={require('../../assets/News.png')} style={styles.imageOption}/>
+          <TouchableOpacity onPress={handleShopping}>
+            <Image source={require('../../assets/cat4.png')} style={styles.imageOption} />
+          </TouchableOpacity>
+
+
           <Image source={require('../../assets/cat5.png')} style={styles.imageOption}/>
         </View>
       </View>
@@ -129,9 +142,9 @@ const styles = StyleSheet.create({
     
   },
   image: {
-    width: 50,
-    height: 50,
-    borderRadius: 25,
+    width: 60,
+    height: 60,
+    borderRadius:20,
   },
   imageOption:{
     marginRight: 10,

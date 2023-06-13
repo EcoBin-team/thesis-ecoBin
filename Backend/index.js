@@ -5,11 +5,12 @@ const cors = require("cors");
 const supabaseConnect = require("./supabase/Supabase_Connect");
 const userRouter = require("./routes/routerUser")
 const feedsRouter = require("./routes/routerFeeds")
-// const depotRouter = require("./routes/depotRouter")
-// const SearchRouter = require("./routes/searchRouter")
+const cartRouter = require("./routes/routerCart")
+const depotRouter = require("./routes/depotRouter")
+const SearchRouter = require("./routes/searchRouter")
 
-app.use(express.urlencoded({ extended: true }));
-app.use(express.json());
+app.use(express.urlencoded({ extended: true, limit: "10mb" }));
+app.use(express.json({limit: "10mb"}));
 app.use(cors());
 
 app.use((req, res, next) => {
@@ -19,8 +20,9 @@ app.use((req, res, next) => {
 app.use("/users", userRouter)
 
 app.use("/", feedsRouter)
-// app.use("/", depotRouter)
-// app.use("/", SearchRouter)
+app.use("/depots", depotRouter)
+app.use("/", SearchRouter)
+app.use('/', cartRouter)
 
 
 

@@ -5,7 +5,7 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 import { Image, View } from 'react-native';
 import News from '../navigation/screens/News';
 import DetailsScreen from './screens/DetailsScreen';
-import SettingsScreen from './screens/SettingsScreen';
+
 import Account from './screens/Account';
 import Recycle from './screens/Recycle';
 import Option from './screens/Option'

@@ -1,19 +1,85 @@
 import React, { useContext, useState, useEffect } from 'react';
-import { View, Image, Text, StyleSheet, TouchableOpacity } from 'react-native';
+import { View, Text, TouchableOpacity, SafeAreaView, ActivityIndicator, StyleSheet, Alert,Image } from "react-native"
 import { MaterialIcons, FontAwesome } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 import { Feather } from '@expo/vector-icons';
 import { UserContext } from '../MainContainer';
 import { useRoute } from '@react-navigation/native';
+import * as ImagePicker from 'expo-image-picker'
+import { v4 as uuidv4 } from "uuid";
+import 'react-native-get-random-values';
+import { uploadBytes, getDownloadURL, ref } from "firebase/storage"
+import AsyncStorage from "@react-native-async-storage/async-storage";
+
+import { app, storage } from "../../firebase/FirebaseApp"
+import { server_url } from "../../secret";
+
+
+import modal from "../../styles/modalBackground.styles"
+import SpinnerStyles from "../../styles/ActivityIndicator.styles"
+
 const ProfileDetails = () => {
+  const [imageUrl,setImageUrl] = useState("") // image url that will be retrieved from firebase storage after uploading
   const [userDetails, setUserDetails] = useState(null);
+  const [isLoading,setIsLoading] = useState(false)
   const userData = useContext(UserContext);
   const navigation = useNavigation();
   const route = useRoute();
   // const updatedUser = route.params?.updatedUser
   
   
+  const pickImage = async () => {
 
+    // asking for the user's permission to access his image library
+    const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync()
+    if(status !== "granted"){
+      Alert.alert("Access Denied", "Library access revoked.")
+    }
+
+    // allowing the user pick an image as a profile picture
+    var result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.All,
+      allowsEditing: true,
+      aspect: [4,3],
+      quality: 0.2
+    })
+
+    if (!result.canceled) {
+      uploadImage(result.assets[0].uri) // invoking upload function to upload image to firebase storage
+    }
+
+  }
+  
+  // this function sends a post request to the server to upload the image picked by the user
+  const uploadImage = async (imageUri) => {
+
+    setIsLoading(true)
+
+    const blob = await new Promise((resolve, reject) => {
+      const xhr = new XMLHttpRequest()
+      xhr.onload = function () {
+        resolve(xhr.response)
+      }
+      xhr.onerror = function (e) {
+        console.log(e)
+        reject(new TypeError("Network request failed"))
+      }
+      xhr.responseType = "blob"
+      xhr.open("GET", imageUri, true)
+      xhr.send(null)
+    })
+  
+    const fileRef = ref(storage, `profile_pictures/${uuidv4()}`)
+    const result = await uploadBytes(fileRef, blob)
+
+    blob.close()
+
+    const url = await getDownloadURL(fileRef)
+    setImageUrl(url)
+
+    setIsLoading(false)
+
+  }
 
   const fetchUserDetails = async () => {
     try {
@@ -36,7 +102,7 @@ const ProfileDetails = () => {
   };
   const handleSignOut = () => {
     setUserDetails(null);
-    userData(null);
+    
     navigation.navigate('Home');
   };
 
@@ -59,7 +125,8 @@ const ProfileDetails = () => {
             style={styles.profileImage}
           />
           <TouchableOpacity style={styles.cameraIcon}>
-            <FontAwesome name="camera" size={24} color="white" />
+            <FontAwesome name="camera" size={24} color="white"
+             onPress={pickImage} image={imageUrl!== null ? imageUrl : null}/>
           </TouchableOpacity>
         </View>
         <Text style={styles.name}>{userDetails?.name}</Text>
