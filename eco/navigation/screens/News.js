@@ -1,26 +1,58 @@
-import { StatusBar } from 'expo-status-bar';
-import { Image, Text, View, Button, StyleSheet, ScrollView, TouchableWithoutFeedback, Modal, TextInput } from 'react-native';
+import React, { useContext, useState, useEffect } from 'react';
+import { View, Text, StyleSheet, ScrollView, Image, Modal, TextInput, TouchableOpacity, Pressable, Alert,Dimensions } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
-import React, { useState, useEffect } from 'react';
+import { UserContext } from '../MainContainer';
 import axios from 'axios';
-
-import { Pressable } from "react-native";
-import { MaterialCommunityIcons } from "@expo/vector-icons";
-
+import { StatusBar } from 'expo-status-bar';
+import { MaterialCommunityIcons } from '@expo/vector-icons';
+import Comments from '../../components/Comments/Comments'
+const windowWidth = Dimensions.get('window').width;
+const windowHeight = Dimensions.get('window').height;
 function News() {
+  const userData = useContext(UserContext);
   const navigation = useNavigation();
   const [liked, setLiked] = useState(false);
   const [data, setData] = useState([]);
-  const [count, setCount] = useState(0);
   const [show, setShow] = useState(false);
+  const [commentText, setCommentText] = useState('');
+  const [userDetails, setUserDetails] = useState(null);
+  const [postId, setPostId] = useState("")
+  const [likeCount, setLikeCount] = useState(0);
+ 
+  const handleLike = () => {
+    if (liked) {
+      setLikeCount(likeCount - 1);
+    } else {
+      setLikeCount(likeCount + 1);
+    }
+    setLiked(!liked);
+  };
+
+  console.log('userData.id:', userData.id);
 
   useEffect(() => {
     fetchData();
+    fetchUserDetails();
   }, []);
+
+  const fetchUserDetails = async () => {
+    try {
+      const response = await fetch(`http://10.0.2.2:3000/users/${userData.id}`);
+      const data = await response.json();
+      console.log('User details:', data);
+      setUserDetails(data);
+    } catch (error) {
+      console.log('Error fetching user details:', error);
+    }
+  };
 
   const fetchData = async () => {
     try {
-      const response = await axios.get('http://192.168.100.6:3000/feeds');
+
+      const response = await axios.get('http://10.0.2.2:3000/feeds');
+      console.log('Fetched data:', response.data);
+
+
       setData(response.data);
     } catch (error) {
       console.error('Error fetching data:', error);
@@ -31,49 +63,75 @@ function News() {
     setShow(false);
   };
 
-  const handleShow = () => {
+  const handleShow = (id) => {
     setShow(true);
+    setPostId(id);
+  };
+
+  const handlePostComment = async (postId) => {
+    setCommentText("");
+    try {
+      const response = await fetch(`http://10.0.2.2:3000/feeds/${postId}/postComment`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ userId: userData.id, commentText }),
+      });
+
+      if (!response.ok) {
+        throw new Error('Error posting comment');
+      }
+
+      const data = await response.json();
+      console.log('Comment posted successfully:', data);
+      // Optionally, you can show a success message or navigate to another screen
+      
+    } catch (error) {
+      console.error('Error posting comment:', error);
+      // Show an error message to the user
+      Alert.alert('Error posting comment', error.message);
+    }
   };
 
   return (
     <View style={styles.container}>
     
-             
       <StatusBar style="auto" />
-     
-   
+      <Image source={require('../../assets/logo.png')} style={styles.logoImage} />
       <ScrollView contentContainerStyle={styles.scrollContainer}>
         <View style={styles.logoContainer}></View>
-        <Image source={require('../../assets/logo.png')} style={styles.logoImage} />
+       
 
         <View style={styles.newsContainer}>
-        
           {data.map((item, index) => (
             <View key={index} style={styles.newsItem}>
-              
-              
               <View style={styles.newsInfo}>
-                <Text style={styles.newsDate}>{item.date}</Text>
                 <Text style={styles.newsTitle}>{item.Title}</Text>
                 <Text style={styles.newsSubtitle}>{item.Subtitle}</Text>
+                <Text style={styles.newsDate}>{item.date}</Text>
               </View>
-           
+
               <Image source={{ uri: item.Image }} style={styles.newsImage} />
 
-              
-              <TouchableWithoutFeedback onPress={handleShow}>
-                <Image source={require('../../assets/comment.png')} />
-              </TouchableWithoutFeedback>
-           
-              <Pressable onPress={() => setLiked((isLiked) => !isLiked)}>
-                <MaterialCommunityIcons
-                  name={liked ? "heart" : "heart-outline"}
-                  size={32}
-                  color={liked ? "red" : "#2DCC70"}
-                />
-              </Pressable>
+              <View style={styles.actionsContainer}>
+              <View style={styles.commentContainer}>
+  <Pressable onPress={() => handleShow(item.id)}  >
+    <MaterialCommunityIcons name="comment" size={24} color="black" />
+  </Pressable>
+</View>
 
-             
+<TouchableOpacity onPress={() => handleLike()} style={styles.like}>
+    <MaterialCommunityIcons
+      name={liked ? 'thumb-up' : 'thumb-up-outline'}
+      size={24}
+      color={liked ? '#6CC51D' : 'black'}
+    />
+    <Text style={styles.likeText}>{liked ? 'Liked' : 'Like'}</Text>
+    <Text style={styles.likeCount}>{likeCount}</Text>
+  </TouchableOpacity>
+
+              </View>
             </View>
           ))}
         </View>
@@ -81,16 +139,29 @@ function News() {
         <Modal visible={show} onRequestClose={handleClose} transparent={true}>
           <View style={styles.modalContainer}>
             <View style={styles.modalContent}>
-              <Text>Write your comment</Text>
-              <TextInput
-                style={styles.input}
-                placeholder="Enter your comment"
-                // value={updatedMovie.name}
-                // onChangeText={(text) => setUpdatedMovie({ ...updatedMovie, name: text })}
-              />
+           <Comments postId={postId} />
+              <View style={styles.comment}>
+              
+                <Image
+                  source={userDetails?.image ? { uri: userDetails ?.image  } : require('../../assets/avatarVide.png')}
+                  style={styles.profileImage}
+                />
+                <Text style={styles.commentText}>{userDetails?.name}</Text>
+                <TextInput
+                  style={styles.input}
+                  placeholder="Enter your comment"
+                  value={commentText}
+                  onChangeText={setCommentText}
+                />
+              </View> 
+              
               <View style={styles.buttonContainer}>
-                <Button title="Close" onPress={handleClose} />
-                <Button title="Post" />
+                <TouchableOpacity style={styles.closeButton} onPress={handleClose}>
+                  <Text style={styles.buttonText}>Close</Text>
+                </TouchableOpacity>
+                <TouchableOpacity style={styles.postButton} onPress={() => handlePostComment(postId)}>
+                  <Text style={[styles.buttonText, styles.postButtonText]}>Post</Text>
+                </TouchableOpacity>
               </View>
             </View>
           </View>
@@ -101,8 +172,27 @@ function News() {
 }
 
 const styles = StyleSheet.create({
+  comment:{
+    marginBottom: 10,
+    left:0,
+
+  }
+  ,
+  like: {
+    top: -4,
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginRight: 10,
+  },
+  likeText: {
+    marginLeft: 5,
+    color: '#6CC51D', // Facebook blue color
+    fontWeight: 'bold',
+  },
+  
   container: {
     flex: 1,
+    backgroundColor: '#F5F5F5',
   },
   scrollContainer: {
     flexGrow: 1,
@@ -114,44 +204,68 @@ const styles = StyleSheet.create({
     left: 0,
     right: 0,
     zIndex: 1000,
+  
   },
   logoImage: {
-    width: 479,
-    height: 130,
+    width: '100%',
+    height: 90,
     backgroundColor: '#9CFFE7',
   },
   newsContainer: {
-    paddingTop: 150, // Adjust this value based on the logo height and desired spacing
+    top: 40,
     paddingBottom: 20,
     alignItems: 'center',
   },
   newsItem: {
     marginBottom: 20,
-  },
-  overlayImage: {
-    position: 'absolute',
-    top: 10,
-    right: 10,
-    width: 32,
-    height: 32,
+    backgroundColor: '#FFFFFF',
+    borderRadius: 10,
+    width: windowWidth * 0.9,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 5,
   },
   newsImage: {
-    width: 200,
-    height: 200,
+    width: '100%',
+    aspectRatio: 1,
+    borderTopLeftRadius: 10,
+    borderTopRightRadius: 10,
   },
   newsInfo: {
     marginTop: 10,
+    marginLeft: 20,
   },
   newsDate: {
     fontSize: 16,
     fontWeight: 'bold',
+    marginLeft: 'auto',
+    marginRight: 20,
+    marginTop: 10,
+    color: '#808080',
   },
   newsTitle: {
     fontSize: 18,
     fontWeight: 'bold',
+    marginTop: 10,
   },
   newsSubtitle: {
     fontSize: 14,
+    color: '#808080',
+  },
+  actionsContainer: {
+    marginLeft: 20,
+    flexDirection: 'row',
+    alignItems: 'center',
+    width: 50,
+    height: 50,
+    marginTop: 10,
+  },
+  commentIcon: {
+    marginRight: 10,
+    width: 32,
+    height: 32,
   },
   modalContainer: {
     flex: 1,
@@ -160,21 +274,70 @@ const styles = StyleSheet.create({
     backgroundColor: 'rgba(0, 0, 0, 0.5)',
   },
   modalContent: {
-    backgroundColor: 'white',
-    padding: 20,
-    borderRadius: 8,
-  },
-  input: {
-    borderWidth: 1,
-    borderColor: 'black',
-    marginBottom: 10,
-    paddingHorizontal: 10,
-    paddingVertical: 5,
+    backgroundColor: '#FFFFFF',
+    borderRadius: 10,
+    width: windowWidth * 0.9,
+    height: windowHeight * 0.7,
+    paddingHorizontal: 20,
+    paddingTop: 20,
+    paddingBottom: 10,
   },
   buttonContainer: {
     flexDirection: 'row',
     justifyContent: 'space-around',
+    marginBottom: 10,
+  },
+  closeButton: {
+    backgroundColor: 'red',
+    padding: 10,
+    borderRadius: 5,
+  },
+  postButton: {
+    backgroundColor: '#27AE60',
+    padding: 10,
+    borderRadius: 5,
+  },
+  buttonText: {
+    color: '#FFFFFF',
+    fontWeight: 'bold',
+  },
+  postButtonText: {
+    fontWeight: 'bold',
+  },
+  profileImage: {
+    top: 10,
+    width: 50,
+    height: 50,
+    borderRadius: 25,
+    marginRight: 10,
+  },
+  commentContainer: {
+    alignItems: 'center',
+    flexDirection: 'row',
+    marginBottom: 10,
+    left: 250,
+  },
+  commentText: {
+    top:10,
+    fontSize: 14,
+    fontWeight: 'bold',
+    marginBottom: 10,
+  },
+  input: {
+    
+    width: 230,
+    height: 40,
+    borderWidth: 1,
+    borderColor: 'gray',
+    borderRadius: 5,
+    paddingLeft: 10,
+    marginBottom: 10,
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginVertical: 10,
   },
 });
+
+
 
 export default News;

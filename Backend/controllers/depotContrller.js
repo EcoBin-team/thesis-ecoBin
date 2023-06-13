@@ -5,7 +5,7 @@ const supabase = require("../supabase/Supabase_Connect")
 const depotController = {
   getAllDepots: async (req ,res) => {
     try {
-        const { data: depots, error } = await supabase.from('Depot').select('*');
+        const { data: depots, error } = await supabase.from('depot').select('*');
     
         if (error) {
           throw new Error(error.message);
@@ -22,7 +22,7 @@ const depotController = {
 
     try {
       const feed = await supabase
-        .from('Depot')
+        .from('depot')
         .select('*')
         .eq('id', id)
         .single();
@@ -35,7 +35,25 @@ const depotController = {
     } catch (error) {
       res.status(500).json({ error: error.message });
     }
-} }
+  },
+
+  searchDepot: async (req,res) => {
+
+    const { query } = req.query
+
+    const { data, error } = await supabase
+    .from("depot")
+    .select()
+    .textSearch("name", query)
+
+    if(error){
+      console.log(error)
+    }
+
+    res.send(data)
+
+  }
+}
   
 
 module.exports = depotController

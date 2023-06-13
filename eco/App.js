@@ -9,12 +9,20 @@ import LaunchPage from './component/LaunchPage';
 import MainContainer from './navigation/MainContainer';
 import WalkthroughScreen from './component/WalkthroughScreen';
 import Login from './navigation/screens/Login';
+<<<<<<< HEAD
 import Home from './navigation/screens/Home';
 import Signup from './navigation/screens/Signup';
 import AboutUs from "./component/AboutUs";
 import ContactUs from "./component/ContactUs";
 import FAQ from "./component/FAQ";
 import Guide from "./component/Guide";
+=======
+import Home from './navigation/screens/Home'
+import Signup from './navigation/screens/Signup'
+import ConfirmSignup from "./navigation/screens/ConfirmSignup";
+import Nearby from "./navigation/screens/Nearby";
+
+>>>>>>> 349b12500fe7d06d00bf48698f295204780eb077
 const Stack = createStackNavigator();
 
 const App = () => {
@@ -45,7 +53,7 @@ const App = () => {
           name="LaunchPage"
           component={LaunchPage}
           options={{ headerShown: false }}
-        />
+        /> 
          <Stack.Screen
           name="Login"
           component={Login}
@@ -62,11 +70,24 @@ const App = () => {
           options={{ headerShown: false }}
         />
 
+
+
+        <Stack.Screen
+          name="ConfirmSignup"
+          component={ConfirmSignup}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="Nearby"
+          component={Nearby}
+          options={{ headerShown: false }}
+        />
+
          <Stack.Screen
           name="WalkthroughScreen"
           component={WalkthroughScreen}
           options={{ headerShown: false }}
-        />
+        /> 
         <Stack.Screen
           name="MainContainer"
           component={MainContainer}
