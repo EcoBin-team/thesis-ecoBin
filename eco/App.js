@@ -9,20 +9,22 @@ import LaunchPage from './component/LaunchPage';
 import MainContainer from './navigation/MainContainer';
 import WalkthroughScreen from './component/WalkthroughScreen';
 import Login from './navigation/screens/Login';
-<<<<<<< HEAD
+
 import Home from './navigation/screens/Home';
 import Signup from './navigation/screens/Signup';
 import AboutUs from "./component/AboutUs";
 import ContactUs from "./component/ContactUs";
 import FAQ from "./component/FAQ";
 import Guide from "./component/Guide";
-=======
-import Home from './navigation/screens/Home'
-import Signup from './navigation/screens/Signup'
+import ChatList from './screens/chatlist';
+import Chat from './screens/chat';
+
+
+
+
 import ConfirmSignup from "./navigation/screens/ConfirmSignup";
 import Nearby from "./navigation/screens/Nearby";
 
->>>>>>> 349b12500fe7d06d00bf48698f295204780eb077
 const Stack = createStackNavigator();
 
 const App = () => {
@@ -93,8 +95,15 @@ const App = () => {
           component={MainContainer}
           options={{ headerShown: false }}
         />
-      </Stack.Navigator>
+     
+    
+<Stack.Screen name="Chatlist" component={ChatList} />
+<Stack.Screen name="Chat"component={Chat}/>
+
+    </Stack.Navigator>
     </NavigationContainer>
+
+
   );
 };
 
