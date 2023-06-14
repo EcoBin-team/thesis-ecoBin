@@ -1,89 +1,102 @@
 import React, { useContext, useState, useEffect } from 'react';
-import { View, Text, TouchableOpacity, SafeAreaView, ActivityIndicator, StyleSheet, Alert,Image } from "react-native"
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  SafeAreaView,
+  ActivityIndicator,
+  StyleSheet,
+  Alert,
+  Image,
+} from 'react-native';
 import { MaterialIcons, FontAwesome } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 import { Feather } from '@expo/vector-icons';
 import { UserContext } from '../MainContainer';
 import { useRoute } from '@react-navigation/native';
-import * as ImagePicker from 'expo-image-picker'
-import { v4 as uuidv4 } from "uuid";
+import * as ImagePicker from 'expo-image-picker';
+import { v4 as uuidv4 } from 'uuid';
 import 'react-native-get-random-values';
-import { uploadBytes, getDownloadURL, ref } from "firebase/storage"
-import AsyncStorage from "@react-native-async-storage/async-storage";
+import { uploadBytes, getDownloadURL, ref } from 'firebase/storage';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
-import { app, storage } from "../../firebase/FirebaseApp"
-import { server_url } from "../../secret";
+import { app, storage } from '../../firebase/FirebaseApp';
+import { server_url } from '../../secret';
 
-
-import modal from "../../styles/modalBackground.styles"
-import SpinnerStyles from "../../styles/ActivityIndicator.styles"
+import modal from '../../styles/modalBackground.styles';
+import SpinnerStyles from '../../styles/ActivityIndicator.styles';
 
 const ProfileDetails = () => {
-  const [imageUrl,setImageUrl] = useState("") // image url that will be retrieved from firebase storage after uploading
+  const [imageUrl, setImageUrl] = useState(''); // image url that will be retrieved from firebase storage after uploading
   const [userDetails, setUserDetails] = useState(null);
-  const [isLoading,setIsLoading] = useState(false)
+  const [isLoading, setIsLoading] = useState(false);
+  const [updateImage,setUpdateImage] = useState(false)
   const userData = useContext(UserContext);
   const navigation = useNavigation();
   const route = useRoute();
   // const updatedUser = route.params?.updatedUser
-  
-  
-  const pickImage = async () => {
 
+  const pickImage = async () => {
     // asking for the user's permission to access his image library
-    const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync()
-    if(status !== "granted"){
-      Alert.alert("Access Denied", "Library access revoked.")
+    const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
+    if (status !== 'granted') {
+      Alert.alert('Access Denied', 'Library access revoked.');
     }
 
-    // allowing the user pick an image as a profile picture
+    // allowing the user to pick an image as a profile picture
     var result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.All,
       allowsEditing: true,
-      aspect: [4,3],
-      quality: 0.2
-    })
+      aspect: [4, 3],
+      quality: 0.2,
+    });
 
-    if (!result.canceled) {
-      uploadImage(result.assets[0].uri) // invoking upload function to upload image to firebase storage
+    if (!result.cancelled) {
+      uploadImage(result.uri); // invoking upload function to upload image to firebase storage
     }
+ 
+  };
 
-  }
-  
   // this function sends a post request to the server to upload the image picked by the user
   const uploadImage = async (imageUri) => {
-
-    setIsLoading(true)
+    setIsLoading(true);
 
     const blob = await new Promise((resolve, reject) => {
-      const xhr = new XMLHttpRequest()
+      const xhr = new XMLHttpRequest();
       xhr.onload = function () {
-        resolve(xhr.response)
-      }
+        resolve(xhr.response);
+      };
       xhr.onerror = function (e) {
-        console.log(e)
-        reject(new TypeError("Network request failed"))
-      }
-      xhr.responseType = "blob"
-      xhr.open("GET", imageUri, true)
-      xhr.send(null)
+        console.log(e);
+        reject(new TypeError('Network request failed'));
+      };
+      xhr.responseType = 'blob';
+      xhr.open('GET', imageUri, true);
+      xhr.send(null);
+    });
+
+    const fileRef = ref(storage, `profile_pictures/${uuidv4()}`);
+    const result = await uploadBytes(fileRef, blob);
+
+    blob.close();
+
+    const url = await getDownloadURL(fileRef);
+    setImageUrl(url);
+    const id = await AsyncStorage.getItem("currentUser")
+
+    await axios.put(`${server_url}/users/updateUser/${id}`,{
+      id: id,
+      image: imageUrl,
     })
-  
-    const fileRef = ref(storage, `profile_pictures/${uuidv4()}`)
-    const result = await uploadBytes(fileRef, blob)
 
-    blob.close()
+    setUpdateImage(true)
 
-    const url = await getDownloadURL(fileRef)
-    setImageUrl(url)
-
-    setIsLoading(false)
-
-  }
+    setIsLoading(false);
+  };
 
   const fetchUserDetails = async () => {
     try {
-      const response = await fetch(`http://10.0.2.2:3000/users/user/${userData.id}`);
+      const response = await fetch(`${server_url}/users/user/${userData.id}`);
       const data = await response.json();
       setUserDetails(data);
     } catch (error) {
@@ -97,20 +110,34 @@ const ProfileDetails = () => {
       userDetails: {
         id: userDetails?.id,
       },
-       // Add the updatedUser parameter
+      // Add the updatedUser parameter
     });
   };
+
+
+
+
   const handleSignOut = () => {
     setUserDetails(null);
-    
+
     navigation.navigate('Home');
   };
 
+
+
   useEffect(() => {
- 
-      fetchUserDetails();
-    
+    fetchUserDetails();
   }, []);
+
+  const handleTransaction = () => {
+    navigation.navigate('Transaction', {
+      userDetails: {
+        id: userDetails?.id,
+      },
+      // Add the updatedUser parameter
+    });
+  };
+
 
   return (
     <View style={styles.container}>
@@ -118,20 +145,22 @@ const ProfileDetails = () => {
         <View style={styles.profileImageContainer}>
           <Image
             source={
-              userDetails?.image
+              imageUrl !== ''
+                ? { uri: imageUrl }
+                : userDetails?.image
                 ? { uri: userDetails.image }
                 : require('../../assets/avatarVide.png')
             }
             style={styles.profileImage}
           />
-          <TouchableOpacity style={styles.cameraIcon}>
-            <FontAwesome name="camera" size={24} color="white"
-             onPress={pickImage} image={imageUrl!== null ? imageUrl : null}/>
+          <TouchableOpacity style={styles.cameraIcon} onPress={pickImage}>
+            <FontAwesome name="camera" size={24} color="white" />
           </TouchableOpacity>
         </View>
         <Text style={styles.name}>{userDetails?.name}</Text>
         <Text style={styles.bio}>
-          <FontAwesome name="dollar" size={20} color="#6CC51D" /> {userDetails?.balance} ECOBIN Points
+          <FontAwesome name="dollar" size={20} color="#6CC51D" /> {userDetails?.balance} ECOBIN
+          Points
         </Text>
       </View>
       <View style={styles.infoContainer}>
@@ -148,7 +177,7 @@ const ProfileDetails = () => {
           <Text style={styles.infoTitle}>transaction</Text>
           <TouchableOpacity
             style={styles.infoButton}
-            onPress={() => console.log('handleChangePassword')}
+            onPress={handleTransaction}
           >
             <MaterialIcons name="keyboard-arrow-right" size={24} color="gray" />
           </TouchableOpacity>

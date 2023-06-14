@@ -30,6 +30,12 @@ export default function OptionScreen({ navigation }) {
   const handleExchange = () => {
     navigation.navigate('Exchange', { userId: userData.id });
   };
+  const handleFAQ = () => {
+    navigation.navigate('FAQ');
+  };
+  const handleNearby= () => {
+    navigation.navigate('Nearby', { userId: userData.id });
+  };
 
   const handleShopping = () => {
     navigation.navigate('shopping', { userId: userData.id });
@@ -72,13 +78,17 @@ export default function OptionScreen({ navigation }) {
         <Image source={require('../../assets/Exchange.png')} style={styles.imageOption} />
         </TouchableOpacity>
         <Image source={require('../../assets/Recycle(1).png')} style={styles.imageOption}/>
+        <TouchableOpacity onPress={handleNearby}>
           <Image source={require('../../assets/Nearby.png')} style={styles.imageOption} />
+          </TouchableOpacity>
           
          
         </View>
         
         <View style={styles.secondRow}>
+        <TouchableOpacity onPress={handleFAQ}>
           <Image source={require('../../assets/FAQ.png')} style={styles.imageOption}/>
+          </TouchableOpacity>
           <TouchableOpacity onPress={handleShopping}>
             <Image source={require('../../assets/cat4.png')} style={styles.imageOption} />
           </TouchableOpacity>

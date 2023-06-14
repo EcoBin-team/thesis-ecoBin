@@ -1,6 +1,7 @@
 import React, { useState } from "react";
-import { View, Text, SafeAreaView, StyleSheet, TextInput, ScrollView, Alert } from "react-native"
+import { View, Text, SafeAreaView, StyleSheet, TextInput, ScrollView, Alert,TouchableOpacity } from "react-native"
 import axios from "axios";
+import Icon from 'react-native-vector-icons/Ionicons';
 
 // common components imports
 import Map from "../../components/Map/Map";
@@ -9,7 +10,7 @@ import BackButton from "../../components/BackButton/BackButton";
 // secret variable import
 import { server_url } from "../../secret";
 
-const Nearby = () => {
+const Nearby = (navigation) => {
 
   const [query,setQuery] = useState("")
   const [data,setData] = useState([])
@@ -31,7 +32,9 @@ const Nearby = () => {
       <View style={{backgroundColor: "white"}}>
 
         <View style={styles.upperContainer}>
-          <BackButton style={{margin: 15}}/>
+        <TouchableOpacity onPress={() => navigation.goBack()}>
+        <Icon style={styles.headerIcon} name="arrow-back" size={24} color="#000000" />
+      </TouchableOpacity>
           <Text style={styles.nearby}>Nearby</Text>
         </View>
 
@@ -60,6 +63,9 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     marginTop: 35
+  },
+  headerIcon:{
+    left: 0,
   },
   nearby: {
     fontFamily: "MontserratBold",

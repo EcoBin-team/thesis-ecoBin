@@ -168,7 +168,16 @@ const confirmPurchase = async (req, res) => {
       return res.status(404).json({ error: 'User not found' });
     }
 
-    const totalPoints = calculateTotalPoints(cart);
+    const { data: products, error: productsError } = await supabase
+      .from('Shop') 
+      .select('id, points')
+      .in('id', cart);
+
+    if (productsError) {
+      return res.status(500).json({ error: 'Error fetching product details' });
+    }
+
+    const totalPoints = calculateTotalPoints(products);
     const updatedBalance = user.balance - totalPoints;
 
     if (updatedBalance < 0) {
@@ -180,12 +189,18 @@ const confirmPurchase = async (req, res) => {
       .update({ balance: updatedBalance })
       .eq('id', userId);
 
+    // Clear the user's cart by setting it to an empty array
+    await supabase
+      .from('users')
+      .update({ cart: [] })
+      .eq('id', userId);
+
     return res.json({ balance: updatedBalance });
   } catch (error) {
     console.error('Error confirming purchase:', error);
     return res.status(500).json({ error: 'Internal server error' });
   }
-};
+}
 
 const getUserBalance = async (req, res) => {
   const { userId } = req.params;

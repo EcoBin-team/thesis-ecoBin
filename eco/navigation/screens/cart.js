@@ -2,15 +2,17 @@ import React, { useEffect, useState } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, Image, TextInput, Modal, Alert } from 'react-native';
 import axios from 'axios';
 import { useNavigation,useRoute } from '@react-navigation/native';
+import { server_url } from '../../secret';
 const CartComponent = () => {
 
     const route = useRoute();
     const { userId } = route.params;
+    console.log(userId)
     const navigation = useNavigation();
   const [cartProducts, setCartProducts] = useState([]);
   const [phoneNumber, setPhoneNumber] = useState('');
   const [confirmModalVisible, setConfirmModalVisible] = useState(false);
- 
+  
   const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
@@ -19,7 +21,7 @@ const CartComponent = () => {
 
   const fetchCartProducts = async () => {
     try {
-      const response = await axios.get(`http://192.168.43.232:3000/users/${userId}/cart`);
+      const response = await axios.get(`${server_url}/users/${userId}/cart`);
       const data = response.data;
       console.log(data);
       setCartProducts(data);
@@ -31,7 +33,7 @@ const CartComponent = () => {
   const handleDeleteProduct = async (productId) => {
     try {
       setIsLoading(true);
-      await axios.delete(`http://192.168.43.232:3000/users/${userId}`, {
+      await axios.delete(`${server_url}/users/${userId}`, {
         data: { productId },
       });
       const updatedCartProducts = cartProducts.filter((product) => product.id !== productId);
@@ -65,7 +67,7 @@ const CartComponent = () => {
       const totalPoints = cartProducts.reduce((sum, product) => sum + product.points, 0);
 
       // Retrieve the user's balance from the server
-      const balanceResponse = await axios.get(`http://10.0.2.2:3000/balance/${userId}`);
+      const balanceResponse = await axios.get(`${server_url}/balance/${userId}`);
       const userBalance = balanceResponse.data.balance;
 
       if (userBalance < totalPoints) {
@@ -79,12 +81,12 @@ const CartComponent = () => {
       const updatedBalance = userBalance - totalPoints;
 
       // Make the purchase by sending the cartProducts data to the server
-      await axios.post(`http://10.0.2.2:3000/users/${userId}/purchase`, {
+      await axios.post(`${server_url}/${userId}/purchase`, {
         cartProducts,
       });
 
       // Update the user's balance on the server
-      await axios.put(`http://10.0.2.2:3000/balance/${userId}`, {
+      await axios.put(`${server_url}/balance/${userId}`, {
         balance: updatedBalance,
       });
 

@@ -19,6 +19,9 @@ import shopping from './navigation/screens/shopping'
 import cart from './navigation/screens/cart'
 import Exchange from './navigation/screens/Exchange'
 import Guide from './component/Guide'
+import FAQ from './component/FAQ'
+import Transaction from './navigation/screens/Transaction'
+
 
 const Stack = createStackNavigator();
 
@@ -46,27 +49,43 @@ const App = () => {
   return (
     <NavigationContainer>
       <Stack.Navigator> 
-      {/* <Stack.Screen
-          name="Guide"
-          component={Guide}
-          options={{ headerShown: false }}
-        /> */}
+    
 
        {/* <Stack.Screen
           name="LaunchPage"
           component={LaunchPage}
           options={{ headerShown: false }}
-        />
+        /> */}
        <Stack.Screen
           name="Home"
           component={Home}
           options={{ headerShown: false }}
-        /> */}
+        />
 
-      
+        <Stack.Screen
+          name="Transaction"
+          component={Transaction}
+          options={{ headerShown: false }}
+        />
           <Stack.Screen
           name="Login"
           component={Login}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="Nearby"
+          component={Nearby}
+          options={{ headerShown: false }}
+        />
+      <Stack.Screen
+          name="FAQ"
+          component={FAQ}
+          options={{ headerShown: false }}
+        />
+
+      <Stack.Screen
+          name="Guide"
+          component={Guide}
           options={{ headerShown: false }}
         />
         
@@ -95,11 +114,7 @@ const App = () => {
           component={cart}
           options={{ headerShown: false }}
         />
-         <Stack.Screen
-          name="Nearby"
-          component={Nearby}
-          options={{ headerShown: false }}
-        />
+        
          <Stack.Screen
           name="WalkthroughScreen"
           component={WalkthroughScreen}

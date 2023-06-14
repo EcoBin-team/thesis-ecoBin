@@ -4,17 +4,18 @@ import axios from 'axios';
 import * as Animatable from 'react-native-animatable';
 import { useRoute, useNavigation } from '@react-navigation/native';
 import Icon from 'react-native-vector-icons/Ionicons';
-
+import { server_url } from '../../secret';
 const ShopComponent = () => {
     const route = useRoute();
     const { userId } = route.params;
+    console.log(userId)
   const [products, setProducts] = useState([]);
  console.log(userId)
 const navigation = useNavigation();
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const response = await axios.get('http://10.0.2.2:3000/getall');
+        const response = await axios.get(`${server_url}/getall`);
         const data = response.data;
         setProducts(data);
       } catch (error) {
@@ -27,7 +28,7 @@ const navigation = useNavigation();
 
   const addToCart = async (productId) => {
     try {
-      const response = await axios.post(`http://10.0.2.2:3000/cart/${userId}`, {
+      const response = await axios.post(`${server_url}/users/${userId}`, {
         userId: userId,
         productId: productId,
       });
@@ -62,7 +63,7 @@ const navigation = useNavigation();
           </Animatable.View>
         ))}
       </View>
-      <TouchableOpacity style={styles.goToCartButton} onPress={() => {navigation.navigate("cart",userId)}}>
+      <TouchableOpacity style={styles.goToCartButton} onPress={() => {navigation.navigate("cart",{ userId: userId })}}>
         <Text style={styles.goToCartButtonText}>Go to Cart</Text>
       </TouchableOpacity>
     </ScrollView>
