@@ -9,6 +9,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import InputField from "../../components/InputField/InputField";
 import BackButton from "../../components/BackButton/BackButton";
 import AuthButton from "../../components/AuthButton/AuthButton";
+import LogoBackground from "../../components/Logo/LogoBackground";
 
 // secret file import
 import { server_url } from "../../secret"; 
@@ -16,7 +17,7 @@ import { server_url } from "../../secret";
 // styles imports
 import SpinnerStyles from "../../styles/ActivityIndicator.styles"
 import ConfirmSignup from "./ConfirmSignup";
-import Logo from "../../components/Logo/Logo";
+import Logo from "../../components/Logo/Logo1";
 import styles from "../../styles/Signup.styles"
 
 const Signup = () => {
@@ -75,17 +76,23 @@ const Signup = () => {
       {!done ?
       
       <>
-        <View>
+        <View style={{marginTop: 20}}>
+
+          <LogoBackground signup={true}/>
 
           <View style={{display: "flex", justifyContent: "center", alignItems: "center", marginTop: 25}}>
-            <BackButton fn={() => navigation.navigate("Home")} style={{marginRight: 270, top: 30}}/>
-            {/* <Logo/> */}
+            <BackButton fn={() => navigation.navigate("Home")} style={{marginRight: 270, top: 30}} auth={true}/>
 
-            <InputField placeholder="Full Name" fn={setName}/>
-            <InputField placeholder="Email address" fn={setEmail}/>
-            <InputField placeholder="Password" fn={setPassword} isPassword={true}/>
-            <AuthButton text="Sign Up" fn={handleSubmit} style={styles.auth}/>
+            <View style={{marginTop: 70}}>
+              <Logo/>
+              <InputField placeholder="Full Name" fn={setName} styling={{marginTop: 60}}/>
+              <InputField placeholder="Email address" fn={setEmail}/>
+              <InputField placeholder="Password" fn={setPassword} isPassword={true}/>
+              <AuthButton text="Sign Up" fn={handleSubmit} style={styles.auth}/>
+            </View>
+
           </View>
+
         </View>
 
         {isLoading && 
@@ -93,6 +100,7 @@ const Signup = () => {
             <ActivityIndicator size={70} color="09E4AF"/>
           </View>
         }
+
       </>
 
     :

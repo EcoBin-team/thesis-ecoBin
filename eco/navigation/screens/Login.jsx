@@ -13,6 +13,8 @@ import { server_url } from "../../secret";
 
 import SpinnerStyles from "../../styles/ActivityIndicator.styles";
 import styles from "../../styles/Signup.styles";
+import LogoBackground from "../../components/Logo/LogoBackground";
+import Logo from "../../components/Logo/Logo1";
 
 const Login = () => {
 
@@ -70,16 +72,21 @@ const Login = () => {
   return (
     <SafeAreaView>
 
-      <View>
+      <View style={{marginTop: 20}}>
+
+        <LogoBackground login={true}/>
 
         <View style={{display: "flex", justifyContent: "center", alignItems: "center", marginTop: 25}}>
-          <BackButton fn={() => navigation.navigate("Home")} style={{marginRight: 270, top: 30}}/>
-          <Image source={require("../../assets/Earth.png")}/>
-          <Text style={{fontFamily: "MontserratBold", color: "#2DCC70", fontSize: 30, marginTop: 20, marginBottom: 20}}>Welcome Back</Text>
 
-          <InputField placeholder="Email address" fn={setEmail}/>
-          <InputField placeholder="Password" fn={setPassword} isPassword={true}/>
-          <AuthButton text="Sign In" fn={handleSubmit} style={styles.auth}/>
+          <BackButton fn={() => navigation.navigate("Home")} style={{marginRight: 270, top: 30}} auth={true}/>
+
+          <View style={{marginTop: 70}}>
+            <Logo/>
+            <InputField placeholder="Email address" fn={setEmail} styling={{marginTop: 60}}/>
+            <InputField placeholder="Password" fn={setPassword} isPassword={true}/>
+            <AuthButton text="Sign In" fn={handleSubmit} style={styles.auth}/>
+          </View>
+
         </View>
       </View>
 
