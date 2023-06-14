@@ -1,5 +1,5 @@
 const router = require("express").Router()
-const { login, signUp, getAll, uploadImage, getUserById } = require("../controllers/users")
+const { login, signUp, getAll, uploadImage, getUserById, } = require("../controllers/users")
 
 router.get("/getAll", getAll) // route to retrieve all users
 

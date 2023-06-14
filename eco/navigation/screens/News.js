@@ -12,36 +12,45 @@ import {
   Alert,
   Dimensions,
 } from 'react-native';
+import { useRoute } from '@react-navigation/native';
 import { useNavigation } from '@react-navigation/native';
 import { UserContext } from '../MainContainer';
 import axios from 'axios';
 import { StatusBar } from 'expo-status-bar';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import Comments from '../../components/Comments/Comments';
+import Likes from '../../components/Likes/Likes';
 
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
 
 function News() {
+
+ 
   const userData = useContext(UserContext);
   const navigation = useNavigation();
   const [data, setData] = useState([]);
   const [show, setShow] = useState(false);
+  const [showlike, setShowlike] = useState(false);
   const [commentText, setCommentText] = useState('');
   const [userDetails, setUserDetails] = useState(null);
   const [postId, setPostId] = useState("");
   const [likeStatus, setLikeStatus] = useState({});
-
+  
   useEffect(() => {
     fetchData();
     fetchUserDetails();
+   
   }, []);
+  
+
+
 
   const fetchUserDetails = async () => {
     try {
       const response = await fetch(`http://10.0.2.2:3000/users/${userData.id}`);
       const data = await response.json();
-      console.log('User details:', data);
+      // console.log('User details:', data);
       setUserDetails(data);
     } catch (error) {
       console.log('Error fetching user details:', error);
@@ -51,9 +60,9 @@ function News() {
   const fetchData = async () => {
     try {
       const response = await axios.get('http://10.0.2.2:3000/feeds');
-      console.log('Fetched data:', response.data);
+      // console.log('Fetched data:', response.data);
       setData(response.data);
-
+console.log(response.data)
       const initialLikeStatus = {};
       response.data.forEach((post) => {
         initialLikeStatus[post.id] = false;
@@ -72,6 +81,14 @@ function News() {
     setShow(true);
     setPostId(id);
   };
+  const handleCloselike = () => {
+    setShowlike(false);
+  };
+
+  const handleShowlike = (id) => {
+    setShowlike(true);
+    setPostId(id);
+  };
 
   const handleLike = async (postId) => {
     try {
@@ -84,16 +101,35 @@ function News() {
         await axios.post(`http://10.0.2.2:3000/feeds/${postId}/postLike`, { userId: userData.id });
       }
 
-      // Toggle the like status
-      setLikeStatus((prevStatus) => ({
-        ...prevStatus,
-        [postId]: !prevStatus[postId],
-      }));
-    } catch (error) {
-      console.error('Error handling like:', error);
-    }
-  };
+        // Toggle the like status
+    setLikeStatus((prevStatus) => ({
+      ...prevStatus,
+      [postId]: !prevStatus[postId],
+    }));
 
+     // Update the like count in the feeds data
+     setData((prevData) => {
+      const newData = prevData.map((item) => {
+        if (item.id === postId) {
+          if (likeStatus[postId]) {
+            item.likes -= 1; // Decrease like count
+          } else {
+            item.likes += 1; // Increase like count
+          }
+        }
+        return item;
+      });
+      return newData;
+    });
+
+    // Update the like count in the database
+    await axios.put(`http://10.0.2.2:3000/feeds/${postId}/updatelike`, { likes: data.find((item) => item.id === postId).likes });
+
+  } catch (error) {
+    console.error('Error handling like:', error);
+  }
+};
+  
   const handlePostComment = async (postId) => {
     setCommentText("");
     try {
@@ -130,7 +166,7 @@ function News() {
       <StatusBar style="auto" />
       <Image source={require('../../assets/logo.png')} style={styles.logoImage} />
       <ScrollView contentContainerStyle={styles.scrollContainer}>
-        <View style={styles.logoContainer}></View>
+        {/* <View style={styles.logoContainer}></View> */}
        
 
         <View style={styles.newsContainer}>
@@ -159,6 +195,10 @@ function News() {
               />
               <Text style={styles.likeText}>{likeStatus[item.id] ? 'Liked' : 'Like'}</Text>
             </TouchableOpacity>
+            <TouchableOpacity  onPress={() => handleShowlike(item.id)}>
+                  <Text >{item.likes}</Text>
+                </TouchableOpacity>
+               
               </View>
             </View>
           ))}
@@ -190,6 +230,23 @@ function News() {
                 <TouchableOpacity style={styles.postButton} onPress={() => handlePostComment(postId)}>
                   <Text style={[styles.buttonText, styles.postButtonText]}>Post</Text>
                 </TouchableOpacity>
+              </View>
+            </View>
+          </View>
+        </Modal>
+
+
+        <Modal visible={showlike} onRequestClose={handleCloselike} transparent={true}>
+          <View style={styles.modalContainer}>
+            <View style={styles.modalContent}>
+           <Likes postId={postId} />
+              
+              
+              <View style={styles.buttonContainer}>
+                <TouchableOpacity style={styles.closeButton} onPress={handleCloselike}>
+                  <Text style={styles.buttonText}>Close</Text>
+                </TouchableOpacity>
+               
               </View>
             </View>
           </View>
@@ -316,7 +373,7 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   closeButton: {
-    backgroundColor: 'red',
+    backgroundColor: '#27AE60',
     padding: 10,
     borderRadius: 5,
   },
@@ -326,7 +383,7 @@ const styles = StyleSheet.create({
     borderRadius: 5,
   },
   buttonText: {
-    color: '#FFFFFF',
+    color: '#27AE60',
     fontWeight: 'bold',
   },
   postButtonText: {

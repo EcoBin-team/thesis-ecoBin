@@ -131,7 +131,23 @@ const postLike = async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 };
+// Update the like count in the "feeds" table
+const updateLikeCount = async (postId, likeCount) => {
+  try {
+    const { data, error } = await supabase
+      .from('feeds')
+      .update({ likes: likeCount })
+      .match({ id: postId });
 
+    if (error) {
+      throw new Error('Error updating like count');
+    }
+
+    console.log('Like count updated successfully:', data);
+  } catch (error) {
+    console.error('Error updating like count:', error);
+  }
+};
 
 
 
@@ -192,7 +208,7 @@ const deleteLike = async (req, res) => {
 
 
 
-module.exports = { getOneFeed, getAllFeeds, postComment, getAllComments, postLike ,deleteLike,getAllLikesByPostId};
+module.exports = {updateLikeCount, getOneFeed, getAllFeeds, postComment, getAllComments, postLike ,deleteLike,getAllLikesByPostId};
 
 
 
