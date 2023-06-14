@@ -1,11 +1,12 @@
 const supabase = require("../supabase/Supabase_Connect");
-const calculateTotalPoints = (cart) => {
+const calculateTotalPoints = (products) => {
   let totalPoints = 0;
-  for (const product of cart) {
+  for (const product of products) {
     totalPoints += product.points;
   }
   return totalPoints;
 };
+
 const cartController = {
     addToCart: async (req, res) => {
         const { userId, productId } = req.body;
@@ -165,7 +166,16 @@ getAllProducts: async (req, res) => {
         return res.status(404).json({ error: 'User not found' });
       }
   
-      const totalPoints = calculateTotalPoints(cart);
+      const { data: products, error: productsError } = await supabase
+        .from('Shop') 
+        .select('id, points')
+        .in('id', cart);
+  
+      if (productsError) {
+        return res.status(500).json({ error: 'Error fetching product details' });
+      }
+  
+      const totalPoints = calculateTotalPoints(products);
       const updatedBalance = user.balance - totalPoints;
   
       if (updatedBalance < 0) {
@@ -175,6 +185,12 @@ getAllProducts: async (req, res) => {
       await supabase
         .from('users')
         .update({ balance: updatedBalance })
+        .eq('id', userId);
+  
+      // Clear the user's cart by setting it to an empty array
+      await supabase
+        .from('users')
+        .update({ cart: [] })
         .eq('id', userId);
   
       return res.json({ balance: updatedBalance });
