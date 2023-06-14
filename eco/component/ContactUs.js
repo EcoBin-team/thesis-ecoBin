@@ -1,61 +1,68 @@
-import React, { Component, useState } from 'react';
-import { View, TextInput, Button, Alert } from 'react-native';
-import nodemailer from 'nodemailer';
-
+import React from 'react';
+import { View, Text, StyleSheet } from 'react-native';
+import { FontAwesome } from '@expo/vector-icons';
 
 const ContactUs = () => {
-  const [name, setName] = useState('');
-  const [email, setEmail] = useState('');
-  const [message, setMessage] = useState('');
-
-  const handleSendEmail = () => {
-    const transporter = nodemailer.createTransport({
-      service: 'Gmail',
-      auth: {
-        user: 'your_email@gmail.com',
-        pass: 'your_password',
-      },
-    });
-
-    const mailOptions = {
-      from: email,
-      to: 'recipient_email@example.com',
-      subject: 'Contact Us Form',
-      text: `Name: ${name}\nEmail: ${email}\n\n${message}`,
-    };
-
-    transporter.sendMail(mailOptions, (error, info) => {
-      if (error) {
-        console.error(error);
-        Alert.alert('Error', 'An error occurred while sending the email.');
-      } else {
-        console.log('Email sent: ' + info.response);
-        Alert.alert('Success', 'Email sent successfully.');
-      }
-    });
-  };
-
   return (
-    <View>
-      <TextInput
-        placeholder="Name"
-        value={name}
-        onChangeText={text => setName(text)}
-      />
-      <TextInput
-        placeholder="Email"
-        value={email}
-        onChangeText={text => setEmail(text)}
-      />
-      <TextInput
-        placeholder="Message"
-        value={message}
-        onChangeText={text => setMessage(text)}
-        multiline
-      />
-      <Button title="Send" onPress={handleSendEmail} />
+    <View style={styles.container}>
+      <Text style={styles.heading}>Contact Us</Text>
+      <View style={styles.contactInfoContainer}>
+        <Text style={styles.contactInfo}>Email: info@ecobin.com</Text>
+        <Text style={styles.contactInfo}>Phone: +216 99 330 012</Text>
+        <Text style={styles.contactInfo}>Address: 123 Green Street, City</Text>
+        <Text style={styles.contactInfo}>
+          Service Times: Monday to Friday         9:00 AM - 5:00 PM
+        </Text>
+      </View>
+      <Text style={styles.socialMediaText}>Follow us on social media:</Text>
+      <View style={styles.socialMediaContainer}>
+        <FontAwesome name="facebook" style={styles.icon} />
+        <FontAwesome name="twitter" style={styles.icon} />
+        <FontAwesome name="instagram" style={styles.icon} />
+      </View>
     </View>
   );
 };
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    padding: 16,
+  },
+  heading: {
+    top :30 ,
+    textAlign: 'center',
+    fontSize: 24,
+    fontWeight: 'bold',
+    marginBottom: 30,
+    color: 'lightgreen',
+  },
+  contactInfoContainer: {
+    marginBottom: 24,
+  },
+  contactInfo: {
+    top : 60 ,
+    fontSize: 16,
+    marginBottom: 8,
+    textAlign: 'center',
+  },
+  socialMediaText: {
+    top : 100 ,
+    fontSize: 18,
+    fontWeight: 'bold',
+    marginBottom: 8,
+    textAlign: 'center',
+  },
+  socialMediaContainer: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+  },
+  icon: {
+    top : 100 ,
+    fontSize: 32,
+    marginHorizontal: 8,
+    color: 'lightgreen',
+  },
+});
 
 export default ContactUs;
