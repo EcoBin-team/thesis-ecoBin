@@ -1,9 +1,9 @@
 const router = require("express").Router()
-const { getAllDepots,getDepotById, searchDepot } = require("../controllers/depotContrller")
+const { getAllDepots,getDepotById, searchDepot } = require("../controllers/depotController")
 
 router.get("/getAll", getAllDepots) 
-router.get("/depot/:id", getDepotById)
-router.get("/searchDepot", searchDepot)
+router.get("/:id", getDepotById)
+router.get("/search", searchDepot)
 
 
 
