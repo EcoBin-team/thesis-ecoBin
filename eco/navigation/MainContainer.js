@@ -9,6 +9,7 @@ import SettingsScreen from './screens/SettingsScreen';
 import Account from './screens/Account';
 import Recycle from './screens/Recycle';
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import Contacts from './screens/Contacts';
 const NewsName = "News";
 const detailsName = "Details";
 const RecycleName = 'Recycle';
