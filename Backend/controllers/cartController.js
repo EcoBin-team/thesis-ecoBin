@@ -1,6 +1,6 @@
 const supabase = require("../supabase/Supabase_Connect");
 
-const calculateTotalPoints = (cart) => {
+const calculateTotalPoints = (products) => {
   let totalPoints = 0;
   for (const product of products) {
     totalPoints += product.points;
@@ -154,39 +154,54 @@ const getAllProducts = async (req, res) => {
   }
 };
 
-const confirmPurchase = async (req, res) => {
+const confirmPurchase =async (req, res) => {
   const { userId } = req.params;
   const { cart } = req.body;
 
   try {
     const { data: user, error } = await supabase
-      .from("users")
-      .select("balance")
-      .eq("id", userId)
+      .from('users')
+      .select('balance')
+      .eq('id', userId)
       .single();
 
     if (error || !user) {
-      return res.status(404).json({ error: "User not found" });
+      return res.status(404).json({ error: 'User not found' });
     }
 
-    const totalPoints = calculateTotalPoints(cart);
+    const { data: products, error: productsError } = await supabase
+      .from('Shop') 
+      .select('id, points')
+      .in('id', cart);
+
+    if (productsError) {
+      return res.status(500).json({ error: 'Error fetching product details' });
+    }
+
+    const totalPoints = calculateTotalPoints(products);
     const updatedBalance = user.balance - totalPoints;
 
     if (updatedBalance < 0) {
-      return res.status(400).json({ error: "Insufficient balance" });
+      return res.status(400).json({ error: 'Insufficient balance' });
     }
 
     await supabase
-      .from("users")
+      .from('users')
       .update({ balance: updatedBalance })
-      .eq("id", userId);
+      .eq('id', userId);
+
+    // Clear the user's cart by setting it to an empty array
+    await supabase
+      .from('users')
+      .update({ cart: [] })
+      .eq('id', userId);
 
     return res.json({ balance: updatedBalance });
   } catch (error) {
-    console.error("Error confirming purchase:", error);
-    return res.status(500).json({ error: "Internal server error" });
+    console.error('Error confirming purchase:', error);
+    return res.status(500).json({ error: 'Internal server error' });
   }
-};
+}
 
 const getUserBalance = async (req, res) => {
   const { userId } = req.params;

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, Image, TextInput, Modal, Alert } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, Image, TextInput, Modal, Alert ,ActivityIndicator } from 'react-native';
 import axios from 'axios';
 import { useNavigation,useRoute } from '@react-navigation/native';
 import { server_url } from '../../secret';
@@ -10,6 +10,7 @@ const CartComponent = () => {
     console.log(userId)
     const navigation = useNavigation();
   const [cartProducts, setCartProducts] = useState([]);
+  const [userBalance, setUserBalance] = useState(0);
   const [phoneNumber, setPhoneNumber] = useState('');
   const [confirmModalVisible, setConfirmModalVisible] = useState(false);
   
@@ -17,6 +18,7 @@ const CartComponent = () => {
 
   useEffect(() => {
     fetchCartProducts();
+    fetchUserBalance()
   }, [userId]);
 
   const fetchCartProducts = async () => {
@@ -29,7 +31,15 @@ const CartComponent = () => {
       console.log('Error fetching cart products:', error);
     }
   };
-
+  const fetchUserBalance = async () => {
+    try {
+      const response = await axios.get(`${server_url}/balance/${userId}`);
+      const { balance } = response.data;
+      setUserBalance(balance);
+    } catch (error) {
+      console.log('Error fetching user balance:', error);
+    }
+  };
   const handleDeleteProduct = async (productId) => {
     try {
       setIsLoading(true);
@@ -60,13 +70,11 @@ const CartComponent = () => {
   };
 
   const handlePurchaseConfirmation = async () => {
-    console.log('Making the purchase');
-    console.log('Phone number:', phoneNumber);
+    console.log('Confirming the purchase');
 
     try {
       const totalPoints = cartProducts.reduce((sum, product) => sum + product.points, 0);
 
-      // Retrieve the user's balance from the server
       const balanceResponse = await axios.get(`${server_url}/balance/${userId}`);
       const userBalance = balanceResponse.data.balance;
 
@@ -77,30 +85,22 @@ const CartComponent = () => {
         return;
       }
 
-      // Calculate the remaining balance after subtracting the total points
-      const updatedBalance = userBalance - totalPoints;
+      setIsLoading(true); // Start the loading state
 
-      // Make the purchase by sending the cartProducts data to the server
-      await axios.post(`${server_url}/${userId}/purchase`, {
-        cartProducts,
+      await axios.post(`${server_url}/users/${userId}/purchase`, {
+        cart: cartProducts.map((product) => product.id),
       });
 
-      // Update the user's balance on the server
-      await axios.put(`${server_url}/balance/${userId}`, {
-        balance: updatedBalance,
-      });
-
-      // Display a success message to the user
       Alert.alert('Purchase Confirmed', 'Your order has been confirmed.', [{ text: 'OK' }]);
 
-      // Clear the cart and update the user's balance
       setCartProducts([]);
-      // Replace `setUserBalance(updatedBalance);` with the appropriate code for updating the balance
     } catch (error) {
-      console.log('Error making the purchase:', error);
+      console.log('Error confirming the purchase:', error);
     } finally {
+      setIsLoading(false); //End the loading state
       setConfirmModalVisible(false);
       setPhoneNumber('');
+      fetchUserBalance(); //Fetch the updated user balance
       fetchCartProducts();
     }
   };
@@ -108,6 +108,7 @@ const CartComponent = () => {
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Cart</Text>
+      <Text style={styles.balanceText}>Balance: {userBalance}</Text>
       {cartProducts.map((product, index) => (
         <View
           key={product.id}
@@ -158,9 +159,15 @@ const CartComponent = () => {
           </View>
         </View>
       </Modal>
+      {isLoading && (
+        <View style={styles.loadingContainer}>
+          <ActivityIndicator size="large" color="#000000" />
+        </View>
+      )}
     </View>
   );
 };
+
 
 const styles = StyleSheet.create({
   container: {
@@ -168,7 +175,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#f5f5f5',
     padding: 16,
     marginTop: 50,
-    width: '100%', // Add this line to set the width to 100% of the page
+    width: '100%',
   },
   title: {
     fontSize: 24,
@@ -279,6 +286,16 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: 'bold',
     color: '#ffffff',
+  },
+  loadingContainer: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
   },
 });
 

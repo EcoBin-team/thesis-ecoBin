@@ -36,7 +36,7 @@ const navigation = useNavigation();
 
     fetchProducts();
     fetchBalance();
-  }, []);
+  }, [userId]);
 
   const addToCart = async (productId) => {
     try {
