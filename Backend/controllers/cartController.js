@@ -2,7 +2,7 @@ const supabase = require("../supabase/Supabase_Connect");
 
 const calculateTotalPoints = (cart) => {
   let totalPoints = 0;
-  for (const product of cart) {
+  for (const product of products) {
     totalPoints += product.points;
   }
   return totalPoints;
