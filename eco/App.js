@@ -3,8 +3,6 @@ import { SplashScreen } from "expo-router";
 import { useFonts } from "expo-font";
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
-import io from "socket.io-client"
-
 
 // Import your screens
 import Account from "./navigation/screens/Account"
@@ -24,6 +22,7 @@ import Exchange from './navigation/screens/Exchange'
 import Guide from './component/Guide'
 import FAQ from './component/FAQ'
 import Transaction from './navigation/screens/Transaction'
+import Conversation from "./navigation/screens/Conversation";
 
 const Stack = createStackNavigator();
 
@@ -99,6 +98,11 @@ const App = () => {
         <Stack.Screen
           name="Contacts"
           component={Contacts}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="Conversations"
+          component={Conversation}
           options={{ headerShown: false }}
         />
         <Stack.Screen
