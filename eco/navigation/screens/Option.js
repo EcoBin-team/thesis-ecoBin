@@ -5,6 +5,7 @@ import { useNavigation } from '@react-navigation/native';
 import { Feather } from '@expo/vector-icons';
 import { UserContext } from '../MainContainer';
 import { useRoute } from '@react-navigation/native';
+import { server_url } from "../../secret";
 
 export default function OptionScreen({ navigation }) {
   const userData = useContext(UserContext);
@@ -13,7 +14,7 @@ export default function OptionScreen({ navigation }) {
   
   const fetchUserDetails = async () => {
     try {
-      const response = await fetch(`http://10.0.2.2:3000/users/user/${userData.id}`);
+      const response = await fetch(`${server_url}/users/user/${userData.id}`);
       const data = await response.json();
       setUserDetails(data);
     } catch (error) {

@@ -6,6 +6,10 @@ import axios from 'axios';
 import { StatusBar } from 'expo-status-bar';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import Comments from '../../components/Comments/Comment'
+import { server_url } from '../../secret';
+
+
+
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
 function News() {
@@ -27,7 +31,7 @@ function News() {
 
   const fetchUserDetails = async () => {
     try {
-      const response = await fetch(`http://10.0.2.2:3000/users/user/${userData.id}`);
+      const response = await fetch(`${server_url}/users/user/${userData.id}`);
       const data = await response.json();
       console.log('User details:', data);
       setUserDetails(data);
@@ -38,7 +42,7 @@ function News() {
 
   const fetchData = async () => {
     try {
-      const response = await axios.get('http://10.0.2.2:3000/feeds');
+      const response = await axios.get(`${server_url}/feeds`);
       console.log('Fetched data:', response.data);
       setData(response.data);
     } catch (error) {
@@ -58,7 +62,7 @@ function News() {
   const handlePostComment = async (postId) => {
     setCommentText("");
     try {
-      const response = await fetch(`http://10.0.2.2:3000/feeds/${postId}/postComment`, {
+      const response = await fetch(`${server_url}/feeds/${postId}/postComment`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

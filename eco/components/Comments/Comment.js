@@ -1,5 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import { View, Text, FlatList, ActivityIndicator, Image, StyleSheet } from 'react-native';
+import { server_url } from '../../secret';
+
+
+
+
+
 
 const Comments = ({ postId }) => {
   const [comments, setComments] = useState([]);
@@ -16,14 +22,15 @@ const Comments = ({ postId }) => {
 
   const fetchComments = async () => {
     try {
-      const response = await fetch(`http://10.0.2.2:3000/feeds/${postId}/comments`);
+      const response = await fetch(`${server_url}/feeds/${postId}/comments`);
       const data = await response.json();
       // console.log(data);
 
       if (Array.isArray(data)) {
         const commentsWithUserDetails = await Promise.all(
           data.map(async (comment) => {
-            const userResponse = await fetch(`http://10.0.2.2:3000/users/${comment.userid}`);
+            console.log(comment)
+            const userResponse = await fetch(`${server_url}/users/user/${comment.userid}`);
             const userData = await userResponse.json();
             return { ...comment, username: userData.name, userImage: userData.image };
           })
