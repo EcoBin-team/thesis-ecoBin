@@ -18,7 +18,7 @@ export default function TransactionScreen({ navigation }) {
 
   return (
     <View style={styles.container}>
-      <Image source={require('../../assets/fond4.jpg')} style={styles.vector} />
+      <Image source={require('../../assets/ciel.jpg')} style={styles.vector} />
       <View style={styles.headerContainer}>
         <TouchableOpacity onPress={() => navigation.goBack()}>
           <Icon style={styles.headerIcon} name="arrow-back" size={24} color="#000000" />
@@ -29,7 +29,7 @@ export default function TransactionScreen({ navigation }) {
       <View style={styles.container2}>
         <Text style={styles.text}>
           Go to nearby recycling center & process affiliated with
-          <Text style={{ color: 'green' }}> EcoBin </Text>and write your code.
+          <Text style={{ color: '#6CC51D' }}> EcoBin </Text>and write your code.
         </Text>
      
       </View>
@@ -43,11 +43,15 @@ export default function TransactionScreen({ navigation }) {
         
         </View>
         <View style={styles.container4}>
-        <Button title="Send" onPress={handleSendCode}  />
+      {/* Your other components */}
+      <TouchableOpacity style={styles.button} onPress={handleSendCode}>
+        <Text style={styles.buttonText}>Send your code</Text>
+      </TouchableOpacity>
     </View>
     </View>
   );
 }
+
 
 const styles = StyleSheet.create({
   vector: {
@@ -73,16 +77,17 @@ const styles = StyleSheet.create({
     left: -100,
   },
   container: {
+    // backgroundColor:'white',
     width: '100%',
     flex: 1,
     position: 'absolute',
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: 'gray',
+   
     top: 50,
   },
   container2: {
-   
+    borderWidth: 2,
     backgroundColor: 'white',
     alignItems: 'center',
     justifyContent: 'center',
@@ -90,14 +95,15 @@ const styles = StyleSheet.create({
     borderRadius: 25,
     marginTop:50,
     // top: -300,
+    borderColor: 'gray',
   },
   container3:{
-    
-    backgroundColor: 'white',
+   
+    // backgroundColor: 'white',
     alignItems: 'center',
     justifyContent: 'center',
     width: '80%',
-    borderRadius: 25,
+    borderRadius: 60,
     marginTop:280,
   },
   title: {
@@ -106,20 +112,39 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
   text: {
+    fontSize: 16,
     marginBottom: 16,
   },
   input: {
+    backgroundColor: 'white',
     marginTop:10,
-    width: '80%',
-    height: 40,
+    width: '100%',
+    height: 55,
     borderColor: 'gray',
-    borderWidth: 1,
-    borderRadius: 5,
+    borderWidth: 2,
+    borderRadius: 10,
     paddingHorizontal: 8,
     marginBottom: 16,
   },
   container4:{
+    width:'50%',
+   
+    flex: 1,
+    borderRadius: 60,
     marginTop:300,
     top:-190
+  },
+  button: {
+    width:'100%',
+    backgroundColor: '#6CC51D',
+    paddingVertical: 12,
+    paddingHorizontal: 24,
+    borderRadius: 8,
+    alignItems: 'center',
+  },
+  buttonText: {
+    color: '#fff',
+    fontSize: 16,
+    fontWeight: 'bold',
   },
 });

@@ -1,5 +1,5 @@
 
-import React, { useState } from "react";
+import React, { useState,useEffect } from "react";
 import { View, Text, SafeAreaView, StyleSheet, TextInput, ScrollView, Alert,TouchableOpacity } from "react-native"
 import axios from "axios";
 import Icon from 'react-native-vector-icons/Ionicons';
@@ -17,7 +17,7 @@ import { server_url } from "../../secret";
 import styles from "../../styles/Nearby.styles";
 import Depot from "../../components/Depot/Depot";
 
-const Nearby = (navigation) => {
+const Nearby = ({navigation}) => {
 
 
   const [mapRegion,setMapRegion] = useState({
@@ -101,22 +101,22 @@ const Nearby = (navigation) => {
 }
 
 
-const styles = StyleSheet.create({
-  upperContainer: {
-    display: "flex",
-    flexDirection: "row",
-    alignItems: "center",
-    marginTop: 35
-  },
-  headerIcon:{
-    left: 0,
-  },
-  nearby: {
-    fontFamily: "MontserratBold",
-    fontSize: 30,
-    color: "#2DCC70"
-  }
-})
+// const styles = StyleSheet.create({
+//   upperContainer: {
+//     display: "flex",
+//     flexDirection: "row",
+//     alignItems: "center",
+//     marginTop: 35
+//   },
+//   headerIcon:{
+//     left: 0,
+//   },
+//   nearby: {
+//     fontFamily: "MontserratBold",
+//     fontSize: 30,
+//     color: "#2DCC70"
+//   }
+// })
 
 
 export default Nearby

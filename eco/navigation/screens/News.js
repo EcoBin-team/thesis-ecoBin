@@ -5,7 +5,7 @@ import { UserContext } from '../MainContainer';
 import axios from 'axios';
 import { StatusBar } from 'expo-status-bar';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
-import Comments from '../../components/Comments/Comments'
+import Comments from '../../components/Comments/Comment'
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
 function News() {

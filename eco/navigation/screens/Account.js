@@ -32,6 +32,7 @@ const ProfileDetails = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [updateImage,setUpdateImage] = useState(false)
   const userData = useContext(UserContext);
+  // const [updatedUser, setUpdatedUser] = useState(null);
   const navigation = useNavigation();
   const route = useRoute();
   // const updatedUser = route.params?.updatedUser
@@ -105,6 +106,9 @@ const ProfileDetails = () => {
   };
 
   console.log(userData);
+
+
+
   const handleAboutMePress = () => {
     navigation.navigate('AboutMe', {
       userDetails: {
