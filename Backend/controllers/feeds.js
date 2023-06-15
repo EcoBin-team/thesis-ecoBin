@@ -132,22 +132,37 @@ const postLike = async (req, res) => {
   }
 };
 // Update the like count in the "feeds" table
-const updateLikeCount = async (postId, likeCount) => {
+
+const updateLikeCount = async (req, res) => {
   try {
+    const { id } = req.params;
+    const { likes } = req.body;
+
     const { data, error } = await supabase
       .from('feeds')
-      .update({ likes: likeCount })
-      .match({ id: postId });
+      .update({ likes })
+      .match({ id });
 
     if (error) {
       throw new Error('Error updating like count');
     }
 
     console.log('Like count updated successfully:', data);
+
+    res.status(200).json({ success: true, message: 'Like count updated successfully' });
   } catch (error) {
     console.error('Error updating like count:', error);
+    res.status(500).json({ success: false, error: 'Error updating like count' });
   }
 };
+
+
+
+
+
+
+
+
 
 
 

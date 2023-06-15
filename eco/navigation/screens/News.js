@@ -36,7 +36,7 @@ function News() {
   const [userDetails, setUserDetails] = useState(null);
   const [postId, setPostId] = useState("");
   const [likeStatus, setLikeStatus] = useState({});
-  
+ 
   useEffect(() => {
     fetchData();
     fetchUserDetails();
@@ -89,46 +89,72 @@ console.log(response.data)
     setShowlike(true);
     setPostId(id);
   };
-
+  
+  
+  const updateLikesCount = async (id, newLikesCount) => {
+    try {
+      const response = await fetch(`http://10.0.2.2:3000/feeds/${id}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ likes: newLikesCount })
+      });
+  
+      if (response.ok) {
+        console.log('Likes count updated successfully');
+      } else {
+        console.error('Failed to update likes count');
+      }
+    } catch (error) {
+      console.error(error);
+      // Handle error gracefully
+    }
+  };
+  
+  const fetchOneFeed = async (id) => {
+    try {
+      const response = await fetch(`http://10.0.2.2:3000/feeds/${id}`);
+      const data = await response.json();
+      return data[0];
+    } catch (error) {
+      console.error(error);
+      // Handle error gracefully
+    }
+  };
+  
   const handleLike = async (postId) => {
     try {
+      const data = await fetchOneFeed(postId);
+    
       // Check if the post is already liked
       if (likeStatus[postId]) {
         // Dislike the post
         await axios.delete(`http://10.0.2.2:3000/likes/${postId}/${userData.id}`);
+        setLikeStatus((prevStatus) => ({
+          ...prevStatus,
+          [postId]: false,
+        }));
+        const newLikesCount = data.likes - 1;
+        await updateLikesCount(postId, newLikesCount);
       } else {
         // Like the post
         await axios.post(`http://10.0.2.2:3000/feeds/${postId}/postLike`, { userId: userData.id });
+        setLikeStatus((prevStatus) => ({
+          ...prevStatus,
+          [postId]: true,
+        }));
+        const newLikesCount = data.likes + 1;
+        await updateLikesCount(postId, newLikesCount);
       }
-
-        // Toggle the like status
-    setLikeStatus((prevStatus) => ({
-      ...prevStatus,
-      [postId]: !prevStatus[postId],
-    }));
-
-     // Update the like count in the feeds data
-     setData((prevData) => {
-      const newData = prevData.map((item) => {
-        if (item.id === postId) {
-          if (likeStatus[postId]) {
-            item.likes -= 1; // Decrease like count
-          } else {
-            item.likes += 1; // Increase like count
-          }
-        }
-        return item;
-      });
-      return newData;
-    });
-
-    // Update the like count in the database
-    await axios.put(`http://10.0.2.2:3000/feeds/${postId}/updatelike`, { likes: data.find((item) => item.id === postId).likes });
-
-  } catch (error) {
-    console.error('Error handling like:', error);
-  }
-};
+    } catch (error) {
+      console.error(error);
+      // Handle error gracefully
+    }
+  };
+  
+  
+  
   
   const handlePostComment = async (postId) => {
     setCommentText("");
@@ -187,7 +213,7 @@ console.log(response.data)
   </Pressable>
 </View>
 
-<TouchableOpacity onPress={() => handleLike(item.id)} style={styles.like}>
+<TouchableOpacity onPress={() => handleLike(item.id) } style={styles.like}>
               <MaterialCommunityIcons
                 name={likeStatus[item.id] ? 'thumb-up' : 'thumb-up-outline'}
                 size={24}
