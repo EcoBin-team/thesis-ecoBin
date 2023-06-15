@@ -14,7 +14,8 @@ io.on("connection", socket => {
   console.log("user connected", socket.id)
 
   socket.on("send_message", data => {
-    
+    console.log(data)
+    socket.to(data.conversation).emit("receive_message", data)
   })
 
   io.on("disconnect", () => {
