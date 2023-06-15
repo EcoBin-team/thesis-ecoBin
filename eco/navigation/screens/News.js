@@ -22,14 +22,7 @@ function News() {
   const [postId, setPostId] = useState("")
   const [likeCount, setLikeCount] = useState(0);
  
-  const handleLike = () => {
-    if (liked) {
-      setLikeCount(likeCount - 1);
-    } else {
-      setLikeCount(likeCount + 1);
-    }
-    setLiked(!liked);
-  };
+
 
   console.log('userData.id:', userData.id);
 
