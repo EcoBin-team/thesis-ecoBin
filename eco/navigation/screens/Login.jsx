@@ -31,7 +31,7 @@ const Login = () => {
 
   // login function to set the user's id and token in the localstorage
   const handleSubmit = async () => {
-    navigation.navigate('News');
+    // navigation.navigate('News');
     // regular expressions to check inputs with
     const regexpEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
 
@@ -43,8 +43,10 @@ const Login = () => {
     setIsLoading(true) // Displaying the ActivityIndicator (Spinner)
 
     // sending an http request to the server to return an id and a token
+
     const response = await axios.post(`${server_url}/users/login`,{email: email, password: password})
     console.log(response.data)
+
 
     // alert if email written is not found in the database
     if(response.data === "auth/user-not-found"){
@@ -58,7 +60,10 @@ const Login = () => {
    
     else{
       await AsyncStorage.setItem("currentUser",JSON.stringify(response.data)) // storing the id and token in the local storage
-      navigation.navigate("MainContainer",{ userData: response.data }) // navigates to Newspage
+
+      navigation.navigate("MainContainer",{ userData: response.data }) // navigates to Newspage and send it to MainContainer component
+      console.log(userData)
+
     }
 
     setIsLoading(false) // hiding the ActivityIndicator (Spinner) after the data loads

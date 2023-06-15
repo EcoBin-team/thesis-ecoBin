@@ -5,15 +5,15 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 import { Image, View } from 'react-native';
 import News from '../navigation/screens/News';
 import DetailsScreen from './screens/DetailsScreen';
-import SettingsScreen from './screens/SettingsScreen';
+
 import Account from './screens/Account';
 import Recycle from './screens/Recycle';
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import Contacts from './screens/Contacts';
+import Option from './screens/Option'
+
 const NewsName = "News";
 const detailsName = "Details";
 const RecycleName = 'Recycle';
-const settingsName = "Settings";
+const OptionName = "Option";
 const AccountName = 'Account';
 
 const Tab = createBottomTabNavigator();
@@ -42,7 +42,7 @@ function MainContainer() {
                 iconName = focused ? 'list' : 'list-outline';
               } else if (rn === RecycleName) {
                 return <CustomRecycleIcon />;
-              } else if (rn === settingsName) {
+              } else if (rn === OptionName) {
                 iconName = focused ? 'settings' : 'settings-outline';
               } else if (rn === AccountName) {
                 iconName = focused ? 'person' : 'person-outline';
@@ -61,7 +61,7 @@ function MainContainer() {
           <Tab.Screen name={NewsName} component={News} />
           <Tab.Screen name={detailsName} component={DetailsScreen} />
           <Tab.Screen name={RecycleName} component={Recycle} options={{ tabBarLabel: () => null }} />
-          <Tab.Screen name={settingsName} component={SettingsScreen} />
+          <Tab.Screen name={OptionName} component={Option} />
           <Tab.Screen name={AccountName} component={Account} />
         </Tab.Navigator>
       
@@ -91,3 +91,4 @@ function CustomRecycleIcon() {
 
 export default MainContainer;
 export { UserContext };
+
