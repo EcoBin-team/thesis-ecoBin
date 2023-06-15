@@ -1,8 +1,15 @@
-import { View, Text } from "react-native"
+import { View, Text, SafeAreaView } from "react-native"
+import io from "socket.io-client"
 
 const Conversation = () => {
 
-  const socket = io.connect("http://localhost:5000")
+  const socket = io.connect("https://ecobin-socket-server.onrender.com")
+
+  return(
+    <SafeAreaView style={{flex: 1, marginTop: 50}}>
+      <Text>Hello</Text>
+    </SafeAreaView>
+  )
 
 }
 
