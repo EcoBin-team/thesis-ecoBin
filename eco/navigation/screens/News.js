@@ -5,7 +5,7 @@ import { UserContext } from '../MainContainer';
 import axios from 'axios';
 import { StatusBar } from 'expo-status-bar';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
-import Comments from '../../components/Comments/Comments'
+import Comments from '../../components/Comments/Comment'
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
 function News() {
@@ -16,17 +16,7 @@ function News() {
   const [show, setShow] = useState(false);
   const [commentText, setCommentText] = useState('');
   const [userDetails, setUserDetails] = useState(null);
-  const [postId, setPostId] = useState("")
-  const [likeCount, setLikeCount] = useState(0);
- 
-  const handleLike = () => {
-    if (liked) {
-      setLikeCount(likeCount - 1);
-    } else {
-      setLikeCount(likeCount + 1);
-    }
-    setLiked(!liked);
-  };
+  const [postId, setPostId] = useState("");
 
   console.log('userData.id:', userData.id);
 
@@ -37,7 +27,7 @@ function News() {
 
   const fetchUserDetails = async () => {
     try {
-      const response = await fetch(`http://10.0.2.2:3000/users/${userData.id}`);
+      const response = await fetch(`http://10.0.2.2:3000/users/user/${userData.id}`);
       const data = await response.json();
       console.log('User details:', data);
       setUserDetails(data);
@@ -48,11 +38,8 @@ function News() {
 
   const fetchData = async () => {
     try {
-
       const response = await axios.get('http://10.0.2.2:3000/feeds');
       console.log('Fetched data:', response.data);
-
-
       setData(response.data);
     } catch (error) {
       console.error('Error fetching data:', error);
@@ -98,10 +85,9 @@ function News() {
     <View style={styles.container}>
     
       <StatusBar style="auto" />
-      <Image source={require('../../assets/logo.png')} style={styles.logoImage} />
       <ScrollView contentContainerStyle={styles.scrollContainer}>
         <View style={styles.logoContainer}></View>
-       
+        <Image source={require('../../assets/logo.png')} style={styles.logoImage} />
 
         <View style={styles.newsContainer}>
           {data.map((item, index) => (
@@ -121,16 +107,14 @@ function News() {
   </Pressable>
 </View>
 
-<TouchableOpacity onPress={() => handleLike()} style={styles.like}>
-    <MaterialCommunityIcons
-      name={liked ? 'thumb-up' : 'thumb-up-outline'}
-      size={24}
-      color={liked ? '#6CC51D' : 'black'}
-    />
-    <Text style={styles.likeText}>{liked ? 'Liked' : 'Like'}</Text>
-    <Text style={styles.likeCount}>{likeCount}</Text>
-  </TouchableOpacity>
-
+<TouchableOpacity onPress={() => setLiked((isLiked) => !isLiked)} style={styles.like}>
+  <MaterialCommunityIcons
+    name={liked ? 'thumb-up' : 'thumb-up-outline'} // Replace with the desired like icon from MaterialCommunityIcons
+    size={24}
+    color={liked ? '#6CC51D' : 'black'}
+  />
+  <Text style={styles.likeText}>{liked ? 'Liked' : 'Like'}</Text>
+</TouchableOpacity>
               </View>
             </View>
           ))}
