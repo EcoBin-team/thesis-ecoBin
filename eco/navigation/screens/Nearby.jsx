@@ -1,9 +1,7 @@
-
-import React, { useState,useEffect } from "react";
-import { View, Text, SafeAreaView, StyleSheet, TextInput, ScrollView, Alert,TouchableOpacity } from "react-native"
+import React, { useEffect, useState } from "react";
+import { View, Text, SafeAreaView, TextInput, ScrollView } from "react-native"
 import axios from "axios";
-import Icon from 'react-native-vector-icons/Ionicons';
-
+import Icon from "react-native-vector-icons/FontAwesome"
 
 // common components imports
 import Map from "../../components/Map/Map";
@@ -12,13 +10,11 @@ import BackButton from "../../components/BackButton/BackButton";
 // secret variable import
 import { server_url } from "../../secret";
 
-
 // styles import
 import styles from "../../styles/Nearby.styles";
 import Depot from "../../components/Depot/Depot";
 
-const Nearby = ({navigation}) => {
-
+const Nearby = () => {
 
   const [mapRegion,setMapRegion] = useState({
     latitude: 0,
@@ -59,9 +55,7 @@ const Nearby = ({navigation}) => {
       <View style={{backgroundColor: "white"}}>
 
         <View style={styles.upperContainer}>
-        <TouchableOpacity onPress={() => navigation.goBack()}>
-        <Icon style={styles.headerIcon} name="arrow-back" size={24} color="#000000" />
-      </TouchableOpacity>
+          <BackButton style={{margin: 15}}/>
           <Text style={styles.nearby}>Nearby</Text>
         </View>
 
@@ -99,24 +93,5 @@ const Nearby = ({navigation}) => {
     </SafeAreaView>
   )
 }
-
-
-// const styles = StyleSheet.create({
-//   upperContainer: {
-//     display: "flex",
-//     flexDirection: "row",
-//     alignItems: "center",
-//     marginTop: 35
-//   },
-//   headerIcon:{
-//     left: 0,
-//   },
-//   nearby: {
-//     fontFamily: "MontserratBold",
-//     fontSize: 30,
-//     color: "#2DCC70"
-//   }
-// })
-
 
 export default Nearby

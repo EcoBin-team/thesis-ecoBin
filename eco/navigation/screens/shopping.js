@@ -10,6 +10,7 @@ const ShopComponent = () => {
     const { userId } = route.params;
     console.log(userId)
   const [products, setProducts] = useState([]);
+  const [balance, setBalance] = useState(0)
  console.log(userId)
 const navigation = useNavigation();
   useEffect(() => {
@@ -23,8 +24,19 @@ const navigation = useNavigation();
       }
     };
 
+    const fetchBalance = async () => {
+      try {
+        const response = await axios.get(`${server_url}/balance/${userId}`);
+        const { balance } = response.data;
+        setBalance(balance);
+      } catch (error) {
+        console.log('Error fetching user balance:', error);
+      }
+    };
+
     fetchProducts();
-  }, []);
+    fetchBalance();
+  }, [userId]);
 
   const addToCart = async (productId) => {
     try {
@@ -40,15 +52,20 @@ const navigation = useNavigation();
   };
 
   return (
+   
+   
     <ScrollView contentContainerStyle={styles.container}>
-      <View style={styles.productsContainer}>
+       
+      
       <View style={styles.headerContainer}>
       <TouchableOpacity onPress={() => navigation.goBack()}>
         <Icon style={styles.headerIcon} name="arrow-back" size={24} color="#000000" />
       </TouchableOpacity>
       <Text style={styles.headerText}>Shopping</Text>
-     
+      
     </View>
+    <Text style={styles.balanceText}>Balance: {balance}</Text>
+    <View style={styles.productsContainer}>
         {products.map((product, index) => (
           <Animatable.View key={product.id} style={styles.productContainer} animation="fadeInUp" delay={index * 100}>
             <Image source={{ uri: product.image }} style={styles.productImage} />
@@ -67,6 +84,7 @@ const navigation = useNavigation();
         <Text style={styles.goToCartButtonText}>Go to Cart</Text>
       </TouchableOpacity>
     </ScrollView>
+    
   );
 };
 
@@ -80,8 +98,8 @@ const styles = StyleSheet.create({
         paddingHorizontal: 16,
         height: 64,
         backgroundColor: 'white',
-        elevation: 4, // Add shadow on Android
-        shadowColor: '#000000', // Add shadow on iOS
+        elevation: 4, 
+        shadowColor: '#000000', 
         shadowOpacity: 0.3,
         shadowOffset: { width: 0, height: 2 },
       },
@@ -164,6 +182,11 @@ const styles = StyleSheet.create({
     fontSize: 20,
     fontWeight: 'bold',
     color: '#fff',
+  },
+  balanceText: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    marginBottom: 8,
   },
 });
 
