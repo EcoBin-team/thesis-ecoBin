@@ -1,5 +1,5 @@
 const router = require("express").Router()
-const { getAllDepots,getDepotById, searchDepot } = require("../controllers/depotContrller")
+const { getAllDepots,getDepotById, searchDepot } = require("../controllers/depotController")
 
 router.get("/getAll", getAllDepots) 
 router.get("/:id", getDepotById)
