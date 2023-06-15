@@ -191,6 +191,34 @@ const getAllLikesByPostId = async (req, res) => {
   }
 };
 
+const updateLikes = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { likes } = req.body;
+
+    // Update the likes for the specified feed
+    const { data, error } = await supabase
+      .from('Feeds')
+      .update({ likes })
+      .eq('id', id);
+
+    if (error) {
+      console.error('Error updating likes:', error.message);
+      return res.status(500).json({ message: 'Error updating likes' });
+    }
+
+    if (!data || data.length === 0) {
+      return res.status(404).json({ message: 'Feed not found' });
+    }
+
+    // Return the updated feed
+    res.json(data[0]);
+  } catch (error) {
+    console.error('Error updating likes:', error.message);
+    res.status(500).json({ message: 'Internal server error' });
+  }
+};
+
 const deleteLike = async (req, res) => {
   const { postId, userId } = req.params;
 
@@ -223,7 +251,7 @@ const deleteLike = async (req, res) => {
 
 
 
-module.exports = {updateLikeCount, getOneFeed, getAllFeeds, postComment, getAllComments, postLike ,deleteLike,getAllLikesByPostId};
+module.exports = {updateLikeCount, getOneFeed, getAllFeeds, postComment, getAllComments, postLike ,deleteLike,getAllLikesByPostId,updateLikes};
 
 
 
