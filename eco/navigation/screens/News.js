@@ -1,26 +1,11 @@
 import React, { useContext, useState, useEffect } from 'react';
-import {
-  View,
-  Text,
-  StyleSheet,
-  ScrollView,
-  Image,
-  Modal,
-  TextInput,
-  TouchableOpacity,
-  Pressable,
-  Alert,
-  Dimensions,
-} from 'react-native';
-import { useRoute } from '@react-navigation/native';
+import { View, Text, StyleSheet, ScrollView, Image, Modal, TextInput, TouchableOpacity, Pressable, Alert,Dimensions } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { UserContext } from '../MainContainer';
 import axios from 'axios';
 import { StatusBar } from 'expo-status-bar';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
-import Comments from '../../components/Comments/Comments';
-import Likes from '../../components/Likes/Likes';
-
+import Comments from '../../components/Comments/Comments'
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
 
@@ -34,9 +19,20 @@ function News() {
   const [showlike, setShowlike] = useState(false);
   const [commentText, setCommentText] = useState('');
   const [userDetails, setUserDetails] = useState(null);
-  const [postId, setPostId] = useState("");
-  const [likeStatus, setLikeStatus] = useState({});
+  const [postId, setPostId] = useState("")
+  const [likeCount, setLikeCount] = useState(0);
  
+  const handleLike = () => {
+    if (liked) {
+      setLikeCount(likeCount - 1);
+    } else {
+      setLikeCount(likeCount + 1);
+    }
+    setLiked(!liked);
+  };
+
+  console.log('userData.id:', userData.id);
+
   useEffect(() => {
     fetchData();
     fetchUserDetails();
@@ -48,7 +44,7 @@ function News() {
 
   const fetchUserDetails = async () => {
     try {
-      const response = await fetch(`http://10.0.2.2:3000/users/${userData.id}`);
+      const response = await fetch(`http://10.0.2.2:3000/users/user/${userData.id}`);
       const data = await response.json();
       // console.log('User details:', data);
       setUserDetails(data);
@@ -190,9 +186,8 @@ console.log(response.data)
     <View style={styles.container}>
     
       <StatusBar style="auto" />
-      <Image source={require('../../assets/logo.png')} style={styles.logoImage} />
       <ScrollView contentContainerStyle={styles.scrollContainer}>
-        {/* <View style={styles.logoContainer}></View> */}
+        <View style={styles.logoContainer}></View>
        
 
         <View style={styles.newsContainer}>
@@ -213,18 +208,16 @@ console.log(response.data)
   </Pressable>
 </View>
 
-<TouchableOpacity onPress={() => handleLike(item.id) } style={styles.like}>
-              <MaterialCommunityIcons
-                name={likeStatus[item.id] ? 'thumb-up' : 'thumb-up-outline'}
-                size={24}
-                color={likeStatus[item.id] ? 'blue' : 'black'}
-              />
-              <Text style={styles.likeText}>{likeStatus[item.id] ? 'Liked' : 'Like'}</Text>
-            </TouchableOpacity>
-            <TouchableOpacity  onPress={() => handleShowlike(item.id)}>
-                  <Text >{item.likes}</Text>
-                </TouchableOpacity>
-               
+<TouchableOpacity onPress={() => handleLike()} style={styles.like}>
+    <MaterialCommunityIcons
+      name={liked ? 'thumb-up' : 'thumb-up-outline'}
+      size={24}
+      color={liked ? '#6CC51D' : 'black'}
+    />
+    <Text style={styles.likeText}>{liked ? 'Liked' : 'Like'}</Text>
+    <Text style={styles.likeCount}>{likeCount}</Text>
+  </TouchableOpacity>
+
               </View>
             </View>
           ))}

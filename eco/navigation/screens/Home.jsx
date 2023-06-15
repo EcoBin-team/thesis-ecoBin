@@ -2,9 +2,13 @@ import React from 'react'
 import { View, Text, SafeAreaView, TouchableOpacity } from 'react-native'
 import { useNavigation } from '@react-navigation/native'
 
+// common components imports
 import Logo from '../../components/Logo/Logo'
 import LogoBackground from '../../components/Logo/LogoBackground'
+
+// styles imports
 import HomeStyles from "../../styles/Home.styles"
+import styles from '../../styles/Home.styles'
 
 const Home = () => {
 
@@ -31,8 +35,8 @@ const Home = () => {
                             <Text style={{fontFamily: "MontserratRegular", color: "#2DCC70", fontSize: 20}}>Sign Up</Text>
                         </TouchableOpacity>
                         <View style={{marginTop: 20, display: "flex", alignItems: "center"}}>
-                             <Text style={{fontFamily: "Montserrat", fontSize: 10}}>By logging in or registering, you agree to our</Text>
-                             <Text style={{fontFamily: "Montserrat", fontSize: 10}}>Terms of Service and Privacy Policy</Text>
+                             <Text style={styles.lowerText}>By logging in or registering, you agree to our</Text>
+                             <Text style={styles.lowerText}>Terms of Service and Privacy Policy</Text>
                          </View>
                     </View>
                   </View>
