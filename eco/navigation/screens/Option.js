@@ -42,7 +42,7 @@ export default function OptionScreen({ navigation }) {
   };
 
   const handleShopping = () => {
-    navigation.navigate('shopping',{  userId: userData.id, balance:userDetails.balance });
+    navigation.navigate('shopping', {  userId: userData.id, balance:userDetails.balance });
   };
   
   return (

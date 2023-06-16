@@ -126,7 +126,7 @@ const styles = StyleSheet.create({
     height: "80%",
   },
   title: {
-    fontSize: 22,
+    fontSize: 20,
     fontFamily: "Montserrat",
     fontWeight: "bold",
     width: "80%",
@@ -138,7 +138,7 @@ const styles = StyleSheet.create({
     color: "#2DCC70",
   },
   description: {
-    fontSize: 15,
+    fontSize: 12,
     fontFamily: "Montserrat",
     width: "90%",
     textAlign: "center",

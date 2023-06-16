@@ -18,7 +18,11 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     margin: 10,
     fontFamily: "MontserratMedium",
-    paddingLeft: 20
+  },
+  searchVector: {
+    position: "absolute",
+    top: 20,
+    left: 40
   }
 })
 
