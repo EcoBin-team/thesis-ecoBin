@@ -9,6 +9,7 @@ import DetailsScreen from './screens/DetailsScreen';
 import Account from './screens/Account';
 import Recycle from './screens/Recycle';
 import Option from './screens/Option'
+import Contacts from './screens/Contacts';
 
 const NewsName = "News";
 const detailsName = "Details";
@@ -60,7 +61,7 @@ function MainContainer() {
         >
           <Tab.Screen name={NewsName} component={News} />
           <Tab.Screen name={detailsName} component={DetailsScreen} />
-          <Tab.Screen name={RecycleName} component={Recycle} options={{ tabBarLabel: () => null }} />
+          <Tab.Screen name={RecycleName} component={Contacts} options={{ tabBarLabel: () => null }} />
           <Tab.Screen name={OptionName} component={Option} />
           <Tab.Screen name={AccountName} component={Account} />
         </Tab.Navigator>
