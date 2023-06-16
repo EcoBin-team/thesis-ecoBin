@@ -30,6 +30,9 @@ export default function OptionScreen({ navigation }) {
   const handleGuide = () => {
     navigation.navigate('Guide');
   };
+  const handleRecycle = () => {
+    navigation.navigate('Recycle');
+  };
   
   const handleExchange = () => {
     navigation.navigate('Exchange', { userId: userData.id });
@@ -82,7 +85,9 @@ export default function OptionScreen({ navigation }) {
         <TouchableOpacity onPress={handleExchange}>
         <Image source={require('../../assets/Exchange.png')} style={styles.imageOption} />
         </TouchableOpacity>
-        <Image source={require('../../assets/Recycle(1).png')} style={styles.imageOption}/>
+        <TouchableOpacity onPress={handleRecycle}>
+          <Image source={require('../../assets/Recycle(1).png')} style={styles.imageOption} />
+          </TouchableOpacity>
         <TouchableOpacity onPress={handleNearby}>
           <Image source={require('../../assets/Nearby.png')} style={styles.imageOption} />
           </TouchableOpacity>
