@@ -9,7 +9,7 @@ const conversationsRouter = require("./routes/conversations")
 const feedsRouter = require("./routes/routerFeeds")
 const cartRouter = require("./routes/routerCart")
 const depotRouter = require("./routes/depotRouter")
-const SearchRouter = require("./routes/searchRouter")
+
 
 app.use(express.urlencoded({ extended: true, limit: "10mb" }));
 app.use(express.json({limit: "10mb"}));
@@ -19,13 +19,12 @@ app.use((req, res, next) => {
   req.supabase = supabaseConnect;
   next();
 });
+
 app.use("/users", userRouter)
 app.use("/contacts", contactRouter)
 app.use("/conversations", conversationsRouter)
-
 app.use("/", feedsRouter)
 app.use("/depots", depotRouter)
-app.use("/", SearchRouter)
 app.use('/', cartRouter)
 
 
