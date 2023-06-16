@@ -24,7 +24,7 @@ app.use("/users", userRouter)
 app.use("/contacts", contactRouter)
 app.use("/conversations", conversationsRouter)
 app.use("/", feedsRouter)
-app.use("/depots", depotRouter)
+app.use("/", depotRouter)
 app.use('/', cartRouter)
 
 
