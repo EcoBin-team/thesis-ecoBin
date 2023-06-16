@@ -1,8 +1,10 @@
 
+
 const express = require('express');
 const router = express.Router();
 const { login, signUp, getAll, nextSignUp, getUserById,updateUserById } = require("../controllers/users")
 
+// uploadImage
 router.get("/getAll", getAll) // route to retrieve all users
 router.put("/updateUser/:id",updateUserById) //update user by id 
 

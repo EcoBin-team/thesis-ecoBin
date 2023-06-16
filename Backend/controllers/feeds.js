@@ -192,4 +192,4 @@ const deleteLike = async (req, res) => {
 
 
 
-module.exports = { getOneFeed, getAllFeeds, postComment, getAllComments, postLike ,deleteLike,getAllLikesByPostId};
+module.exports = { getOneFeed, getAllFeeds, postComment, getAllComments, postLike ,deleteLike,getAllLikesByPostId}
