@@ -1,5 +1,7 @@
 import { useEffect, useState } from "react"
 import { SafeAreaView, Text, View, TextInput, Image } from "react-native"
+import axios from "axios"
+import AsyncStorage from "@react-native-async-storage/async-storage"
 
 // components imports
 import TextInputWithImage from "../../components/TextInputWithImage/TextInputWithImage"
@@ -8,26 +10,25 @@ import TextInputWithImage from "../../components/TextInputWithImage/TextInputWit
 import styles from "../../styles/Contacts.styles"
 import Contact from "../../components/Contact/Contact"
 
+// secret variables file
+import { server_url } from "../../secret"
+
 const Contacts = () => {
 
   const [query,setQuery] = useState("")
-  const [contacts,setContacts] = useState([{
-    name: "Bella",
-    image: "https://firebasestorage.googleapis.com/v0/b/ecobin-d3109.appspot.com/o/profile_pictures%2Fdc4d928a-345a-4edc-b1c0-f1785c0c3cfb?alt=media&token=ff1d0493-60fb-4698-b94c-0afb9eafc410",
-    message: "Gas keun gk daur ulang ?asdasdasdasdas",
-    time: "5mins"
-  },
-  {
-    name: "second",
-    image: "https://firebasestorage.googleapis.com/v0/b/ecobin-d3109.appspot.com/o/profile_pictures%2Fdc4d928a-345a-4edc-b1c0-f1785c0c3cfb?alt=media&token=ff1d0493-60fb-4698-b94c-0afb9eafc410",
-    message: "ich will immosasdddddddddddddddasd",
-    time: "50mins"
+  const [contacts,setContacts] = useState([])
+  const currentUser = AsyncStorage.getItem("currentUser")
+
+  useEffect(() => {
+    getConversations()
+  },[])
+
+  const getConversations = async () => {
+
+    const response = await axios.get(`${server_url}/contacts/getContacts/${currentUser.id}`)
+    setContacts(response.data)
+
   }
-])
-
-  // useEffect(() => {
-
-  // },[])
 
   return (
     <SafeAreaView style={styles.container}>
@@ -43,7 +44,12 @@ const Contacts = () => {
 
       <View>
         {contacts.map((e,i) => {
-          return <Contact key={i} name={e.name} image={e.image} message={e.message} time={e.time}/>
+          return <Contact key={i}
+            conversation={e.id} 
+            name={e.user.name} 
+            image={e.user.image} 
+            message={e.chat.message} 
+            time={e.chat.created_at}/>
         })}
       </View>
 

@@ -7,6 +7,7 @@ module.exports = {
 
     const { id } = req.params
     
+    // fetching all conversations of the user
     const { data: conversations, error } = await supabase
     .from('conversations')
     .select('id, users')
@@ -18,11 +19,12 @@ module.exports = {
 
     // formatting the response to return only the conversation id and the id of the other user
 
-    const contacts = []
+    const contacts = [] // contacts array that will be used in the response
 
     for(const conversation of conversations){
       const userId = conversation.users.find(user => user !== id)
 
+      // fetching latest chat message details
       const { data: chats, err } = await supabase
       .from("chats")
       .select("created_at, message")
@@ -35,6 +37,7 @@ module.exports = {
         return res.send(err)
       }
 
+      // fetching the other user's data in the conversation
       const { data, error } = await supabase
       .from("users")
       .select("name, image")
@@ -45,6 +48,7 @@ module.exports = {
         return res.send(error)
       }
 
+      // pushing all the data fetched
       contacts.push({
         id: conversation.id,
         user: data,
