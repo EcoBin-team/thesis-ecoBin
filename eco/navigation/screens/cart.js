@@ -6,7 +6,7 @@ import { server_url } from '../../secret';
 const CartComponent = () => {
 
     const route = useRoute();
-    const { userId } = route.params;
+    const { userId,balance } = route.params;
     console.log(userId)
     const navigation = useNavigation();
   const [cartProducts, setCartProducts] = useState([]);
@@ -108,7 +108,7 @@ const CartComponent = () => {
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Cart</Text>
-      <Text style={styles.balanceText}>Balance: {userBalance}</Text>
+      <Text style={styles.balanceText}>Balance: {balance}</Text>
       {cartProducts.map((product, index) => (
         <View
           key={product.id}

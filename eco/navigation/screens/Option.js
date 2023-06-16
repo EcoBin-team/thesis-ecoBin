@@ -27,6 +27,9 @@ export default function OptionScreen({ navigation }) {
   }, []);
 
   console.log(userDetails);
+  const handleGuide = () => {
+    navigation.navigate('Guide');
+  };
   
   const handleExchange = () => {
     navigation.navigate('Exchange', { userId: userData.id });
@@ -39,8 +42,9 @@ export default function OptionScreen({ navigation }) {
   };
 
   const handleShopping = () => {
-    navigation.navigate('shopping', { userId: userData.id });
+    navigation.navigate('shopping',{  userId: userData.id, balance:userDetails.balance });
   };
+  
   return (
     <View style={styles.container}>
       <Image source={require('../../assets/nature.jpg')} style={styles.backgroundImage} />
@@ -95,7 +99,9 @@ export default function OptionScreen({ navigation }) {
           </TouchableOpacity>
 
 
-          <Image source={require('../../assets/cat5.png')} style={styles.imageOption}/>
+          <TouchableOpacity onPress={handleGuide}>
+            <Image source={require('../../assets/cat5.png')} style={styles.imageOption} />
+          </TouchableOpacity>
         </View>
       </View>
     </View>

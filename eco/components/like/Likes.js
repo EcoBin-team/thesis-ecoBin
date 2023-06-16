@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { View, Text, FlatList, ActivityIndicator, Image, StyleSheet } from 'react-native';
-
+import { server_url } from '../../secret';
 const Likes = ({ postId }) => {
   const [likes, setlikes] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -9,7 +9,7 @@ const Likes = ({ postId }) => {
   useEffect(() => {
     fetchlikes();
 
-    const refreshInterval = setInterval(fetchlikes, 1000); // Fetch comments every 1 seconds
+    const refreshInterval = setInterval(fetchlikes, 7000); // Fetch comments every 1 seconds
 
     return () => clearInterval(refreshInterval); // Clear the interval when the component unmounts
   }, []);
@@ -18,13 +18,15 @@ const Likes = ({ postId }) => {
     try {
       const response = await fetch(`http://10.0.2.2:3000/likes/post/${postId}`);
       const data = await response.json();
-      // console.log(data);
+    
 
       if (Array.isArray(data)) {
         const likesWithUserDetails = await Promise.all(
           data.map(async (like) => {
-            const userResponse = await fetch(`http://10.0.2.2:3000/users/${like.userid}`);
+            console.log(like);
+            const userResponse = await fetch(`${server_url}/users/user/${like.userid}`);
             const userData = await userResponse.json();
+            console.log(userData)
             return { ...like, username: userData.name, userImage: userData.image };
           })
         );

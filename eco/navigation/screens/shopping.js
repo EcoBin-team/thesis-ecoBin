@@ -5,12 +5,16 @@ import * as Animatable from 'react-native-animatable';
 import { useRoute, useNavigation } from '@react-navigation/native';
 import Icon from 'react-native-vector-icons/Ionicons';
 import { server_url } from '../../secret';
+
+
 const ShopComponent = () => {
     const route = useRoute();
-    const { userId } = route.params;
-    console.log(userId)
+    const { userId,balance } = route.params;
+    console.log(balance)
+    
   const [products, setProducts] = useState([]);
-  const [balance, setBalance] = useState(0)
+ 
+  const [isLoading, setIsLoading] = useState(true);
  console.log(userId)
 const navigation = useNavigation();
   useEffect(() => {
@@ -21,21 +25,15 @@ const navigation = useNavigation();
         setProducts(data);
       } catch (error) {
         console.log('Error fetching shop products:', error);
-      }
+      } finally {
+            setIsLoading(false);
+          }
     };
 
-    const fetchBalance = async () => {
-      try {
-        const response = await axios.get(`${server_url}/balance/${userId}`);
-        const { balance } = response.data;
-        setBalance(balance);
-      } catch (error) {
-        console.log('Error fetching user balance:', error);
-      }
-    };
+
 
     fetchProducts();
-    fetchBalance();
+   
   }, [userId]);
 
   const addToCart = async (productId) => {
@@ -51,6 +49,14 @@ const navigation = useNavigation();
     }
   };
 
+
+  if (isLoading) {
+    return (
+      <View>
+        <Text>Loading...</Text>
+      </View>
+    );
+  }
   return (
    
    
@@ -80,7 +86,7 @@ const navigation = useNavigation();
           </Animatable.View>
         ))}
       </View>
-      <TouchableOpacity style={styles.goToCartButton} onPress={() => {navigation.navigate("cart",{ userId: userId })}}>
+      <TouchableOpacity style={styles.goToCartButton} onPress={() => {navigation.navigate("cart",{ userId: userId ,balance:balance})}}>
         <Text style={styles.goToCartButtonText}>Go to Cart</Text>
       </TouchableOpacity>
     </ScrollView>
