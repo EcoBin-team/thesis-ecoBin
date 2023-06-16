@@ -1,11 +1,28 @@
 import React, { useContext, useState, useEffect } from 'react';
-import { View, Text, StyleSheet, ScrollView, Image, Modal, TextInput, TouchableOpacity, Pressable, Alert,Dimensions } from 'react-native';
+import {
+  View,
+  Text,
+  StyleSheet,
+  ScrollView,
+  Image,
+  Modal,
+  TextInput,
+  TouchableOpacity,
+  Pressable,
+  Alert,
+  Dimensions,
+} from 'react-native';
+import { AntDesign } from '@expo/vector-icons';
+import { useRoute } from '@react-navigation/native';
 import { useNavigation } from '@react-navigation/native';
 import { UserContext } from '../MainContainer';
 import axios from 'axios';
 import { StatusBar } from 'expo-status-bar';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
-import Comments from '../../components/Comments/Comments'
+import Comments from '../../components/Comments/Comment';
+import Likes from '../../components/like/Likes';
+import { server_url } from '../../secret';
+
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
 
@@ -19,13 +36,9 @@ function News() {
   const [showlike, setShowlike] = useState(false);
   const [commentText, setCommentText] = useState('');
   const [userDetails, setUserDetails] = useState(null);
-  const [postId, setPostId] = useState("")
-  const [likeCount, setLikeCount] = useState(0);
- 
-
-
-  console.log('userData.id:', userData.id);
-
+  const [postId, setPostId] = useState("");
+  const [likeStatus, setLikeStatus] = useState({});
+  
   useEffect(() => {
     fetchData();
     fetchUserDetails();
@@ -37,7 +50,7 @@ function News() {
 
   const fetchUserDetails = async () => {
     try {
-      const response = await fetch(`http://10.0.2.2:3000/users/user/${userData.id}`);
+      const response = await fetch(`${server_url}/users/user/${userData.id}`);
       const data = await response.json();
       // console.log('User details:', data);
       setUserDetails(data);
@@ -48,10 +61,10 @@ function News() {
 
   const fetchData = async () => {
     try {
-      const response = await axios.get('http://10.0.2.2:3000/feeds');
-      // console.log('Fetched data:', response.data);
+      const response = await axios.get(`${server_url}/feeds`);
+    
       setData(response.data);
-console.log(response.data)
+
       const initialLikeStatus = {};
       response.data.forEach((post) => {
         initialLikeStatus[post.id] = false;
@@ -78,77 +91,34 @@ console.log(response.data)
     setShowlike(true);
     setPostId(id);
   };
-  
-  
-  const updateLikesCount = async (id, newLikesCount) => {
-    try {
-      const response = await fetch(`http://10.0.2.2:3000/feeds/${id}`, {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ likes: newLikesCount })
-      });
-  
-      if (response.ok) {
-        console.log('Likes count updated successfully');
-      } else {
-        console.error('Failed to update likes count');
-      }
-    } catch (error) {
-      console.error(error);
-      // Handle error gracefully
-    }
-  };
-  
-  const fetchOneFeed = async (id) => {
-    try {
-      const response = await fetch(`http://10.0.2.2:3000/feeds/${id}`);
-      const data = await response.json();
-      return data[0];
-    } catch (error) {
-      console.error(error);
-      // Handle error gracefully
-    }
-  };
-  
+ 
+ 
   const handleLike = async (postId) => {
     try {
-      const data = await fetchOneFeed(postId);
-    
       // Check if the post is already liked
       if (likeStatus[postId]) {
         // Dislike the post
         await axios.delete(`http://10.0.2.2:3000/likes/${postId}/${userData.id}`);
-        setLikeStatus((prevStatus) => ({
-          ...prevStatus,
-          [postId]: false,
-        }));
-        const newLikesCount = data.likes - 1;
-        await updateLikesCount(postId, newLikesCount);
       } else {
         // Like the post
         await axios.post(`http://10.0.2.2:3000/feeds/${postId}/postLike`, { userId: userData.id });
-        setLikeStatus((prevStatus) => ({
-          ...prevStatus,
-          [postId]: true,
-        }));
-        const newLikesCount = data.likes + 1;
-        await updateLikesCount(postId, newLikesCount);
       }
+
+      // Toggle the like status
+      setLikeStatus((prevStatus) => ({
+        ...prevStatus,
+        [postId]: !prevStatus[postId],
+      }));
     } catch (error) {
-      console.error(error);
-      // Handle error gracefully
+      console.error('Error handling like:', error);
     }
   };
-  
-  
   
   
   const handlePostComment = async (postId) => {
     setCommentText("");
     try {
-      const response = await fetch(`http://10.0.2.2:3000/feeds/${postId}/postComment`, {
+      const response = await fetch(`${server_url}/feeds/${postId}/postComment`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -179,8 +149,9 @@ console.log(response.data)
     <View style={styles.container}>
     
       <StatusBar style="auto" />
+      <Image source={require('../../assets/logo.png')} style={styles.logoImage} />
       <ScrollView contentContainerStyle={styles.scrollContainer}>
-        <View style={styles.logoContainer}></View>
+       
        
 
         <View style={styles.newsContainer}>
@@ -201,68 +172,71 @@ console.log(response.data)
   </Pressable>
 </View>
 
-<TouchableOpacity onPress={() => handleLike()} style={styles.like}>
-    <MaterialCommunityIcons
-      name={liked ? 'thumb-up' : 'thumb-up-outline'}
-      size={24}
-      color={liked ? '#6CC51D' : 'black'}
-    />
-    <Text style={styles.likeText}>{liked ? 'Liked' : 'Like'}</Text>
-    <Text style={styles.likeCount}>{likeCount}</Text>
-  </TouchableOpacity>
-
+<TouchableOpacity onPress={() => handleLike(item.id)} style={styles.like}>
+              <MaterialCommunityIcons
+                name={likeStatus[item.id] ? 'thumb-up' : 'thumb-up-outline'}
+                size={24}
+                color={likeStatus[item.id] ? 'blue' : 'black'}
+              />
+              <Text style={styles.likeText}>{likeStatus[item.id] ? 'Liked' : 'Like'}</Text>
+            </TouchableOpacity>
+            <TouchableOpacity  onPress={() => handleShowlike(item.id)}>
+                  <Text >see all likes</Text>
+                </TouchableOpacity>
+               
               </View>
             </View>
           ))}
         </View>
 
         <Modal visible={show} onRequestClose={handleClose} transparent={true}>
-          <View style={styles.modalContainer}>
-            <View style={styles.modalContent}>
-           <Comments postId={postId} />
-              <View style={styles.comment}>
-              
-                <Image
-                  source={userDetails?.image ? { uri: userDetails ?.image  } : require('../../assets/avatarVide.png')}
-                  style={styles.profileImage}
-                />
-                <Text style={styles.commentText}>{userDetails?.name}</Text>
-                <TextInput
-                  style={styles.input}
-                  placeholder="Enter your comment"
-                  value={commentText}
-                  onChangeText={setCommentText}
-                />
-              </View> 
-              
-              <View style={styles.buttonContainer}>
-                <TouchableOpacity style={styles.closeButton} onPress={handleClose}>
-                  <Text style={styles.buttonText}>Close</Text>
-                </TouchableOpacity>
-                <TouchableOpacity style={styles.postButton} onPress={() => handlePostComment(postId)}>
-                  <Text style={[styles.buttonText, styles.postButtonText]}>Post</Text>
-                </TouchableOpacity>
-              </View>
-            </View>
-          </View>
-        </Modal>
-
+  <View style={styles.modalContainer}>
+    <View style={styles.modalContent}>
+      <View style={styles.modalHeader}>
+        <TouchableOpacity onPress={handleClose} style={styles.closeButton}>
+          <AntDesign name="close" size={24} color="black" />
+        </TouchableOpacity>
+      </View>
+      <Comments postId={postId} />
+      <View style={styles.comment}>
+        <Image
+          source={userDetails?.image ? { uri: userDetails?.image } : require('../../assets/avatarVide.png')}
+          style={styles.profileImage}
+        />
+        <Text style={styles.commentText}>{userDetails?.name}</Text>
+        <TextInput
+          style={styles.input}
+          placeholder="Enter your comment"
+          value={commentText}
+          onChangeText={setCommentText}
+        />
+      </View>
+      <View style={styles.buttonContainer}>
+        <TouchableOpacity style={styles.postButton} onPress={() => handlePostComment(postId)}>
+          <Text style={[styles.buttonText, styles.postButtonText]}>Post</Text>
+        </TouchableOpacity>
+      </View>
+    </View>
+  </View>
+</Modal>
 
         <Modal visible={showlike} onRequestClose={handleCloselike} transparent={true}>
-          <View style={styles.modalContainer}>
-            <View style={styles.modalContent}>
-           <Likes postId={postId} />
-              
-              
-              <View style={styles.buttonContainer}>
-                <TouchableOpacity style={styles.closeButton} onPress={handleCloselike}>
-                  <Text style={styles.buttonText}>Close</Text>
-                </TouchableOpacity>
-               
-              </View>
-            </View>
-          </View>
-        </Modal>
+  <View style={styles.modalContainer}>
+    <View style={styles.modalContent}>
+      <View style={styles.modalHeader}>
+        <TouchableOpacity onPress={handleCloselike} style={styles.closeButton}>
+          <AntDesign name="close" size={24} color="black" />
+        </TouchableOpacity>
+      </View>
+      <Likes postId={postId} />
+      <View style={styles.buttonContainer}>
+        <TouchableOpacity style={styles.closeButton} onPress={handleCloselike}>
+          
+        </TouchableOpacity>
+      </View>
+    </View>
+  </View>
+</Modal>
       </ScrollView>
     </View>
   );
@@ -380,25 +354,24 @@ const styles = StyleSheet.create({
     paddingBottom: 10,
   },
   buttonContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-around',
-    marginBottom: 10,
+    marginTop: 16,
+    alignItems: 'flex-end',
   },
   closeButton: {
-    backgroundColor: '#27AE60',
-    padding: 10,
-    borderRadius: 5,
+    padding: 8,
   },
   postButton: {
-    backgroundColor: '#27AE60',
-    padding: 10,
-    borderRadius: 5,
+    backgroundColor: 'blue',
+    borderRadius: 4,
+    paddingVertical: 8,
+    paddingHorizontal: 16,
   },
   buttonText: {
-    color: '#27AE60',
-    fontWeight: 'bold',
+    fontSize: 16,
+    color: 'black',
   },
   postButtonText: {
+    color: 'white',
     fontWeight: 'bold',
   },
   profileImage: {
@@ -432,6 +405,9 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     marginVertical: 10,
+  },
+  modalHeader: {
+    alignItems: 'flex-end',
   },
 });
 
