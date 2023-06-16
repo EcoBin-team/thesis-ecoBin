@@ -4,6 +4,8 @@ const app = express();
 const cors = require("cors");
 const supabaseConnect = require("./supabase/Supabase_Connect");
 const userRouter = require("./routes/routerUser")
+const contactRouter = require("./routes/contact")
+const conversationsRouter = require("./routes/conversations")
 const feedsRouter = require("./routes/routerFeeds")
 const cartRouter = require("./routes/routerCart")
 const depotRouter = require("./routes/depotRouter")
@@ -18,8 +20,9 @@ app.use((req, res, next) => {
   next();
 });
 
-
 app.use("/users", userRouter)
+app.use("/contacts", contactRouter)
+app.use("/conversations", conversationsRouter)
 app.use("/", feedsRouter)
 app.use("/depots", depotRouter)
 app.use('/', cartRouter)
