@@ -38,7 +38,7 @@ export default function OptionScreen({ navigation }) {
   };
 
   const handleShopping = () => {
-    navigation.navigate('shopping', { userId: userData.id });
+    navigation.navigate('shopping', {  userId: userData.id, balance:userDetails.balance });
   };
   return (
     <View style={styles.container}>

@@ -6,7 +6,7 @@ import { server_url } from '../../secret';
 const CartComponent = () => {
 
     const route = useRoute();
-    const { userId } = route.params;
+    const { userId ,balance} = route.params;
     console.log(userId)
     const navigation = useNavigation();
   const [cartProducts, setCartProducts] = useState([]);
@@ -18,7 +18,7 @@ const CartComponent = () => {
 
   useEffect(() => {
     fetchCartProducts();
-    fetchUserBalance()
+    // fetchUserBalance()
   }, [userId]);
 
   const fetchCartProducts = async () => {
@@ -70,45 +70,46 @@ const CartComponent = () => {
   };
 
   const handlePurchaseConfirmation = async () => {
-    console.log('Confirming the purchase');
+  console.log('Confirming the purchase');
 
-    try {
-      const totalPoints = cartProducts.reduce((sum, product) => sum + product.points, 0);
+  try {
+    const totalPoints = cartProducts.reduce((sum, product) => sum + product.points, 0);
 
-      const balanceResponse = await axios.get(`${server_url}/balance/${userId}`);
-      const userBalance = balanceResponse.data.balance;
-
-      if (userBalance < totalPoints) {
-        Alert.alert('Insufficient Balance', 'You do not have enough balance to make this purchase.', [
-          { text: 'OK' },
-        ]);
-        return;
-      }
-
-      setIsLoading(true); // Start the loading state
-
-      await axios.post(`${server_url}/users/${userId}/purchase`, {
-        cart: cartProducts.map((product) => product.id),
-      });
-
-      Alert.alert('Purchase Confirmed', 'Your order has been confirmed.', [{ text: 'OK' }]);
-
-      setCartProducts([]);
-    } catch (error) {
-      console.log('Error confirming the purchase:', error);
-    } finally {
-      setIsLoading(false); //End the loading state
-      setConfirmModalVisible(false);
-      setPhoneNumber('');
-      fetchUserBalance(); //Fetch the updated user balance
-      fetchCartProducts();
+    if (balance < totalPoints) {
+      Alert.alert('Insufficient Balance', 'You do not have enough balance to make this purchase.', [
+        { text: 'OK' },
+      ]);
+      return;
     }
-  };
+
+    setIsLoading(true); // Start the loading state
+
+    await axios.post(`${server_url}/users/${userId}/purchase`, {
+      cart: cartProducts.map((product) => product.id),
+    });
+
+    Alert.alert('Purchase Confirmed', 'Your order has been confirmed.', [{ text: 'OK' }]);
+
+    setIsLoading(false); // End the loading state
+
+    setConfirmModalVisible(false);
+    setPhoneNumber('');
+
+    fetchUserBalance(); // Fetch the updated balance from the server
+
+    fetchCartProducts();
+
+  } catch (error) {
+    console.log('Error confirming the purchase:', error);
+    setIsLoading(false); // End the loading state
+  }
+};
+
 
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Cart</Text>
-      <Text style={styles.balanceText}>Balance: {userBalance}</Text>
+      <Text style={styles.balanceText}>Balance: {balance}</Text>
       {cartProducts.map((product, index) => (
         <View
           key={product.id}
