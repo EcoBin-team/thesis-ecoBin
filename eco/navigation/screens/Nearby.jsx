@@ -33,9 +33,11 @@ const Nearby = () => {
   const [isLoading,setIsLoading] = useState(false)
   
   useEffect(() => {
-    setTimeout(() => {
-      searchDepot()
-    }, 200) // adding delay so the server doesn't overload
+    if(query !== ""){
+      setTimeout(() => {
+        searchDepot()
+      }, 200) // adding delay so the server doesn't overload
+    }
   },[query])
 
   // search function to filter depots according to the query written by the user
@@ -43,7 +45,7 @@ const Nearby = () => {
 
     setIsLoading(true) // showing loading indicator
 
-    const response = await axios.get(`${server_url}/depots/searchDepot?query=${query}`)
+    const response = await axios.get(`${server_url}/depot/search?query=${query}`)
     setData(response.data) // sets data state to the returned depots from the server
 
     setIsLoading(false) // hiding loading indicator
@@ -71,7 +73,6 @@ const Nearby = () => {
       </View>
 
       <ScrollView style={{height: "60%"}} contentContainerStyle={{flexGrow: 1}}>
-        
         <View style={styles.scrollContainer}>
           {isLoading && <Text style={styles.loadingText}> Finding place...</Text>}
           {!data.length && !isLoading && <Text style={styles.placeholderScroll}>Nearby depot center</Text>}
@@ -89,7 +90,7 @@ const Nearby = () => {
 
       </ScrollView>
       
-      <Map mapRegion={mapRegion} setMapRegion={setMapRegion} userRegion={userRegion} setUserRegion={setUserRegion}/>
+      <Map mapRegion={mapRegion} setMapRegion={setMapRegion} userRegion={userRegion} setUserRegion={setUserRegion} query={query}/>
     </SafeAreaView>
   )
 }
