@@ -49,6 +49,7 @@ const Comments = ({ postId }) => {
 
   const toggleShowAllComments = () => {
     setShowAllComments(!showAllComments);
+ 
   };
 
   if (loading) {
@@ -91,7 +92,7 @@ const Comments = ({ postId }) => {
             renderItem={renderItem}
           />
           {remainingCommentsCount > 0 && !showAllComments && (
-            <Text style={styles.showMoreText} onPress={toggleShowAllComments}>
+            <Text style={styles.showMoreText} onPress={toggleShowAllComments} >
               Show more ({remainingCommentsCount} more comments)
             </Text>
           )}
@@ -133,12 +134,12 @@ const styles = StyleSheet.create({
     fontSize: 14,
   },
   showMoreText: {
-    fontSize: 16,
+    fontSize: 13,
     fontWeight: 'bold',
     textAlign: 'center',
     marginVertical: 10,
-    color: 'blue',
-    textDecorationLine: 'underline',
+    color: '#868889',
+    // textDecorationLine: 'underline',
   },
 });
 
