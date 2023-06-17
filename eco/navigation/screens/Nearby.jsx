@@ -72,7 +72,7 @@ const Nearby = () => {
 
       </View>
 
-      <ScrollView style={{height: "60%"}} contentContainerStyle={{flexGrow: 1}}>
+      <ScrollView style={query === "" ? {height: "0%"} : {height: "60%"}} contentContainerStyle={{flexGrow: 1}}>
         <View style={styles.scrollContainer}>
           {isLoading && <Text style={styles.loadingText}> Finding place...</Text>}
           {!data.length && !isLoading && <Text style={styles.placeholderScroll}>Nearby depot center</Text>}
