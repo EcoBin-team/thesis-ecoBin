@@ -5,6 +5,7 @@ import { useNavigation } from '@react-navigation/native';
 import { Feather } from '@expo/vector-icons';
 import { UserContext } from '../MainContainer';
 import { useRoute } from '@react-navigation/native';
+import { server_url } from "../../secret";
 
 export default function OptionScreen({ navigation }) {
   const userData = useContext(UserContext);
@@ -13,7 +14,7 @@ export default function OptionScreen({ navigation }) {
   
   const fetchUserDetails = async () => {
     try {
-      const response = await fetch(`http://10.0.2.2:3000/users/user/${userData.id}`);
+      const response = await fetch(`${server_url}/users/user/${userData.id}`);
       const data = await response.json();
       setUserDetails(data);
     } catch (error) {
@@ -23,9 +24,15 @@ export default function OptionScreen({ navigation }) {
 
   useEffect(() => {
     fetchUserDetails();
-  }, []);
+  }, [userDetails]);
 
-  console.log(userDetails);
+  
+  const handleGuide = () => {
+    navigation.navigate('Guide');
+  };
+  const handleRecycle = () => {
+    navigation.navigate('Recycle');
+  };
   
   const handleExchange = () => {
     navigation.navigate('Exchange', { userId: userData.id });
@@ -40,6 +47,7 @@ export default function OptionScreen({ navigation }) {
   const handleShopping = () => {
     navigation.navigate('shopping', {  userId: userData.id, balance:userDetails.balance });
   };
+  
   return (
     <View style={styles.container}>
       <Image source={require('../../assets/nature.jpg')} style={styles.backgroundImage} />
@@ -77,7 +85,9 @@ export default function OptionScreen({ navigation }) {
         <TouchableOpacity onPress={handleExchange}>
         <Image source={require('../../assets/Exchange.png')} style={styles.imageOption} />
         </TouchableOpacity>
-        <Image source={require('../../assets/Recycle(1).png')} style={styles.imageOption}/>
+        <TouchableOpacity onPress={handleRecycle}>
+          <Image source={require('../../assets/Recycle(1).png')} style={styles.imageOption} />
+          </TouchableOpacity>
         <TouchableOpacity onPress={handleNearby}>
           <Image source={require('../../assets/Nearby.png')} style={styles.imageOption} />
           </TouchableOpacity>
@@ -94,7 +104,9 @@ export default function OptionScreen({ navigation }) {
           </TouchableOpacity>
 
 
-          <Image source={require('../../assets/cat5.png')} style={styles.imageOption}/>
+          <TouchableOpacity onPress={handleGuide}>
+            <Image source={require('../../assets/cat5.png')} style={styles.imageOption} />
+          </TouchableOpacity>
         </View>
       </View>
     </View>

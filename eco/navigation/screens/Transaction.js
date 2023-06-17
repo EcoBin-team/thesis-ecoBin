@@ -1,20 +1,79 @@
-import * as React from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, Image, TextInput, Button } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
+import { server_url } from '../../secret';
+import axios from 'axios'; // Import axios for making HTTP requests
+import { useRoute } from '@react-navigation/native';
+import { Alert } from 'react-native';
 
 export default function TransactionScreen({ navigation }) {
-  const [code, setCode] = React.useState('');
+
+
+
+  const route = useRoute();
+  const { userDetails } = route.params;
+  const [code, setCode] = useState('');
+  const [userBalance, setUserBalance] = useState(0);
+  const [isLoading, setIsLoading] = useState(false);
+
+  const fetchUserBalance = async () => {
+    try {
+      const response = await axios.get(`${server_url}/balance/${userDetails.id}`);
+      const { balance } = response.data;
+      setUserBalance(balance);
+    } catch (error) {
+      console.log('Error fetching user balance:', error);
+    }
+  };
+
+
+
+
+
+  useEffect(() => {
+    fetchUserBalance();
+  }, []);
+
+
+
 
   const handleCodeChange = (value) => {
     setCode(value);
   };
+console.log(userDetails.id)
+  
+  const handleSendCode = async (code) => {
+    try {
+      // Perform the necessary action with the code
+      console.log('Sending code:', code);
+      setIsLoading(true); // Start the loading state
+      // Send the code to the server for confirmation
+      const response = await axios.post(`http://10.0.2.2:3000/codes/users/${userDetails.id}/purchase`, {
+        code: code,
+      });
+      console.log(response.data)
+      Alert.alert('Purchase Confirmed', 'Your order has been confirmed.', [{ text: 'Done', },
+    ]);
 
-  const handleSendCode = () => {
-    // Perform the necessary action with the code
-    console.log('Sending code:', code);
-    // Clear the input field
-    setCode('');
+    setIsLoading(false); // End the loading state
+
+      const { balance } = response.data;
+      console.log(balance)
+      setUserBalance(balance);
+
+       // Delete the code from the backend
+    await axios.delete(`http://10.0.2.2:3000/codes/code/${code}`);
+
+      // Clear the input field
+      setCode('');
+    } catch (error) {
+      // Alert.alert('Purchase failed', 'Your code is not found ', [{ text: 'Done' }]);
+      console.log('Error sending code:', error);
+    }
   };
+
+
+ 
 
   return (
     <View style={styles.container}>
@@ -44,7 +103,9 @@ export default function TransactionScreen({ navigation }) {
         </View>
         <View style={styles.container4}>
       {/* Your other components */}
-      <TouchableOpacity style={styles.button} onPress={handleSendCode}>
+      <TouchableOpacity style={styles.button} onPress={() => handleSendCode(code)}>
+
+
         <Text style={styles.buttonText}>Send your code</Text>
       </TouchableOpacity>
     </View>
