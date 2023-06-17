@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react"
-import { SafeAreaView, Text, View, TextInput, Image } from "react-native"
+import { SafeAreaView, Text, View } from "react-native"
 import axios from "axios"
 import AsyncStorage from "@react-native-async-storage/async-storage"
 

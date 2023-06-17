@@ -2,16 +2,17 @@ import { View, Text } from "react-native"
 import moment from "moment/moment"
 
 // styles imports
-import styles from "../../styles/Message.styles"
+import { currentUserStyles, otherUserStyles } from "../../styles/Message.styles"
 
-const Message = ({ message, time }) => {
+const Message = ({ currentUser, sender, message, time }) => {
 
-  const newTime = moment(time).format("LT")
+  const newTime = moment(time).format("LT") // changing the time format to make it readable and user-friendly
+  const styles = currentUser === sender ? currentUserStyles : otherUserStyles
 
   return (
     <View style={styles.container}>
-      <Text>{message}</Text>
-      <Text>{newTime}</Text>
+      <Text style={styles.message}>{message}</Text>
+      <Text style={styles.time}>{newTime}</Text>
     </View>
   )
 }

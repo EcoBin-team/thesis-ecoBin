@@ -18,6 +18,14 @@ const styles = StyleSheet.create({
     fontFamily: "MontserratBold",
     fontSize: 17,
     marginLeft: 15
+  },
+
+  inputContainer: {
+    backgroundColor: "#e8e8e8",
+    height: "15%",
+    width: "100%",
+    alignItems: "center",
+    justifyContent: "center"
   }
 })
 
