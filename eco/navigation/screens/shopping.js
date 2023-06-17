@@ -185,15 +185,20 @@ const styles = StyleSheet.create({
     color: '#fff',
   },
   goToCartButton: {
+    width: 250,
+    height: 50,
     top: -40,
     backgroundColor: '#6CC51D',
     padding: 16,
-    borderRadius: 8,
-    marginTop: 16,
+    borderRadius: 15,
+    marginTop: 50,
+    marginBottom:30,
     alignItems: 'center',
+    marginLeft:55
   },
   goToCartButtonText: {
-    fontSize: 20,
+    
+    fontSize: 15,
     fontWeight: 'bold',
     color: '#fff',
   },
