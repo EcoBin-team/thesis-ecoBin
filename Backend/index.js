@@ -6,7 +6,7 @@ const supabaseConnect = require("./supabase/Supabase_Connect");
 const userRouter = require("./routes/routerUser")
 const contactRouter = require("./routes/contact")
 const conversationsRouter = require("./routes/conversations")
-const feedsRouter = require("./routes/routerFeeds")
+const feedsRouter = require("./routes/routerfeeds")
 const cartRouter = require("./routes/routerCart")
 const depotRouter = require("./routes/depotRouter")
 
