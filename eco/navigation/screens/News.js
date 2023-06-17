@@ -397,7 +397,7 @@ const styles = StyleSheet.create({
   },
   input: {
     
-    width: 380,
+    width: 310,
     height: 40,
     borderWidth: 1,
     borderColor: 'gray',

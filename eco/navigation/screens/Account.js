@@ -230,6 +230,7 @@ const styles = StyleSheet.create({
     position: 'relative',
     width: 114,
     height: 117,
+    marginRight:25,
     alignSelf: 'center',
     marginTop: 16,
   },
@@ -247,6 +248,7 @@ const styles = StyleSheet.create({
     padding: 4,
   },
   name: {
+    marginRight:25,
     top: 60,
     alignSelf: 'center',
     marginTop: 8,
@@ -254,6 +256,7 @@ const styles = StyleSheet.create({
     fontWeight: '600',
   },
   bio: {
+    marginRight:25,
     top: 80,
     alignSelf: 'center',
     marginTop: 8,
