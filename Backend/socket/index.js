@@ -21,11 +21,9 @@ io.on("connection", socket => {
 
   socket.on("join_room", data => {
     socket.join(data)
-    console.log(`user ${socket.id} joined conversation ${data}`)
   })
 
   socket.on("send_message", data => {
-    console.log(data)
     socket.to(data.conversation).emit("receive_message", data)
   })
 })
