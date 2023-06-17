@@ -5,17 +5,22 @@ import axios from "axios"
 // styles imports
 import styles from "../../styles/MessageInput.styles"
 
-const MessageInput = ({ currentUser, conversation }) => {
+// secret variables imports
+import { server_url } from "../../secret"
+
+const MessageInput = ({ currentUser, conversation, socket }) => {
 
   const [text,setText] = useState("")
 
   const sendMessage = async () => {
     if(text !== ""){
-      const response = await axios.post("http://localhost:3000/conversations/send",{
+      const messageDetails = {
         sender: currentUser,
         conversation: conversation,
         message: text
-      })
+      }
+      await axios.post(`${server_url}/conversations/send`, messageDetails)
+      socket.emit("send_message", messageDetails)
     }
 
   }

@@ -53,7 +53,7 @@ const Conversation = (props) => {
       </ScrollView>
 
       <View style={styles.inputContainer}>
-        <MessageInput currentUser={currentUser.id} conversation={conversation}/>
+        <MessageInput currentUser={currentUser.id} conversation={conversation} socket={socket}/>
       </View>
 
     </SafeAreaView>
