@@ -23,10 +23,11 @@ const Conversation = (props) => {
   const [currentUser,setCurrentUser] = useState({})
   const navigation = useNavigation()
   const scrollViewRef = useRef()
+  const [isLoading,setIsLoading] = useState(false)
 
   useEffect(() => {
     socket.emit("join_room", conversation)
-    getMessages() // message fetching function getting invoked on each conversation
+    getMessages() // message fetching function getting invoked when user joins the socket conversation
   },[])
 
   useEffect(() => {
@@ -39,8 +40,13 @@ const Conversation = (props) => {
   // function that fetched all the messages of a conversation that user pressed on
   const getMessages = async () => {
     setCurrentUser(JSON.parse(await AsyncStorage.getItem("currentUser")))
-    const response = await axios.get(`${server_url}/conversations/getMessages/${conversation}`)
+    
+    setIsLoading(true)
+
+    const response = await axios.get(`${server_url}/conversations/getMessages/${conversation}`) // fetching messages from database
     setMessages(response.data)
+
+    setIsLoading(false)
   }
 
   return(
@@ -55,6 +61,7 @@ const Conversation = (props) => {
       </View>
 
       <ScrollView ref={scrollViewRef} onContentSizeChange={() => scrollViewRef.current.scrollToEnd({ animated: true })}>
+        {isLoading && <Text>Loading...</Text>}
         {messages.map((e,i) => {
           return <Message key={i} currentUser={currentUser.id} sender={e.sender} message={e.message} time={e.created_at}/>
         })}

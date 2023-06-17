@@ -26,9 +26,28 @@ const depotController = {
     const depots = [...(depotsByName.data || []),...(depotsByState.data || []), ];
     res.status(200).json(depots);} catch (error) {
     console.error('Error retrieving depots:', error.message);
-    res.status(500).json({ error: 'Failed to retrieve depots' });}}
+    res.status(500).json({ error: 'Failed to retrieve depots' });}},
+
+
+    // function to search for depots in nearby component
+    searchDepot: async (req,res) => {
+
+    const { query } = req.query
+
+    const { data, error } = await supabase
+    .from("depot")
+    .select()
+    .textSearch("name", query)
+
+    if(error){
+      console.log(error)
+    }
+
+    res.send(data)
+
+  }
 ////
-    } 
+}
      
 
 module.exports = depotController
