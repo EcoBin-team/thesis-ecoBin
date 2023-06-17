@@ -1,4 +1,7 @@
+
+
 const{ getOneFeed, getAllFeeds,postComment ,getAllComments,postLike,deleteLike,getAllLikesByPostId,createFeed } = require('../controllers/feeds');
+
 const express = require('express');
 const router = express.Router();
 // GET one feed

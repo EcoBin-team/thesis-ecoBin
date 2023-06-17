@@ -9,6 +9,7 @@ const conversationsRouter = require("./routes/conversations")
 const feedsRouter = require("./routes/routerFeeds")
 const cartRouter = require("./routes/routerCart")
 const depotRouter = require("./routes/depotRouter")
+const codeRouter = require("./routes/codeRouter")
 
 
 app.use(express.urlencoded({ extended: true, limit: "10mb" }));
@@ -26,6 +27,7 @@ app.use("/conversations", conversationsRouter)
 app.use("/", feedsRouter)
 app.use("/", depotRouter)
 app.use('/', cartRouter)
+app.use('/codes',codeRouter)
 
 
 
