@@ -1,24 +1,22 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, Image, TextInput, Modal, Alert ,ActivityIndicator } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, Image, TextInput, Modal, Alert, ActivityIndicator } from 'react-native';
 import axios from 'axios';
-import { useNavigation,useRoute } from '@react-navigation/native';
+import { useNavigation, useRoute } from '@react-navigation/native';
 import { server_url } from '../../secret';
-const CartComponent = () => {
 
-    const route = useRoute();
-    const { userId ,balance} = route.params;
-    console.log(userId)
-    const navigation = useNavigation();
+const CartComponent = () => {
+  const route = useRoute();
+  const { userId, balance: initialBalance } = route.params;
+  console.log(userId);
+  const navigation = useNavigation();
   const [cartProducts, setCartProducts] = useState([]);
-  const [userBalance, setUserBalance] = useState(0);
+  const [balance, setBalance] = useState(initialBalance);
   const [phoneNumber, setPhoneNumber] = useState('');
   const [confirmModalVisible, setConfirmModalVisible] = useState(false);
-  
   const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     fetchCartProducts();
-    // fetchUserBalance()
   }, [userId]);
 
   const fetchCartProducts = async () => {
@@ -31,15 +29,7 @@ const CartComponent = () => {
       console.log('Error fetching cart products:', error);
     }
   };
-  const fetchUserBalance = async () => {
-    try {
-      const response = await axios.get(`${server_url}/balance/${userId}`);
-      const { balance } = response.data;
-      setUserBalance(balance);
-    } catch (error) {
-      console.log('Error fetching user balance:', error);
-    }
-  };
+
   const handleDeleteProduct = async (productId) => {
     try {
       setIsLoading(true);
@@ -57,7 +47,7 @@ const CartComponent = () => {
   };
 
   const handleGoBack = () => {
-    navigation.goBack()
+    navigation.goBack();
     console.log('Going back to the previous page');
   };
 
@@ -70,41 +60,40 @@ const CartComponent = () => {
   };
 
   const handlePurchaseConfirmation = async () => {
-  console.log('Confirming the purchase');
+    console.log('Confirming the purchase');
 
-  try {
-    const totalPoints = cartProducts.reduce((sum, product) => sum + product.points, 0);
+    try {
+      const totalPoints = cartProducts.reduce((sum, product) => sum + product.points, 0);
 
-    if (balance < totalPoints) {
-      Alert.alert('Insufficient Balance', 'You do not have enough balance to make this purchase.', [
-        { text: 'OK' },
-      ]);
-      return;
+      if (balance < totalPoints) {
+        Alert.alert('Insufficient Balance', 'You do not have enough balance to make this purchase.', [{ text: 'OK' }]);
+        return;
+      }
+
+      setIsLoading(true); // Start the loading state
+
+      await axios.post(`${server_url}/users/${userId}/purchase`, {
+        cart: cartProducts.map((product) => product.id),
+      });
+
+      Alert.alert('Purchase Confirmed', 'Your order has been confirmed.', [{ text: 'OK' }]);
+
+      setIsLoading(false); // End the loading state
+
+      setConfirmModalVisible(false);
+      setPhoneNumber('');
+
+      // Update the balance after successful purchase
+      const newBalance = balance - totalPoints;
+      setBalance(newBalance);
+
+      fetchCartProducts();
+
+    } catch (error) {
+      console.log('Error confirming the purchase:', error);
+      setIsLoading(false); // End the loading state
     }
-
-    setIsLoading(true); // Start the loading state
-
-    await axios.post(`${server_url}/users/${userId}/purchase`, {
-      cart: cartProducts.map((product) => product.id),
-    });
-
-    Alert.alert('Purchase Confirmed', 'Your order has been confirmed.', [{ text: 'OK' }]);
-
-    setIsLoading(false); // End the loading state
-
-    setConfirmModalVisible(false);
-    setPhoneNumber('');
-
-    fetchUserBalance(); // Fetch the updated balance from the server
-
-    fetchCartProducts();
-
-  } catch (error) {
-    console.log('Error confirming the purchase:', error);
-    setIsLoading(false); // End the loading state
-  }
-};
-
+  };
 
   return (
     <View style={styles.container}>
@@ -160,6 +149,7 @@ const CartComponent = () => {
           </View>
         </View>
       </Modal>
+
       {isLoading && (
         <View style={styles.loadingContainer}>
           <ActivityIndicator size="large" color="#000000" />
