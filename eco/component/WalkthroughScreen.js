@@ -64,7 +64,7 @@ export default function WalkthroughScreen() {
             position: "absolute",
             bottom: "40%",
           }}
-          activeDotColor="#09E4AF"
+          activeDotColor="#2DCC70"
           activeDotStyle={{ width: 20, height: 8 }}
           onIndexChanged={handleSwiperIndexChanged}
         >
@@ -126,7 +126,7 @@ const styles = StyleSheet.create({
     height: "80%",
   },
   title: {
-    fontSize: 20,
+    fontSize: 23,
     fontFamily: "Montserrat",
     fontWeight: "bold",
     width: "80%",
@@ -135,10 +135,10 @@ const styles = StyleSheet.create({
     position: "absolute",
     bottom: "90%",
     zIndex: 1,
-    color: "#2DCC70",
+    color: "#9A9B9B",
   },
   description: {
-    fontSize: 12,
+    fontSize: 14,
     fontFamily: "Montserrat",
     width: "90%",
     textAlign: "center",
@@ -146,7 +146,7 @@ const styles = StyleSheet.create({
     position: "absolute",
     bottom: "50%",
     zIndex: 1,
-    color: "#2DCC70",
+    color: "#9A9B9B",
   },
   buttonStyle: {
     backgroundColor: "#2DCC70",

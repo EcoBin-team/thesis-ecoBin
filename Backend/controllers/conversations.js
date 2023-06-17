@@ -16,5 +16,24 @@ module.exports = {
     }
 
     res.send(data)
+  },
+
+  sendMessage: async (req,res) => {
+
+    const { sender, conversation, message } = req.body
+
+    const { data, error } = await supabase
+    .from("chats")
+    .insert([{
+      sender: sender,
+      conversation: conversation,
+      message: message
+    }])
+
+    if(error){
+      return res.send(error)
+    }
+
+    res.send(data)
   }
 }

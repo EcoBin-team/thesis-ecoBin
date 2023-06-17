@@ -12,6 +12,9 @@ import {
 } from 'react-native';
 import * as Animatable from 'react-native-animatable';
 import axios from 'axios';
+import Modal from 'react-native-modal';
+import { Picker } from '@react-native-picker/picker';
+import MapView, { Marker } from 'react-native-maps';
 
 const Recycle = () => {
   const inputAnim = useRef(new Animated.Value(300)).current;
@@ -19,6 +22,9 @@ const Recycle = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [query, setQuery] = useState('');
   const [depots, setDepots] = useState([]);
+  const [selectedDepot, setSelectedDepot] = useState(null);
+  const [isModalVisible, setModalVisible] = useState(false);
+  const [selectedMedal, setSelectedMedal] = useState('');
 
   useEffect(() => {
     const fetchDepots = async () => {
@@ -59,10 +65,26 @@ const Recycle = () => {
     setInputWidth(200);
   };
 
+  const handleCardPress = (depot) => {
+    setSelectedDepot(depot);
+    setModalVisible(true);
+  };
+
+  const handleMedalChange = (medal) => {
+    setSelectedMedal(medal);
+
+    // Update the selectedDepot based on the selected medal
+    if (medal === 'Location') {
+      setSelectedDepot({ ...selectedDepot, selectedMedal: 'Location' });
+    }
+  };
+
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.searchContainer}>
-        <Animated.View style={[styles.input, { transform: [{ translateY: inputAnim }], width: inputWidth }]}>
+        <Animated.View
+          style={[styles.input, { transform: [{ translateY: inputAnim }], width: inputWidth }]}
+        >
           <TextInput
             style={styles.textInput}
             onFocus={handleFocus}
@@ -86,22 +108,79 @@ const Recycle = () => {
       <ScrollView contentContainerStyle={styles.scrollContent}>
         {/* Render the search results */}
         {depots.map((depot) => (
-          <View key={depot.id} style={styles.card}>
+          <TouchableOpacity
+            key={depot.id}
+            style={styles.card}
+            onPress={() => handleCardPress(depot)}
+          >
             <View style={styles.cardTitleContainer}>
               {/* Depot Name */}
               <Text style={styles.cardTitle}>{depot.name}</Text>
             </View>
             {/* Depot Picture */}
             <Image source={{ uri: depot.picture }} style={styles.cardImage} />
-            <View style={styles.cardDetails}>
-              <View style={styles.cardTextContainer}>
-                <Text style={styles.cardText}>Times: {depot.worktime}</Text>
-                <Text style={styles.cardText}>Capacity: {depot.capacity.total}</Text>
-              </View>
-            </View>
-          </View>
+            <Text style={styles.cardText}>Times: {depot.worktime}</Text>
+            <View style={styles.cardDetails}></View>
+          </TouchableOpacity>
         ))}
       </ScrollView>
+
+      <Modal
+        isVisible={isModalVisible}
+        onBackdropPress={() => setModalVisible(false)}
+        onBackButtonPress={() => setModalVisible(false)}
+        animationIn="fadeIn"
+        animationOut="fadeOut"
+        backdropOpacity={0.5}
+        style={styles.modal}
+      >
+        <ScrollView contentContainerStyle={styles.modalContent}>
+          {selectedDepot && (
+            <>
+              <Text style={styles.modalTitle}>
+                {selectedDepot.name}{selectedDepot.worktime.substring(4)}
+              </Text>
+              <Image source={{ uri: selectedDepot.picture }} style={styles.modalImage} />
+              
+              {/* Medal Picker */}
+              <Picker
+                selectedValue={selectedMedal}
+                style={styles.medalPicker}
+                onValueChange={handleMedalChange}
+              >
+                <Picker.Item label="Location" value={"Location"} />
+                <Picker.Item label="Capacity" value={selectedDepot.capacity.total} />
+                <Picker.Item label="Accepted Products" value={selectedDepot.items} />
+                <Picker.Item label="Certificate of Use" value={selectedDepot.certif} />
+              </Picker>
+             
+              {/* Depot Location Map */}
+              {selectedMedal === 'Location' && (
+                <MapView
+                  style={styles.map}
+                  region={{
+                    latitude: selectedDepot.latitude,
+                    longitude: selectedDepot.longitude,
+                    latitudeDelta: 0.0922,
+                    longitudeDelta: 0.0421,
+                  }}
+                >
+                  <Marker
+                    coordinate={{
+                      latitude: selectedDepot.latitude,
+                      longitude: selectedDepot.longitude,
+                    }}
+                  />
+                </MapView>
+              )}
+              {/* Selected Medal */}
+              {selectedMedal !== 'Location' && (
+                <Text style={styles.modalText}>{selectedMedal}</Text>
+              )}
+            </>
+          )}
+        </ScrollView>
+      </Modal>
     </SafeAreaView>
   );
 };
@@ -144,42 +223,80 @@ const styles = StyleSheet.create({
   scrollContent: {
     flexGrow: 1,
     alignItems: 'center',
-    paddingTop: 60, // Adjust the top padding to provide space for the search bar
+    paddingTop: 60,
   },
   card: {
     backgroundColor: 'white',
     borderRadius: 10,
     padding: 10,
     elevation: 4,
-    width: 370, // Set a fixed width for the card container
-    marginBottom: 10, // Add margin bottom to separate the cards
+    width: 370,
+    marginBottom: 20,
   },
   cardTitleContainer: {
-    flexWrap: 'wrap',
-    maxWidth: 300,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
   },
   cardTitle: {
-    fontSize: 18,
+    fontSize: 20,
     fontWeight: 'bold',
-    marginBottom: 5,
+    marginBottom: 10,
   },
   cardImage: {
+    width: '100%',
     height: 200,
+    borderRadius: 10,
     marginBottom: 10,
-    resizeMode: 'contain',
-    borderRadius: 5,
+  },
+  cardText: {
+    fontSize: 16,
+    marginBottom: 10,
   },
   cardDetails: {
     flexDirection: 'row',
     justifyContent: 'space-between',
   },
-  cardTextContainer: {
-    flexDirection: 'column',
-    alignItems: 'flex-start',
+  modal: {
+    top: 40,
+    margin: 0,
+    justifyContent: 'flex-end',
+    padding: 10,
+    elevation: 4,
+    width: 400,
+    marginLeft: 10,
+    borderTopLeftRadius: 20, // Add this line
+    borderTopRightRadius: 20,
   },
-  cardText: {
+  modalContent: {
+    backgroundColor: 'white',
+    padding: 22,
+    borderTopLeftRadius: 10,
+    borderTopRightRadius: 10,
+  },
+  modalTitle: {
+    fontSize: 15,
+    fontWeight: 'bold',
+    marginBottom: 10,
+  },
+  modalImage: {
+    width: '100%',
+    height: 200,
+    borderRadius: 10,
+    marginBottom: 10,
+  },
+  medalPicker: {
+    marginBottom: 10,
+    borderTopLeftRadius: 10, // Add this line
+    borderTopRightRadius: 10,
+    borderRadius: 10,
+  },
+  map: {
+    width: '100%',
+    height: 200,
+    marginBottom: 10,
+  },
+  modalText: {
     fontSize: 16,
-    marginBottom: 5,
   },
 });
 

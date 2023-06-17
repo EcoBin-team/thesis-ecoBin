@@ -1,55 +1,51 @@
 import React, { useEffect, useState } from 'react';
 import { View, Text, FlatList, ActivityIndicator, Image, StyleSheet } from 'react-native';
-import { server_url } from '../../secret';
 
-
-
-
-
-
-const Comments = ({ postId }) => {
-  const [comments, setComments] = useState([]);
+const Likes = ({ postId }) => {
+  const [likes, setlikes] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [showAllComments, setShowAllComments] = useState(false);
+  const [showAlllikes, setShowAlllikes] = useState(false);
+  const [count,setCount]=useState(0)
 
   useEffect(() => {
-    fetchComments();
+    fetchlikes();
 
-    const refreshInterval = setInterval(fetchComments, 1000); // Fetch comments every 1 seconds
+    const refreshInterval = setInterval(fetchlikes, 1000); // Fetch likes every 1 seconds
 
     return () => clearInterval(refreshInterval); // Clear the interval when the component unmounts
   }, []);
 
-  const fetchComments = async () => {
+  const fetchlikes = async () => {
     try {
-      const response = await fetch(`${server_url}/feeds/${postId}/comments`);
+      const response = await fetch(`http://10.0.2.2:3000/likes/post/${postId}`);
       const data = await response.json();
-      // console.log(data);
+      console.log(  'datalikes',data);
+      console.log(  'count',data.length);
+      setCount(data.length)
+    
 
       if (Array.isArray(data)) {
-        const commentsWithUserDetails = await Promise.all(
-          data.map(async (comment) => {
-            console.log(comment)
-            const userResponse = await fetch(`${server_url}/users/user/${comment.userid}`);
+        const likesWithUserDetails = await Promise.all(
+          data.map(async (like) => {
+            const userResponse = await fetch(`http://10.0.2.2:3000/users/${like.userid}`);
             const userData = await userResponse.json();
-            return { ...comment, username: userData.name, userImage: userData.image };
+            return { ...like, username: userData.name, userImage: userData.image };
           })
         );
 
-        setComments(commentsWithUserDetails);
+        setlikes(likesWithUserDetails);
+
       } else {
-        setComments([]);
+        setlikes([]);
       }
 
       setLoading(false);
     } catch (error) {
       console.error(error);
     }
-  };
-
-  const toggleShowAllComments = () => {
-    setShowAllComments(!showAllComments);
- 
+  }
+  const toggleShowAlllikes = () => {
+    setShowAlllikes(!showAlllikes);
   };
 
   if (loading) {
@@ -60,13 +56,13 @@ const Comments = ({ postId }) => {
     );
   }
 
-  let visibleComments = comments;
-  if (!showAllComments && comments.length > 4) {
-    visibleComments = comments.slice(comments.length - 4);
+  let visiblelikes = likes;
+  if (!showAlllikes && likes.length > 4) {
+    visiblelikes = likes.slice(likes.length - 4);
   }
 
-  const remainingCommentsCount = comments.length - visibleComments.length;
-
+  const remaininglikesCount = likes.length - visiblelikes.length;
+  
   const renderItem = ({ item }) => (
     <View style={styles.commentContainer}>
       <Image
@@ -75,25 +71,24 @@ const Comments = ({ postId }) => {
       />
       <View style={styles.commentContent}>
         <Text style={styles.username}>{item.username}</Text>
-        <Text style={styles.commentText}>{item.content}</Text>
+       
       </View>
     </View>
   );
-
   return (
     <View style={styles.container}>
-      {comments.length === 0 ? (
-        <Text>No comments found.</Text>
+      {likes.length === 0 ? (
+        <Text>No Likes found.</Text>
       ) : (
         <React.Fragment>
           <FlatList
-            data={visibleComments.reverse()}
+            data={visiblelikes.reverse()}
             keyExtractor={(item) => item.id.toString()}
             renderItem={renderItem}
           />
-          {remainingCommentsCount > 0 && !showAllComments && (
-            <Text style={styles.showMoreText} onPress={toggleShowAllComments} >
-              Show more ({remainingCommentsCount} more comments)
+          {remaininglikesCount > 0 && !showAlllikes && (
+            <Text style={styles.showMoreText} onPress={toggleShowAlllikes}>
+              Show more ({remaininglikesCount} more likes)
             </Text>
           )}
         </React.Fragment>
@@ -134,13 +129,14 @@ const styles = StyleSheet.create({
     fontSize: 14,
   },
   showMoreText: {
-    fontSize: 13,
+    fontSize: 16,
     fontWeight: 'bold',
     textAlign: 'center',
     marginVertical: 10,
-    color: '#868889',
-    // textDecorationLine: 'underline',
+    color: 'blue',
+    textDecorationLine: 'underline',
   },
 });
 
-export default Comments;
+export default Likes;
+

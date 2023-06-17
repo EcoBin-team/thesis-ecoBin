@@ -6,11 +6,12 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 
 import InputField from "../../components/InputField/InputField";
 import BackButton from "../../components/BackButton/BackButton";
-import Facebook from "../../components/LoginWith/Facebook";
-import Google from "../../components/LoginWith/Google";
 import AuthButton from "../../components/AuthButton/AuthButton";
+
+// secret variables imports
 import { server_url } from "../../secret";
 
+// styles imports
 import SpinnerStyles from "../../styles/ActivityIndicator.styles";
 import styles from "../../styles/Signup.styles";
 import LogoBackground from "../../components/Logo/LogoBackground";
@@ -31,7 +32,6 @@ const Login = () => {
 
   // login function to set the user's id and token in the localstorage
   const handleSubmit = async () => {
-    // navigation.navigate('News');
     // regular expressions to check inputs with
     const regexpEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
 
@@ -82,8 +82,8 @@ const Login = () => {
 
           <View style={{marginTop: 70}}>
             <Logo/>
-            <InputField placeholder="Email address" fn={setEmail} styling={{marginTop: 60}}/>
-            <InputField placeholder="Password" fn={setPassword} isPassword={true}/>
+            <InputField placeholder="Email address" fn={setEmail} styling={{marginTop: 150}}/>
+            <InputField placeholder="Password" fn={setPassword} isPassword={true} styling={{marginBottom: 30}}/>
             <AuthButton text="Sign In" fn={handleSubmit} style={styles.auth}/>
           </View>
 

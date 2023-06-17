@@ -73,7 +73,7 @@ export default function OptionScreen({ navigation }) {
 
       <View style={styles.group}>
       
-      <Image source={require('../../assets/Vector1.png')} style={styles.vector} />
+      <Image source={require('../../assets/vector.png')} style={styles.vector} />
       <View style={styles.balance}>
       <Text style={styles.text1}>Selection</Text>
       
@@ -121,7 +121,11 @@ const styles = StyleSheet.create({
     backgroundColor: 'gray',
   },
   header: {
+    position: 'absolute',
     backgroundColor: 'white',
+    top: '10%',
+    left: '40%',
+    transform: [{ translateX: -100 }],
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
@@ -139,7 +143,8 @@ const styles = StyleSheet.create({
  text1:{
     alignItems: 'center',
     color: '#6CC51D',
-    top:-30,
+    marginTop:40,
+    
     fontSize: 30,
     fontWeight: 'bold',
     marginLeft: 10,
@@ -147,7 +152,7 @@ const styles = StyleSheet.create({
   text2:{
     alignItems: 'center',
     color: '#6CC51D',
-    top:-25,
+    
     fontSize: 20,
     fontWeight: 'bold',
     marginLeft: 10,
@@ -186,18 +191,18 @@ const styles = StyleSheet.create({
   group: {
     
     alignItems: 'center',
-    marginTop: 250,
+    marginTop: 350,
     backgroundColor:'#F2F3F7',
   },
   firstRow: {
-    top:-40,
+    top:-60,
     flexDirection: 'row',
     justifyContent: 'space-between',
     marginTop: 20,
   },
   secondRow: {
     marginVertical:30,
-    top:-40,
+    top:-60,
     flexDirection: 'row',
     justifyContent: 'space-between',
     marginTop: 20,

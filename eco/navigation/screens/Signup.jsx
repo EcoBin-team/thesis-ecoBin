@@ -85,7 +85,7 @@ const Signup = () => {
 
             <View style={{marginTop: 70}}>
               <Logo/>
-              <InputField placeholder="Full Name" fn={setName} styling={{marginTop: 60}}/>
+              <InputField placeholder="Full Name" fn={setName} styling={{marginTop: 120}}/>
               <InputField placeholder="Email address" fn={setEmail}/>
               <InputField placeholder="Password" fn={setPassword} isPassword={true}/>
               <AuthButton text="Sign Up" fn={handleSubmit} style={styles.auth}/>

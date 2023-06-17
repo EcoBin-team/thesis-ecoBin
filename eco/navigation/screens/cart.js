@@ -1,24 +1,22 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, Image, TextInput, Modal, Alert ,ActivityIndicator } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, Image, TextInput, Modal, Alert, ActivityIndicator } from 'react-native';
 import axios from 'axios';
-import { useNavigation,useRoute } from '@react-navigation/native';
+import { useNavigation, useRoute } from '@react-navigation/native';
 import { server_url } from '../../secret';
-const CartComponent = () => {
 
-    const route = useRoute();
-    const { userId ,balance} = route.params;
-    console.log(userId)
-    const navigation = useNavigation();
+const CartComponent = () => {
+  const route = useRoute();
+  const { userId, balance: initialBalance } = route.params;
+  console.log(userId);
+  const navigation = useNavigation();
   const [cartProducts, setCartProducts] = useState([]);
-  const [userBalance, setUserBalance] = useState(0);
+  const [balance, setBalance] = useState(initialBalance);
   const [phoneNumber, setPhoneNumber] = useState('');
   const [confirmModalVisible, setConfirmModalVisible] = useState(false);
-  
   const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     fetchCartProducts();
-    // fetchUserBalance()
   }, [userId]);
 
   const fetchCartProducts = async () => {
@@ -31,15 +29,7 @@ const CartComponent = () => {
       console.log('Error fetching cart products:', error);
     }
   };
-  const fetchUserBalance = async () => {
-    try {
-      const response = await axios.get(`${server_url}/balance/${userId}`);
-      const { balance } = response.data;
-      setUserBalance(balance);
-    } catch (error) {
-      console.log('Error fetching user balance:', error);
-    }
-  };
+
   const handleDeleteProduct = async (productId) => {
     try {
       setIsLoading(true);
@@ -57,7 +47,7 @@ const CartComponent = () => {
   };
 
   const handleGoBack = () => {
-    navigation.goBack()
+    navigation.goBack();
     console.log('Going back to the previous page');
   };
 
@@ -70,46 +60,49 @@ const CartComponent = () => {
   };
 
   const handlePurchaseConfirmation = async () => {
-  console.log('Confirming the purchase');
+    console.log('Confirming the purchase');
 
-  try {
-    const totalPoints = cartProducts.reduce((sum, product) => sum + product.points, 0);
+    try {
+      const totalPoints = cartProducts.reduce((sum, product) => sum + product.points, 0);
 
-    if (balance < totalPoints) {
-      Alert.alert('Insufficient Balance', 'You do not have enough balance to make this purchase.', [
-        { text: 'OK' },
-      ]);
-      return;
+      if (balance < totalPoints) {
+        Alert.alert('Insufficient Balance', 'You do not have enough balance to make this purchase.', [{ text: 'OK' }]);
+        return;
+      }
+
+      setIsLoading(true); // Start the loading state
+
+      await axios.post(`${server_url}/users/${userId}/purchase`, {
+        cart: cartProducts.map((product) => product.id),
+      });
+
+      Alert.alert('Purchase Confirmed', 'Your order has been confirmed.', [{ text: 'OK' }]);
+
+      setIsLoading(false); // End the loading state
+
+      setConfirmModalVisible(false);
+      setPhoneNumber('');
+
+      // Update the balance after successful purchase
+      const newBalance = balance - totalPoints;
+      setBalance(newBalance);
+
+      fetchCartProducts();
+
+    } catch (error) {
+      console.log('Error confirming the purchase:', error);
+      setIsLoading(false); // End the loading state
     }
-
-    setIsLoading(true); // Start the loading state
-
-    await axios.post(`${server_url}/users/${userId}/purchase`, {
-      cart: cartProducts.map((product) => product.id),
-    });
-
-    Alert.alert('Purchase Confirmed', 'Your order has been confirmed.', [{ text: 'OK' }]);
-
-    setIsLoading(false); // End the loading state
-
-    setConfirmModalVisible(false);
-    setPhoneNumber('');
-
-    fetchUserBalance(); // Fetch the updated balance from the server
-
-    fetchCartProducts();
-
-  } catch (error) {
-    console.log('Error confirming the purchase:', error);
-    setIsLoading(false); // End the loading state
-  }
-};
-
+  };
 
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Cart</Text>
-      <Text style={styles.balanceText}>Balance: {balance}</Text>
+      <View style={styles.balanceContainer}>
+        <Text style={styles.balanceText}>
+          <Image source={require('../../assets/star.png')} style={styles.starImage} /> Balance: {balance}
+        </Text>
+      </View>
       {cartProducts.map((product, index) => (
         <View
           key={product.id}
@@ -132,7 +125,7 @@ const CartComponent = () => {
         </View>
       ))}
       <TouchableOpacity style={styles.confirmButton} onPress={handleConfirmPurchase}>
-        <Text style={styles.confirmButtonText}>Confirm Purchase</Text>
+        <Text style={styles.confirmButtonText}>Confirm </Text>
       </TouchableOpacity>
       <TouchableOpacity style={styles.goBackButton} onPress={handleGoBack}>
         <Text style={styles.goBackButtonText}>Go Back</Text>
@@ -141,7 +134,7 @@ const CartComponent = () => {
       <Modal visible={confirmModalVisible} animationType="fade" transparent>
         <View style={styles.modalContainer}>
           <View style={styles.modalContent}>
-            <Text style={styles.modalTitle}>Confirm Purchase</Text>
+            <Text style={styles.modalTitle}>Confirm Exchange</Text>
             <Text style={styles.modalMessage}>Are you sure you want to proceed with the purchase?</Text>
             <TextInput
               style={styles.phoneNumberInput}
@@ -160,6 +153,7 @@ const CartComponent = () => {
           </View>
         </View>
       </Modal>
+
       {isLoading && (
         <View style={styles.loadingContainer}>
           <ActivityIndicator size="large" color="#000000" />
@@ -217,6 +211,9 @@ const styles = StyleSheet.create({
     height: 25,
   },
   confirmButton: {
+    width: 200,
+    height: 50,
+    marginLeft:80,
     backgroundColor: '#6CC51D',
     borderRadius: 18,
     padding: 16,
@@ -225,11 +222,14 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   confirmButtonText: {
-    fontSize: 18,
+    fontSize: 16,
     fontWeight: 'bold',
     color: '#ffffff',
   },
   goBackButton: {
+    width: 200,
+    height: 50,
+    marginLeft:80,
     backgroundColor: '#B2B2B2',
     borderRadius: 18,
     padding: 16,
@@ -237,7 +237,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   goBackButtonText: {
-    fontSize: 18,
+    fontSize: 16,
     fontWeight: 'bold',
     color: '#ffffff',
   },
@@ -274,7 +274,12 @@ const styles = StyleSheet.create({
     justifyContent: 'flex-end',
   },
   modalCancelButton: {
-    marginRight: 8,
+    marginRight: 100,
+    backgroundColor: '#2DCC70',
+    borderRadius: 8,
+    padding: 8,
+    paddingLeft: 16,
+    paddingRight: 16,
   },
   modalConfirmButton: {
     backgroundColor: '#2DCC70',
@@ -297,6 +302,18 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: 'rgba(0, 0, 0, 0.5)',
+  },
+  balanceText: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    marginBottom: 8,
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  starImage: {
+    width: 20,
+    height: 20,
+    marginRight: 4,
   },
 });
 

@@ -6,3 +6,4 @@ export const messagingSenderId = "810001797869"
 export const appId = "1:810001797869:web:72063a93ccd7ecbca172e4"
 
 export const server_url = "https://ecobin.onrender.com"
+export const socket_url = "https://ecobin-socket-server.onrender.com"
