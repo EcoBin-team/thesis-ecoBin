@@ -20,9 +20,9 @@ const MessageInput = ({ currentUser, conversation, socket }) => {
         message: text
       }
       await axios.post(`${server_url}/conversations/send`, messageDetails)
-      socket.emit("send_message", messageDetails)
+      await socket.emit("send_message", messageDetails)
+      setText("")
     }
-
   }
 
   return (
@@ -30,6 +30,8 @@ const MessageInput = ({ currentUser, conversation, socket }) => {
       <TextInput
         style={styles.textInput}
         placeholder="Type a message here"
+        onChangeText={setText}
+        value={text}
       />
 
       <TouchableOpacity onPress={sendMessage}>
