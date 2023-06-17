@@ -101,7 +101,7 @@ const App = () => {
           options={{ headerShown: false }}
         />
         <Stack.Screen
-          name="Conversations"
+          name="Conversation"
           component={Conversation}
           options={{ headerShown: false }}
         />

@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react"
-import { SafeAreaView, Text, View, TextInput, Image } from "react-native"
+import { SafeAreaView, Text, View } from "react-native"
 import axios from "axios"
 import AsyncStorage from "@react-native-async-storage/async-storage"
 
@@ -17,17 +17,15 @@ const Contacts = () => {
 
   const [query,setQuery] = useState("")
   const [contacts,setContacts] = useState([])
-  const currentUser = AsyncStorage.getItem("currentUser")
 
   useEffect(() => {
     getConversations()
   },[])
 
   const getConversations = async () => {
-
+    const currentUser = JSON.parse(await AsyncStorage.getItem("currentUser"))
     const response = await axios.get(`${server_url}/contacts/getContacts/${currentUser.id}`)
     setContacts(response.data)
-
   }
 
   return (
