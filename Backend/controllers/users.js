@@ -184,7 +184,7 @@ getUserById: async (req, res) => {
     }
 
     res.send(data)
-  }
+  },
 
 
 }

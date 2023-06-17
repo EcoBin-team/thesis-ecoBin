@@ -52,7 +52,7 @@ module.exports = {
       contacts.push({
         id: conversation.id,
         user: data,
-        chat: chats,
+        chat: !chats ? "" : chats
       })
     }
 
