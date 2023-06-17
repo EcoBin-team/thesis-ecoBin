@@ -30,7 +30,10 @@ const Conversation = (props) => {
   },[])
 
   useEffect(() => {
-    socket.on("receive_message", () => getMessages()) // watching for message with socket to re-render messages if a new message gets received
+    // watching for message with socket to re-render messages if a new message gets received
+    socket.on("receive_message", data => {
+      setMessages(prevMessages => [...prevMessages, data]) // adding the new message to the messages array
+    })
   },[socket])
 
   // function that fetched all the messages of a conversation that user pressed on

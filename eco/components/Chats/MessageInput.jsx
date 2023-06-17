@@ -17,11 +17,12 @@ const MessageInput = ({ currentUser, conversation, socket }) => {
       const messageDetails = {
         sender: currentUser,
         conversation: conversation,
-        message: text
+        message: text,
+        created_at: new Date(Date.now())
       }
-      await axios.post(`${server_url}/conversations/send`, messageDetails)
-      await socket.emit("send_message", messageDetails)
-      setText("")
+      await socket.emit("send_message", messageDetails) // emitting a send event to socket server
+      await axios.post(`${server_url}/conversations/send`, messageDetails) // posting message to the database
+      setText("") // resetting the text
     }
   }
 
