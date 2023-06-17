@@ -50,7 +50,7 @@ const Map = ({ mapRegion, setMapRegion, userRegion, setUserRegion, query }) => {
       <MapView
         style={query === "" ? styles.largeMap : styles.map}
         region={mapRegion}
-        onRegionChangeComplete={setMapRegion}
+        showsUserLocation={true}
       >
         {userRegion && <Marker coordinate={userRegion} title="You"/>}
 
