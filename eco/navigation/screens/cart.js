@@ -98,7 +98,11 @@ const CartComponent = () => {
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Cart</Text>
-      <Text style={styles.balanceText}>Balance: {balance}</Text>
+      <View style={styles.balanceContainer}>
+        <Text style={styles.balanceText}>
+          <Image source={require('../../assets/star.png')} style={styles.starImage} /> Balance: {balance}
+        </Text>
+      </View>
       {cartProducts.map((product, index) => (
         <View
           key={product.id}
@@ -121,7 +125,7 @@ const CartComponent = () => {
         </View>
       ))}
       <TouchableOpacity style={styles.confirmButton} onPress={handleConfirmPurchase}>
-        <Text style={styles.confirmButtonText}>Confirm Purchase</Text>
+        <Text style={styles.confirmButtonText}>Confirm </Text>
       </TouchableOpacity>
       <TouchableOpacity style={styles.goBackButton} onPress={handleGoBack}>
         <Text style={styles.goBackButtonText}>Go Back</Text>
@@ -130,7 +134,7 @@ const CartComponent = () => {
       <Modal visible={confirmModalVisible} animationType="fade" transparent>
         <View style={styles.modalContainer}>
           <View style={styles.modalContent}>
-            <Text style={styles.modalTitle}>Confirm Purchase</Text>
+            <Text style={styles.modalTitle}>Confirm Exchange</Text>
             <Text style={styles.modalMessage}>Are you sure you want to proceed with the purchase?</Text>
             <TextInput
               style={styles.phoneNumberInput}
@@ -207,6 +211,9 @@ const styles = StyleSheet.create({
     height: 25,
   },
   confirmButton: {
+    width: 200,
+    height: 50,
+    marginLeft:80,
     backgroundColor: '#6CC51D',
     borderRadius: 18,
     padding: 16,
@@ -215,11 +222,14 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   confirmButtonText: {
-    fontSize: 18,
+    fontSize: 16,
     fontWeight: 'bold',
     color: '#ffffff',
   },
   goBackButton: {
+    width: 200,
+    height: 50,
+    marginLeft:80,
     backgroundColor: '#B2B2B2',
     borderRadius: 18,
     padding: 16,
@@ -227,7 +237,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   goBackButtonText: {
-    fontSize: 18,
+    fontSize: 16,
     fontWeight: 'bold',
     color: '#ffffff',
   },
@@ -264,7 +274,12 @@ const styles = StyleSheet.create({
     justifyContent: 'flex-end',
   },
   modalCancelButton: {
-    marginRight: 8,
+    marginRight: 100,
+    backgroundColor: '#2DCC70',
+    borderRadius: 8,
+    padding: 8,
+    paddingLeft: 16,
+    paddingRight: 16,
   },
   modalConfirmButton: {
     backgroundColor: '#2DCC70',
@@ -287,6 +302,18 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: 'rgba(0, 0, 0, 0.5)',
+  },
+  balanceText: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    marginBottom: 8,
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  starImage: {
+    width: 20,
+    height: 20,
+    marginRight: 4,
   },
 });
 
