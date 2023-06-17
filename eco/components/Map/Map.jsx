@@ -9,7 +9,7 @@ import { server_url } from "../../secret"
 
 import depot from "../../assets/depot.png"
 
-const Map = ({mapRegion, setMapRegion, userRegion, setUserRegion}) => {
+const Map = ({ mapRegion, setMapRegion, userRegion, setUserRegion, query }) => {
 
   const [depots,setDepots] = useState([])
 
@@ -48,10 +48,11 @@ const Map = ({mapRegion, setMapRegion, userRegion, setUserRegion}) => {
   return (
     <View>
       <MapView
-        style={styles.map}
+        style={query === "" ? styles.largeMap : styles.map}
         region={mapRegion}
+        showsUserLocation={true}
       >
-        <Marker coordinate={userRegion} title="You"/>
+        {userRegion && <Marker coordinate={userRegion} title="You"/>}
 
         {depots.map( (e,i) => <Marker key={i} coordinate={{
           latitude: e.latitude,
@@ -72,6 +73,10 @@ const styles = StyleSheet.create({
   map: {
     width: "100%",
     height: "65%",
+  },
+  largeMap: {
+    height: "100%",
+    width: "100%"
   }
 })
 

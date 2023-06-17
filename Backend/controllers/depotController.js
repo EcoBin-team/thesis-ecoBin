@@ -26,8 +26,20 @@ const depotController = {
     const depots = [...(depotsByName.data || []),...(depotsByState.data || []), ];
     res.status(200).json(depots);} catch (error) {
     console.error('Error retrieving depots:', error.message);
-    res.status(500).json({ error: 'Failed to retrieve depots' });}}
+    res.status(500).json({ error: 'Failed to retrieve depots' });}} ,
 ////
+
+getDepotItems  : async  (depotId)=> {
+  try {  const { data: depotData, error: depotError } = await supabase.from("depot")
+  .select("items").eq("id", depotId).single();
+    if (depotError) { throw depotError;}
+    const { data: itemsData, error: itemsError } = await supabase.from("items")
+     .select().in("id", depotData.items).order("id", { ascending: true });
+    if (itemsError) {throw itemsError;  }
+return itemsData; }
+ catch (error) {console.error("Error retrieving items for depot:", error);
+    throw error;}
+}
     } 
      
 
