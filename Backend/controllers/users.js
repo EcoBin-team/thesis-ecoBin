@@ -171,5 +171,20 @@ getUserById: async (req, res) => {
     }
   },
 
+  search: async (req,res) => {
+    const { query } = req.query
+
+    const { data, error } = await supabase
+    .from("users")
+    .select("*")
+    .ilike("name", `%${query}%`)
+
+    if(error){
+      return res.send(error)
+    }
+
+    res.send(data)
+  }
+
 
 }
