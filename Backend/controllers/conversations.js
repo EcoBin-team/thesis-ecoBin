@@ -35,5 +35,24 @@ module.exports = {
     }
 
     res.send(data)
+  },
+  
+  create: async (req,res) => {
+    const { users } = req.body
+
+    const usersArray = JSON.parse(users)
+    console.log(usersArray)
+
+    const { data, error } = await supabase
+    .from("conversations")
+    .insert([{
+      users: usersArray
+    }])
+
+    if(error){
+      return res.send(error)
+    }
+
+    res.send(data)
   }
 }
