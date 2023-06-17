@@ -68,7 +68,7 @@ const ProfileDetails = () => {
         resolve(xhr.response);
       };
       xhr.onerror = function (e) {
-        console.log(e);
+       
         reject(new TypeError('Network request failed'));
       };
       xhr.responseType = 'blob';
@@ -105,7 +105,7 @@ const ProfileDetails = () => {
     }
   };
 
-  console.log(userData);
+
 
 
 
@@ -131,7 +131,7 @@ const ProfileDetails = () => {
 
   useEffect(() => {
     fetchUserDetails();
-  }, []);
+  }, [userDetails]);
 
   const handleTransaction = () => {
     navigation.navigate('Transaction', {

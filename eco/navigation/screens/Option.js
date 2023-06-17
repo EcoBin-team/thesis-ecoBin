@@ -24,9 +24,9 @@ export default function OptionScreen({ navigation }) {
 
   useEffect(() => {
     fetchUserDetails();
-  }, []);
+  }, [userDetails]);
 
-  console.log(userDetails);
+  
   const handleGuide = () => {
     navigation.navigate('Guide');
   };

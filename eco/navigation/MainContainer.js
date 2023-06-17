@@ -40,7 +40,7 @@ function MainContainer() {
               if (rn === NewsName) {
                 iconName = focused ? 'home' : 'home-outline';
               } else if (rn === ContactsName) {
-                iconName = focused ? 'list' : 'list-outline';
+                iconName = focused ? 'md-chatbox-ellipses-outline' : 'md-chatbox-ellipses-outline';
               } else if (rn === RecycleName) {
                 return <CustomRecycleIcon />;
               } else if (rn === OptionName) {
