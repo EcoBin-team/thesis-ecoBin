@@ -46,7 +46,7 @@ const CreateConversation = () => {
     const response = await axios.post(`${server_url}/conversations/create`,{
       users: conversationUsers
     })
-    console.log(response)
+    console.log("hello")
   }
 
   return (

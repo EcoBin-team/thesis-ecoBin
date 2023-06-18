@@ -39,7 +39,6 @@ module.exports = {
   
   create: async (req,res) => {
     const { users } = req.body
-    console.log(users)
 
     const { data, error } = await supabase
     .from("conversations")
