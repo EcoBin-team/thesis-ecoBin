@@ -23,6 +23,7 @@ import Guide from './component/Guide'
 import FAQ from './component/FAQ'
 import Transaction from './navigation/screens/Transaction'
 import Conversation from "./navigation/screens/Conversation";
+import ProfileUser from "./components/ProfileUser/ProfileUser";
 
 const Stack = createStackNavigator();
 
@@ -150,6 +151,7 @@ const App = () => {
             title: 'Account',
              headerShown: false }}
         />
+        
       </Stack.Navigator>
     </NavigationContainer>
   );
