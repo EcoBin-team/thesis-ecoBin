@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react"
-import { View, SafeAreaView, ScrollView } from "react-native"
+import { View, SafeAreaView, ScrollView, Alert } from "react-native"
 import axios from "axios"
 
 // components imports
@@ -39,13 +39,15 @@ const CreateConversation = () => {
 
   // function that created a new row in the conversations table
   const startConversation = async (id) => {
-    console.log(id)
     const currentUser = JSON.parse(await AsyncStorage.getItem("currentUser"))
     // creating a new conversation between the user logged in and the user pressed
     const response = await axios.post(`${server_url}/conversations/create`,{
       users: [currentUser.id,id]
     })
-    console.log("hello")
+    
+    if(response.data === "conversation exists."){
+      return Alert.alert("Error", "You already have an existing conversation with this user.")
+    }
   }
 
   return (
