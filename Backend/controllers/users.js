@@ -178,6 +178,7 @@ getUserById: async (req, res) => {
     .from("users")
     .select("*")
     .ilike("name", `%${query}%`)
+    .limit(20)
 
     if(error){
       return res.send(error)

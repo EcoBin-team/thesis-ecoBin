@@ -23,6 +23,7 @@ import Guide from './component/Guide'
 import FAQ from './component/FAQ'
 import Transaction from './navigation/screens/Transaction'
 import Conversation from "./navigation/screens/Conversation";
+import CreateConversation from "./navigation/screens/CreateConversation";
 
 const Stack = createStackNavigator();
 
@@ -98,6 +99,11 @@ const App = () => {
         <Stack.Screen
           name="Contacts"
           component={Contacts}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="CreateConversation"
+          component={CreateConversation}
           options={{ headerShown: false }}
         />
         <Stack.Screen

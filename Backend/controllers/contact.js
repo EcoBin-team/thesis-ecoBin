@@ -29,7 +29,7 @@ module.exports = {
       .from("chats")
       .select("created_at, message")
       .eq("conversation", conversation.id)
-      .order("created_at", { ascending: false})
+      .order("created_at", { ascending: false })
       .limit(1)
       .single()
 
