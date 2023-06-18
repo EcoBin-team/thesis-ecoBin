@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react"
 import { View, SafeAreaView, ScrollView, Alert } from "react-native"
 import axios from "axios"
+import { useNavigation } from "@react-navigation/native"
 
 // components imports
 import TextInputWithImage from "../../components/TextInputWithImage/TextInputWithImage"
@@ -17,6 +18,7 @@ const CreateConversation = () => {
 
   const [query,setQuery] = useState("")
   const [users,setUsers] = useState([])
+  const navigation = useNavigation()
 
   useEffect(() => {
     searchUsers()
@@ -44,10 +46,12 @@ const CreateConversation = () => {
     const response = await axios.post(`${server_url}/conversations/create`,{
       users: [currentUser.id,id]
     })
-    
+
     if(response.data === "conversation exists."){
       return Alert.alert("Error", "You already have an existing conversation with this user.")
     }
+
+    navigation.navigate("Contacts")
   }
 
   return (

@@ -36,7 +36,6 @@ const Contacts = () => {
   const searchUsers = () => {
     const regex = new RegExp(query, "i")
     const filtered = contacts.filter(user => regex.test(user.user.name))
-    console.log(`filtered: ${filtered}`)
     setContacts(filtered)
   }
 
