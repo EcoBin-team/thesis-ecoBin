@@ -42,9 +42,8 @@ const CreateConversation = () => {
     console.log(id)
     const currentUser = JSON.parse(await AsyncStorage.getItem("currentUser"))
     // creating a new conversation between the user logged in and the user pressed
-    const conversationUsers = JSON.stringify([currentUser.id,id])
     const response = await axios.post(`${server_url}/conversations/create`,{
-      users: conversationUsers
+      users: [currentUser.id,id]
     })
     console.log("hello")
   }
