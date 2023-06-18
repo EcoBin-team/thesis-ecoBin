@@ -21,13 +21,23 @@ const Contacts = () => {
   const navigation = useNavigation()
 
   useEffect(() => {
-    getConversations()
-  },[])
+    if(!query.length){
+      getConversations()
+    }
+    searchUsers()
+  },[query])
 
   const getConversations = async () => {
     const currentUser = JSON.parse(await AsyncStorage.getItem("currentUser"))
     const response = await axios.get(`${server_url}/contacts/getContacts/${currentUser.id}`)
     setContacts(response.data)
+  }
+
+  const searchUsers = () => {
+    const regex = new RegExp(query, "i")
+    const filtered = contacts.filter(user => regex.test(user.user.name))
+    console.log(`filtered: ${filtered}`)
+    setContacts(filtered)
   }
 
   return (

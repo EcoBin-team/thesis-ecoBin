@@ -40,6 +40,17 @@ module.exports = {
   create: async (req,res) => {
     const { users } = req.body
 
+    // checking if user has already created a conversation with the chosen user
+    const { data: checkData, checkError } = await supabase
+    .from("conversations")
+    .select("*")
+    .contains("users", users)
+
+    // if there is a conversation it will return an error
+    if(checkData.length){
+      return res.send("conversation exists.")
+    }
+
     const { data, error } = await supabase
     .from("conversations")
     .insert([{ users: users }])

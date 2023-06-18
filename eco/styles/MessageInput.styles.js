@@ -14,7 +14,8 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
     paddingVertical: 5,
     backgroundColor: "#FFFFFF",
-    textAlign: "left"
+    textAlign: "left",
+    fontFamily: "MontserratRegular"
   },
   send: {
     height: 25.33,
