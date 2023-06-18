@@ -6,7 +6,6 @@ import { Image, View } from 'react-native';
 import News from '../navigation/screens/News';
 import DetailsScreen from './screens/DetailsScreen';
 
-import Contacts from './screens/Contacts';
 import Account from './screens/Account';
 import Recycle from './screens/Recycle';
 import Option from './screens/Option'
