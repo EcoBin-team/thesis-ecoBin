@@ -1,15 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import {
-  ScrollView,
-  TextInput,
-  TouchableOpacity,
-  Text,
-  StyleSheet,
-  SafeAreaView,
-  Animated,
-  View,
-  Image,
-} from 'react-native';
+import { ScrollView, TextInput, TouchableOpacity, Text, StyleSheet, SafeAreaView, Animated, View, Image, Easing, Linking } from 'react-native';
 import * as Animatable from 'react-native-animatable';
 import axios from 'axios';
 import Modal from 'react-native-modal';
@@ -18,6 +8,7 @@ import MapView, { Marker } from 'react-native-maps';
 
 const Recycle = () => {
   const inputAnim = useRef(new Animated.Value(300)).current;
+  const progressAnim = useRef(new Animated.Value(0)).current;
   const [inputWidth, setInputWidth] = useState(200);
   const [isLoading, setIsLoading] = useState(false);
   const [query, setQuery] = useState('');
@@ -25,12 +16,14 @@ const Recycle = () => {
   const [selectedDepot, setSelectedDepot] = useState(null);
   const [isModalVisible, setModalVisible] = useState(false);
   const [selectedMedal, setSelectedMedal] = useState('');
+  const [depotItems, setDepotItems] = useState([]);
+  
 
   useEffect(() => {
     const fetchDepots = async () => {
       try {
         const response = await axios.get(
-          `http://192.168.103.18:3000/depot/search?query=${query}`
+          `https://ecobin.onrender.com/depot/search?query=${query}`
         );
         setDepots(response.data);
       } catch (error) {
@@ -47,6 +40,18 @@ const Recycle = () => {
     }
   }, [query]);
 
+  useEffect(() => {
+    if (selectedMedal === 'Capacity') {
+      Animated.timing(progressAnim, {
+        toValue: (parseInt(selectedDepot.capacity.current) / parseInt(selectedDepot.capacity.total)) * 100,
+        duration: 1000,
+        easing: Easing.linear,
+        useNativeDriver: false,
+      }).start();
+    }
+  }, [selectedMedal, selectedDepot]);
+  
+
   const handleFocus = () => {
     Animated.timing(inputAnim, {
       toValue: 20,
@@ -62,22 +67,53 @@ const Recycle = () => {
       duration: 500,
       useNativeDriver: true,
     }).start();
-    setInputWidth(200);
+    setInputWidth(250);
   };
 
-  const handleCardPress = (depot) => {
+  const handleCardPress = async (depot) => {
     setSelectedDepot(depot);
     setModalVisible(true);
+
+    try {
+      const response = await axios.get(`https://ecobin.onrender.com/items/${depot.id}`);
+      setDepotItems(response.data);
+    } catch (error) {
+      console.error('Error fetching depot items:', error.message);
+    }
   };
 
   const handleMedalChange = (medal) => {
     setSelectedMedal(medal);
 
-    // Update the selectedDepot based on the selected medal
     if (medal === 'Location') {
       setSelectedDepot({ ...selectedDepot, selectedMedal: 'Location' });
     }
   };
+  const progressValueStyle = {
+    width: 150,
+    height: 150,
+    borderRadius: 75,
+    borderTopWidth: 5,
+    borderTopColor: 'red',
+    borderRightWidth: 5,
+    borderRightColor: 'red',
+    position: 'absolute',
+    transform: [
+      {
+        rotate: progressAnim.interpolate({
+          inputRange: [0, 100],
+          outputRange: ['0deg', '360deg'],
+        }),
+      },
+    ],
+    rotation: progressAnim.interpolate({
+      inputRange: [0, 100],
+      outputRange: ['0deg', '360deg'],
+    }),
+  };
+  
+  
+  
 
   return (
     <SafeAreaView style={styles.container}>
@@ -106,7 +142,7 @@ const Recycle = () => {
         </Animated.View>
       </View>
       <ScrollView contentContainerStyle={styles.scrollContent}>
-        {/* Render the search results */}
+       
         {depots.map((depot) => (
           <TouchableOpacity
             key={depot.id}
@@ -114,12 +150,12 @@ const Recycle = () => {
             onPress={() => handleCardPress(depot)}
           >
             <View style={styles.cardTitleContainer}>
-              {/* Depot Name */}
+            
               <Text style={styles.cardTitle}>{depot.name}</Text>
             </View>
-            {/* Depot Picture */}
+           
             <Image source={{ uri: depot.picture }} style={styles.cardImage} />
-            <Text style={styles.cardText}>Times: {depot.worktime}</Text>
+            <Text style={styles.cardText}>Times: {depot.worktime.substring(4)}</Text>
             <View style={styles.cardDetails}></View>
           </TouchableOpacity>
         ))}
@@ -138,23 +174,24 @@ const Recycle = () => {
           {selectedDepot && (
             <>
               <Text style={styles.modalTitle}>
-                {selectedDepot.name}{selectedDepot.worktime.substring(4)}
+                {selectedDepot.name}
+                {selectedDepot.worktime.substring(4)}
               </Text>
               <Image source={{ uri: selectedDepot.picture }} style={styles.modalImage} />
-              
-              {/* Medal Picker */}
+
+           
               <Picker
                 selectedValue={selectedMedal}
                 style={styles.medalPicker}
                 onValueChange={handleMedalChange}
               >
-                <Picker.Item label="Location" value={"Location"} />
-                <Picker.Item label="Capacity" value={selectedDepot.capacity.total} />
-                <Picker.Item label="Accepted Products" value={selectedDepot.items} />
-                <Picker.Item label="Certificate of Use" value={selectedDepot.certif} />
+                <Picker.Item label="Location" value={'Location'} />
+                <Picker.Item label="Capacity" value={'Capacity'} />
+                <Picker.Item label="Accepted Products" value={'Accepted Products'} />
+                <Picker.Item label="Certificate of Use" value={'Certificate of Use'} />
               </Picker>
-             
-              {/* Depot Location Map */}
+
+          
               {selectedMedal === 'Location' && (
                 <MapView
                   style={styles.map}
@@ -173,10 +210,48 @@ const Recycle = () => {
                   />
                 </MapView>
               )}
-              {/* Selected Medal */}
-              {selectedMedal !== 'Location' && (
-                <Text style={styles.modalText}>{selectedMedal}</Text>
+           
+              {selectedMedal === 'Accepted Products' && (
+                <ScrollView style={styles.modalScrollView}>
+                  {selectedDepot &&
+                    depotItems.map((item) => (
+                      <View key={item.id} style={styles.itemContainer}>
+                        <View style={styles.itemBorder}>
+                          <Text style={styles.itemName}>{item.name}</Text>
+                          <Image style={styles.itemImage} source={{ uri: item.image }} />
+                          <Text style={styles.itemType}>{item.type}</Text>
+                        </View>
+                      </View>
+                    ))}
+                </ScrollView>
               )}
+              {selectedMedal === 'Capacity' && (
+                <View style={styles.progressRing}>
+                  <Animated.View style={[styles.progressValue, progressValueStyle]} />
+                  <Text style={styles.progressText}>{`${Math.round(
+                    (parseInt(selectedDepot.capacity.current) /
+                      parseInt(selectedDepot.capacity.total)) *
+                      100
+                  )}%`}</Text>
+                  <Text style={styles.filled}>Filled</Text>
+                  <Text style={styles.capacityTex}>Total Capacity : {selectedDepot.capacity.total} </Text>
+                </View>
+              )}
+             {selectedMedal === 'Certificate of Use' && (
+  <TouchableOpacity
+    style={styles.downloadButton}
+    onPress={() => Linking.openURL(selectedDepot.certificate)}
+  >
+    <Text style={styles.downloadButtonText}>DOWNLOAD CERTIFICATE</Text>
+  </TouchableOpacity>
+)}
+
+              {selectedMedal !== 'Location' &&
+                selectedMedal !== 'Accepted Products' &&
+                selectedMedal !== 'Capacity' &&
+                selectedMedal !== 'Certificate of Use' &&  (
+                  <Text style={styles.modalText}>{selectedMedal}</Text>
+                )}
             </>
           )}
         </ScrollView>
@@ -194,7 +269,7 @@ const styles = StyleSheet.create({
   searchContainer: {
     position: 'absolute',
     top: -10,
-    left: 77,
+    left: 66,
     right: 0,
     zIndex: 1,
   },
@@ -205,16 +280,22 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
     borderRadius: 20,
     paddingHorizontal: 16,
-    height: 40,
-    elevation: 4,
+    paddingVertical: 8,
+    elevation: 3,
+    width: 14,
+    justifyContent: 'center',
+    left : 10
   },
   textInput: {
     flex: 1,
+    fontSize: 16,
+    padding: 0,
+    
   },
   loaderContainer: {
-    alignItems: 'center',
     justifyContent: 'center',
-    marginLeft: 8,
+    alignItems: 'center',
+    marginLeft: 10,
   },
   loaderIcon: {
     width: 30,
@@ -223,9 +304,10 @@ const styles = StyleSheet.create({
   scrollContent: {
     flexGrow: 1,
     alignItems: 'center',
-    paddingTop: 60,
+    paddingVertical: 20,
   },
   card: {
+    top: 50,
     backgroundColor: 'white',
     borderRadius: 10,
     padding: 10,
@@ -236,11 +318,12 @@ const styles = StyleSheet.create({
   cardTitleContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: 10,
   },
   cardTitle: {
-    fontSize: 20,
+    fontSize: 18,
     fontWeight: 'bold',
-    marginBottom: 10,
   },
   cardImage: {
     width: '100%',
@@ -255,23 +338,25 @@ const styles = StyleSheet.create({
   cardDetails: {
     flexDirection: 'row',
     justifyContent: 'space-between',
+    alignItems: 'center',
   },
   modal: {
     top: 40,
     margin: 0,
     justifyContent: 'flex-end',
-    padding: 10,
+    padding: 5,
     elevation: 4,
     width: 400,
     marginLeft: 10,
-    borderTopLeftRadius: 20, // Add this line
-    borderTopRightRadius: 20,
+    height: 500, 
+    marginBottom: 20, 
   },
   modalContent: {
     backgroundColor: 'white',
-    padding: 22,
-    borderTopLeftRadius: 10,
-    borderTopRightRadius: 10,
+    padding: 10,
+    borderRadius: 10,
+   height : -100
+    
   },
   modalTitle: {
     fontSize: 15,
@@ -285,19 +370,109 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   medalPicker: {
-    marginBottom: 10,
-    borderTopLeftRadius: 10, // Add this line
-    borderTopRightRadius: 10,
+    marginVertical: 10,
     borderRadius: 10,
+    backgroundColor: '#f2f2f2',
+    elevation: 2,
   },
   map: {
     width: '100%',
-    height: 200,
+    height: 300,
+    borderRadius: 10,
     marginBottom: 10,
+  },
+  modalScrollView: {
+    maxHeight: 300,
+    marginBottom: 10,
+  },
+  itemContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    padding: 10,
+    borderRadius: 10,
+    marginBottom: 10,
+    backgroundColor: '#f2f2f2',
+    height : 80
+  },
+  itemBorder: {
+    height : 40 ,
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  itemName: {
+    color : 'green' ,
+    fontSize: 14,
+    fontWeight: 'bold',
+    marginRight: 10,
+  },
+  itemImage: {
+    width: 30,
+    height: 30,
+    borderRadius: 5,
+    marginRight: 10,
+  },
+  itemType: {
+    fontSize: 12,
+  },
+  progressRing: {
+    width: 200,
+    height: 200,
+    borderRadius: 100,
+    borderWidth: 5,
+    borderColor: 'lightgreen',
+    justifyContent: 'center',
+    alignItems: 'center',
+    alignSelf: 'center',
+    marginBottom: 50,
+  },
+  progressValue: {
+    width: 80,
+    height: 80,
+    borderRadius: 40,
+    borderTopWidth: 5,
+    borderTopColor: 'lightgreen',
+    borderRightWidth: 5,
+    borderRightColor: 'lightgreen',
+    position: 'absolute',
+  },
+  progressText: {
+    top : 30,
+    fontSize: 25,
+    fontWeight: 'bold',
+    color: 'green',
   },
   modalText: {
     fontSize: 16,
+    marginBottom: 10,
+  } ,
+  downloadButton: {
+    backgroundColor: 'grey',
+    padding: 10,
+    borderRadius: 5,
+    marginTop: 10,
+    alignSelf: 'center',
   },
+  downloadButtonText: {
+    color: 'lightgreen',
+    fontSize: 16,
+    fontWeight: 'bold',
+  },
+  capacityTex: {
+    top : 100,
+   textAlign:'auto',
+    fontSize: 15,
+    fontWeight: 'bold',
+    marginBottom : 10,
+    width: 300,
+    left : 50
+    
+  },
+  filled : {
+    top: 30,
+    fontSize : 15,
+    fontWeight : 'bold'
+  }
 });
 
 export default Recycle;
