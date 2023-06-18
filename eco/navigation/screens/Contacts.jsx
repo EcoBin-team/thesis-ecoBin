@@ -1,7 +1,8 @@
 import { useEffect, useState } from "react"
-import { SafeAreaView, Text, View } from "react-native"
+import { View, SafeAreaView, Text, Image, TouchableOpacity } from "react-native"
 import axios from "axios"
 import AsyncStorage from "@react-native-async-storage/async-storage"
+import { useNavigation } from "@react-navigation/native"
 
 // components imports
 import TextInputWithImage from "../../components/TextInputWithImage/TextInputWithImage"
@@ -17,6 +18,7 @@ const Contacts = () => {
 
   const [query,setQuery] = useState("")
   const [contacts,setContacts] = useState([])
+  const navigation = useNavigation()
 
   useEffect(() => {
     getConversations()
@@ -30,7 +32,17 @@ const Contacts = () => {
 
   return (
     <SafeAreaView style={styles.container}>
-      <Text style={styles.header}>Chats</Text>
+
+      <View style={{flexDirection: "row"}}>
+      
+        <Text style={styles.header}>Chats</Text>
+
+        <TouchableOpacity style={styles.createChatButton} onPress={() => navigation.navigate("CreateConversation")}>
+          <Image source={require("../../assets/CreateChat.png")} style={styles.createChat}/>
+        </TouchableOpacity>
+      
+      </View>
+      
       <View>
         <TextInputWithImage
           fn={setQuery}

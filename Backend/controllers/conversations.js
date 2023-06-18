@@ -41,7 +41,6 @@ module.exports = {
     const { users } = req.body
 
     const usersArray = JSON.parse(users)
-    console.log(usersArray)
 
     const { data, error } = await supabase
     .from("conversations")
