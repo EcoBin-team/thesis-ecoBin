@@ -39,14 +39,11 @@ module.exports = {
   
   create: async (req,res) => {
     const { users } = req.body
-
-    const usersArray = JSON.parse(users)
+    console.log(users)
 
     const { data, error } = await supabase
     .from("conversations")
-    .insert([{
-      users: usersArray
-    }])
+    .insert([{ users: users }])
 
     if(error){
       return res.send(error)

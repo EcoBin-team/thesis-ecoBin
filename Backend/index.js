@@ -11,10 +11,9 @@ const cartRouter = require("./routes/routerCart")
 const depotRouter = require("./routes/depotRouter")
 const codeRouter = require("./routes/codeRouter")
 
-
-app.use(express.urlencoded({ extended: true, limit: "10mb" }));
-app.use(express.json({limit: "10mb"}));
-app.use(cors());
+app.use(express.urlencoded({ extended: true, limit: "10mb" }))
+app.use(express.json({limit: "10mb"}))
+app.use(cors())
 
 app.use((req, res, next) => {
   req.supabase = supabaseConnect;
