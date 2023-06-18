@@ -52,12 +52,12 @@ const App = () => {
     <NavigationContainer>
       <Stack.Navigator> 
     
-
+{/* 
        <Stack.Screen
           name="LaunchPage"
           component={LaunchPage}
           options={{ headerShown: false }}
-        />
+        /> */}
        <Stack.Screen
           name="Home"
           component={Home}

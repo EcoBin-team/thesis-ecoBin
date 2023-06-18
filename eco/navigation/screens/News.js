@@ -176,13 +176,17 @@ function News() {
               <MaterialCommunityIcons
                 name={likeStatus[item.id] ? 'thumb-up' : 'thumb-up-outline'}
                 size={24}
+
                 color={likeStatus[item.id] ? '#6CC51D' : 'black'}
+
               />
               <Text style={styles.likeText}>{likeStatus[item.id] ? 'Liked' : 'Like'}</Text>
             </TouchableOpacity>
             <TouchableOpacity  onPress={() => handleShowlike(item.id)}>
+
                   
                   <Image source={require('../../assets/vue.png')} style={styles.vue} />
+
                 </TouchableOpacity>
                
               </View>
@@ -363,7 +367,9 @@ const styles = StyleSheet.create({
     padding: 8,
   },
   postButton: {
+
     backgroundColor: '#6CC51D',
+
     borderRadius: 4,
     paddingVertical: 8,
     paddingHorizontal: 16,
