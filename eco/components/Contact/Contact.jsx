@@ -18,7 +18,7 @@ const Contact = ({ conversation, image, name, message, time }) => {
   }
 
   return (
-    <TouchableOpacity style={{display: "flex", flexDirection: "row"}} onPress={handleClick}>
+    <TouchableOpacity style={{display: "flex", flexDirection: "row", borderBottomColor: "#DADADA", borderBottomWidth: 1}} onPress={handleClick}>
 
       <View>
         <Image source={{uri: image}} style={styles.image}/>
