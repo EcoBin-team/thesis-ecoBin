@@ -26,6 +26,13 @@ const styles = StyleSheet.create({
     width: "100%",
     alignItems: "center",
     justifyContent: "center"
+  },
+  noMessages: {
+    fontSize: 20,
+    alignSelf: "center"
+  },
+  noMessageName: {
+    color: "#09E4AF"
   }
 })
 
