@@ -29,7 +29,9 @@ const styles = StyleSheet.create({
   },
   noMessages: {
     fontSize: 20,
-    alignSelf: "center"
+    alignSelf: "center",
+    fontFamily: "MontserratMedium",
+    margin: 20
   },
   noMessageName: {
     color: "#09E4AF"

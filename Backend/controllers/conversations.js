@@ -34,6 +34,12 @@ module.exports = {
       return res.send(error)
     }
 
+    // updating latest message date in conversations
+    const { data: date, dateError} = await supabase
+    .from("conversations")
+    .update({updated_at: new Date()})
+    .eq("id", conversation)
+
     res.send(data)
   },
   
