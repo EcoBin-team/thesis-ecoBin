@@ -12,6 +12,7 @@ module.exports = {
     .from('conversations')
     .select('id, users')
     .contains('users', [id])
+    .order("updated_at", { ascending: false })
 
     if(error){
       return res.send(error)
@@ -19,7 +20,7 @@ module.exports = {
 
     // formatting the response to return only the conversation id and the id of the other user
 
-    var contacts = [] // contacts array that will be used in the response
+    const contacts = [] // contacts array that will be used in the response
 
     for(const conversation of conversations){
       // picking out of the array the id of the user that is not the current user
@@ -56,8 +57,6 @@ module.exports = {
         chat: !chats ? "" : chats
       })
     }
-
-    contacts = contacts.reverse()
 
     res.send(contacts)
   },
