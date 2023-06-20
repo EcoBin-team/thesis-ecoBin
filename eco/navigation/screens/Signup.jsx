@@ -1,31 +1,26 @@
 import React, { useState } from "react";
-import { View, Text, SafeAreaView, Image, ActivityIndicator, Alert, TouchableOpacity } from "react-native"
+import { View, Text, SafeAreaView, Image, Alert, TouchableOpacity } from "react-native"
 import { useNavigation } from "@react-navigation/native";
 import axios from "axios";
 import CheckBox from "@react-native-community/checkbox" // TODO: add a checkbox
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
-// components imports
+// common components imports
 import InputField from "../../components/InputField/InputField";
 import BackButton from "../../components/BackButton/BackButton";
 import AuthButton from "../../components/AuthButton/AuthButton";
 import LogoBackground from "../../components/Logo/LogoBackground";
+import Spinner from "../../components/Spinner/Spinner";
 
 // secret file import
 import { server_url } from "../../secret"; 
 
 // styles imports
-import SpinnerStyles from "../../styles/ActivityIndicator.styles"
 import ConfirmSignup from "./ConfirmSignup";
 import Logo from "../../components/Logo/Logo1";
 import styles from "../../styles/Signup.styles"
 
 const Signup = () => {
-
-  // hiding header
-  React.useLayoutEffect(() => {
-    navigation.setOptions({ headerShown: false })
-},[navigation])
 
   const navigation = useNavigation()
   const [name,setName] = useState("")
@@ -38,6 +33,8 @@ const Signup = () => {
   const regexpName = /[a-z]/gi
 
   const handleSubmit = async () => {
+
+    if(name.length < 5 || email.len)
 
     setIsLoading(true)
 
@@ -56,6 +53,11 @@ const Signup = () => {
     // alert when email format is not correct
     else if(response.data === "auth/invalid-email"){
       Alert.alert("Signup Failed", "Please provide a correct email format.")
+    }
+
+    // if the user didn't write a password he will get an alert
+    else if(response.data === "auth/missing-password"){
+      Alert.alert("Signup Failed", "Please provide a password.")
     }
 
     // alert when password written is weak
@@ -101,11 +103,7 @@ const Signup = () => {
 
         </View>
 
-        {isLoading && 
-          <View style={SpinnerStyles.container}>
-            <ActivityIndicator size={70} color="09E4AF"/>
-          </View>
-        }
+        {isLoading && <Spinner/>}
 
       </>
 

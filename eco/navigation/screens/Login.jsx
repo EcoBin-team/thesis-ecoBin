@@ -1,21 +1,19 @@
 import React, { useState } from "react";
-import { View, Text, SafeAreaView, Image, Alert, ActivityIndicator, TouchableOpacity } from "react-native"
+import { View, Text, SafeAreaView, Image, Alert, TouchableOpacity } from "react-native"
 import { useNavigation } from "@react-navigation/native";
 import axios from "axios"
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
+// common components imports
 import InputField from "../../components/InputField/InputField";
 import BackButton from "../../components/BackButton/BackButton";
 import AuthButton from "../../components/AuthButton/AuthButton";
 import Logo from "../../components/Logo/Logo1";
 import LogoBackground from "../../components/Logo/LogoBackground";
+import Spinner from "../../components/Spinner/Spinner";
 
 // secret variables imports
 import { server_url } from "../../secret";
-
-// styles imports
-import SpinnerStyles from "../../styles/ActivityIndicator.styles";
-import styles from "../../styles/Signup.styles";
 
 const Login = () => {
 
@@ -94,11 +92,7 @@ const Login = () => {
         </View>
       </View>
 
-      {isLoading && 
-        <View style={SpinnerStyles.container}>
-          <ActivityIndicator size={70} color="09E4AF"/>
-        </View>
-      }
+      {isLoading && <Spinner/>}
 
     </SafeAreaView>
   )

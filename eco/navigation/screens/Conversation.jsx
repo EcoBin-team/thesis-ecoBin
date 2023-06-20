@@ -14,6 +14,7 @@ import styles from "../../styles/Conversation.styles"
 // common components imports
 import Message from "../../components/Chats/Message"
 import MessageInput from "../../components/Chats/MessageInput"
+import Spinner from "../../components/Spinner/Spinner"
 
 const Conversation = (props) => {
 
@@ -61,7 +62,7 @@ const Conversation = (props) => {
       </View>
 
       <ScrollView ref={scrollViewRef} onContentSizeChange={() => scrollViewRef.current.scrollToEnd({ animated: true })}>
-        {isLoading && <Text>Loading...</Text>}
+        {!messages.length && <Text>h</Text>}
         {messages.map((e,i) => {
           return <Message key={i} currentUser={currentUser.id} sender={e.sender} message={e.message} time={e.created_at}/>
         })}
@@ -70,6 +71,8 @@ const Conversation = (props) => {
       <View style={styles.inputContainer}>
         <MessageInput currentUser={currentUser.id} conversation={conversation} socket={socket}/>
       </View>
+
+      {isLoading && <Spinner/>}
 
     </SafeAreaView>
   )
