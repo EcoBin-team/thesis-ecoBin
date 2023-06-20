@@ -19,10 +19,11 @@ module.exports = {
 
     // formatting the response to return only the conversation id and the id of the other user
 
-    const contacts = [] // contacts array that will be used in the response
+    var contacts = [] // contacts array that will be used in the response
 
     for(const conversation of conversations){
-      const userId = conversation.users.find(user => user !== id)
+      // picking out of the array the id of the user that is not the current user
+      const userId = conversation.users.find(user => user !== id) 
 
       // fetching latest chat message details
       const { data: chats, err } = await supabase
@@ -55,6 +56,8 @@ module.exports = {
         chat: !chats ? "" : chats
       })
     }
+
+    contacts = contacts.reverse()
 
     res.send(contacts)
   },

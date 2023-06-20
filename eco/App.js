@@ -25,6 +25,7 @@ import Transaction from './navigation/screens/Transaction'
 import Conversation from "./navigation/screens/Conversation";
 import CreateConversation from "./navigation/screens/CreateConversation";
 import ForgotPassword from "./navigation/screens/ForgotPassword";
+import ChangePassword from "./navigation/screens/ChangePassword";
 
 const Stack = createStackNavigator();
 
@@ -100,6 +101,11 @@ const App = () => {
         <Stack.Screen
           name="ForgotPassword"
           component={ForgotPassword}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="ChangePassword"
+          component={ChangePassword}
           options={{ headerShown: false }}
         />
         <Stack.Screen

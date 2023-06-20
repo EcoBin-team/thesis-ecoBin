@@ -7,6 +7,7 @@ import styles from "../../styles/ChangePassword.styles"
 
 // common components imports
 import AuthButton from "../../components/AuthButton/AuthButton"
+import Spinner from "../../components/Spinner/Spinner"
 
 // secret variables imports
 import { server_url } from "../../secret"
@@ -15,6 +16,7 @@ const ChangePassword = () => {
 
   const [currentPassword,setCurrentPassword] = useState("")
   const [newPassword,setNewPassword] = useState("")
+  const [isLoading,setIsLoading] = useState(false)
 
   const handleSubmit = async () => {
 
@@ -23,18 +25,36 @@ const ChangePassword = () => {
       return Alert.alert("Error", "Please fill all the inputs.")
     }
 
+    // if the user has written the same password for the 2 fields this will return an alert
+    if(currentPassword === newPassword){
+      return Alert.alert("Error", "You have written the same password.")
+    }
+
+    setIsLoading(true)
+
     // sending http request to modify password
     const response = await axios.post(`${server_url}/users/changePassword`,{
       currentPassword: currentPassword,
       newPassword: newPassword
     })
-    console.log(response.data)
-
+    
+    // successful operation's alert
     if(response.data === "password updated."){
-      return Alert.alert("Success", "Password has been successfully changed.")
+      Alert.alert("Success", "Password has been successfully changed.")
     }
 
-    Alert.alert("Error", "error")
+    // if current password is incorrect this will return an alert
+    else if(response.data === "auth/wrong-password"){
+      Alert.alert("Error", "Wrong Password.")
+    }
+
+    // if password is weak this will return an alert
+    else if(response.data === "auth/weak-password"){
+      Alert.alert("Error", "Weak Password.")
+    }
+
+    setIsLoading(false)
+
   }
 
   return(
@@ -60,6 +80,8 @@ const ChangePassword = () => {
         <AuthButton text="Submit" fn={handleSubmit} style={styles.button}/>
         
       </View>
+
+      {isLoading && <Spinner/>}
       
     </SafeAreaView>
   )

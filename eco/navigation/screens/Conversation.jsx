@@ -14,6 +14,7 @@ import styles from "../../styles/Conversation.styles"
 // common components imports
 import Message from "../../components/Chats/Message"
 import MessageInput from "../../components/Chats/MessageInput"
+import Spinner from "../../components/Spinner/Spinner"
 
 const Conversation = (props) => {
 
@@ -24,6 +25,7 @@ const Conversation = (props) => {
   const navigation = useNavigation()
   const scrollViewRef = useRef()
   const [isLoading,setIsLoading] = useState(false)
+  const [fetched,setFetched] = useState(false)
 
   useEffect(() => {
     socket.emit("join_room", conversation)
@@ -39,6 +41,7 @@ const Conversation = (props) => {
 
   // function that fetched all the messages of a conversation that user pressed on
   const getMessages = async () => {
+
     setCurrentUser(JSON.parse(await AsyncStorage.getItem("currentUser")))
     
     setIsLoading(true)
@@ -46,6 +49,7 @@ const Conversation = (props) => {
     const response = await axios.get(`${server_url}/conversations/getMessages/${conversation}`) // fetching messages from database
     setMessages(response.data)
 
+    setFetched(true)
     setIsLoading(false)
   }
 
@@ -61,15 +65,17 @@ const Conversation = (props) => {
       </View>
 
       <ScrollView ref={scrollViewRef} onContentSizeChange={() => scrollViewRef.current.scrollToEnd({ animated: true })}>
-        {isLoading && <Text>Loading...</Text>}
         {messages.map((e,i) => {
           return <Message key={i} currentUser={currentUser.id} sender={e.sender} message={e.message} time={e.created_at}/>
         })}
+        {fetched && !messages.length && <Text style={styles.noMessages}>Say Hi to <Text style={styles.noMessageName}>{name}</Text></Text>}
       </ScrollView>
 
       <View style={styles.inputContainer}>
         <MessageInput currentUser={currentUser.id} conversation={conversation} socket={socket}/>
       </View>
+
+      {isLoading && <Spinner/>}
 
     </SafeAreaView>
   )
