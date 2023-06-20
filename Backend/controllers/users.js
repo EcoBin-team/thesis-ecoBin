@@ -232,8 +232,7 @@ getUserById: async (req, res) => {
       res.send("password updated.")
     }
     catch(error){
-      const errorCode = error.code
-      res.send(errorCode)
+      res.send(error)
     }
   }
 
