@@ -7,6 +7,8 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import InputField from "../../components/InputField/InputField";
 import BackButton from "../../components/BackButton/BackButton";
 import AuthButton from "../../components/AuthButton/AuthButton";
+import Logo from "../../components/Logo/Logo1";
+import LogoBackground from "../../components/Logo/LogoBackground";
 
 // secret variables imports
 import { server_url } from "../../secret";
@@ -14,8 +16,6 @@ import { server_url } from "../../secret";
 // styles imports
 import SpinnerStyles from "../../styles/ActivityIndicator.styles";
 import styles from "../../styles/Signup.styles";
-import LogoBackground from "../../components/Logo/LogoBackground";
-import Logo from "../../components/Logo/Logo1";
 
 const Login = () => {
 
@@ -85,6 +85,10 @@ const Login = () => {
             <InputField placeholder="Email address" fn={setEmail} styling={{marginTop: 150}}/>
             <InputField placeholder="Password" fn={setPassword} isPassword={true} styling={{marginBottom: 30}}/>
             <AuthButton text="Sign In" fn={handleSubmit} style={styles.auth}/>
+
+            <TouchableOpacity onPress={() => navigation.navigate("ForgotPassword")} style={{marginBottom: 150, marginTop: 10, alignSelf: "center"}}>
+            <Text style={{fontFamily: "MontserratRegular", color: "#A1A4B2"}}>Forgot your password?</Text>
+            </TouchableOpacity>
           </View>
 
         </View>

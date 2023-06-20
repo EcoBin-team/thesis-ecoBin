@@ -61,7 +61,7 @@ function MainContainer() {
         >
           <Tab.Screen name={NewsName} component={News} />
 
-          <Tab.Screen name={ContactsName} component={Contacts} options={{ headerShown: false}} />
+          <Tab.Screen name={ContactsName} component={Contacts} options={{ headerShown: false }} />
           <Tab.Screen name={RecycleName} component={Recycle} options={{ tabBarLabel: () => null }} />
 
           <Tab.Screen name={OptionName} component={Option} />

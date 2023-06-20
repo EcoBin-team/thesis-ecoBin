@@ -1,4 +1,4 @@
-const { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword } = require("firebase/auth")
+const { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, sendPasswordResetEmail } = require("firebase/auth")
 
 const { app, storage } = require("../firebase/FirebaseApp")
 const supabase = require("../supabase/Supabase_Connect")
@@ -187,5 +187,21 @@ getUserById: async (req, res) => {
     res.send(data)
   },
 
+  reset: async (req,res) => {
+
+    try {
+      const { email } = req.params
+  
+      const auth = getAuth()
+      await sendPasswordResetEmail(auth, email)
+  
+      res.send("email sent.")
+    }
+
+    catch(error){
+      const errorCode = error.code
+      res.send(errorCode)
+    }
+  }
 
 }

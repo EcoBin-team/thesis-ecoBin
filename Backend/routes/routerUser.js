@@ -2,7 +2,7 @@
 
 const express = require('express');
 const router = express.Router();
-const { login, signUp, getAll, nextSignUp, getUserById,updateUserById, search } = require("../controllers/users")
+const { login, signUp, getAll, nextSignUp, getUserById,updateUserById, search, reset } = require("../controllers/users")
 
 // uploadImage
 router.get("/getAll", getAll) // route to retrieve all users
@@ -12,6 +12,7 @@ router.get("/search", search)
 
 router.post("/login", login) // login route
 router.post("/signup", signUp) // sign up route
+router.post("/reset/:email", reset)
 
 router.put("/nextSignup", nextSignUp)
 
