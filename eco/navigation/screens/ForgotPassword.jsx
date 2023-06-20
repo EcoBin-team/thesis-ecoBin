@@ -18,6 +18,10 @@ const ForgotPassword = () => {
   const handleSubmit = async () => {
     if(email !== ""){
       const response = await axios.post(`${server_url}/users/reset/${email}`)
+
+      if(response.data === "auth/invalid-email"){
+        return Alert.alert("Reset Error", "Invalid email.")
+      }
       
       if(response.data === "auth/user-not-found"){
         return Alert.alert("Reset Error", "Email doesn't exist.")

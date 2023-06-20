@@ -84,7 +84,7 @@ const Login = () => {
             <Logo/>
             <InputField placeholder="Email address" fn={setEmail} styling={{marginTop: 150}}/>
             <InputField placeholder="Password" fn={setPassword} isPassword={true} styling={{marginBottom: 30}}/>
-            <AuthButton text="Sign In" fn={handleSubmit} style={styles.auth}/>
+            <AuthButton text="Sign In" fn={handleSubmit} style={{marginTop: 40,width: 300, height: 50.53,borderRadius: 38,}}/>
 
             <TouchableOpacity onPress={() => navigation.navigate("ForgotPassword")} style={{marginBottom: 150, marginTop: 10, alignSelf: "center"}}>
             <Text style={{fontFamily: "MontserratRegular", color: "#A1A4B2"}}>Forgot your password?</Text>

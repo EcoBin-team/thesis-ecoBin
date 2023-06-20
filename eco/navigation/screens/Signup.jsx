@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { View, Text, SafeAreaView, Image, ActivityIndicator, Alert } from "react-native"
+import { View, Text, SafeAreaView, Image, ActivityIndicator, Alert, TouchableOpacity } from "react-native"
 import { useNavigation } from "@react-navigation/native";
 import axios from "axios";
 import CheckBox from "@react-native-community/checkbox" // TODO: add a checkbox
@@ -34,6 +34,7 @@ const Signup = () => {
   const [isChecked,setIsChecked] = useState(false)
   const [isLoading,setIsLoading] = useState(false)
   const [done,setDone] = useState(false)
+  const [hidden,setHidden] = useState(true)
   const regexpName = /[a-z]/gi
 
   const handleSubmit = async () => {
@@ -87,7 +88,12 @@ const Signup = () => {
               <Logo/>
               <InputField placeholder="Full Name" fn={setName} styling={{marginTop: 120}}/>
               <InputField placeholder="Email address" fn={setEmail}/>
-              <InputField placeholder="Password" fn={setPassword} isPassword={true}/>
+              <View>
+                <InputField placeholder="Password" fn={setPassword} isPassword={hidden}/>
+                <TouchableOpacity onPress={() => setHidden(!hidden)} style={{position: "absolute", top: 40, right: 20}}>
+                  <Image source={require("../../assets/ShowPassword.png")}/>
+                </TouchableOpacity>
+              </View>
               <AuthButton text="Sign Up" fn={handleSubmit} style={styles.auth}/>
             </View>
 
