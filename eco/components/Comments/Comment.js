@@ -1,21 +1,18 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, FlatList, ActivityIndicator, Image, StyleSheet } from 'react-native';
+import { View, Text, FlatList, ActivityIndicator, Image, StyleSheet, TouchableOpacity } from 'react-native';
 import { server_url } from '../../secret';
-
-
-
-
-
+import { useNavigation } from '@react-navigation/native';
 
 const Comments = ({ postId }) => {
   const [comments, setComments] = useState([]);
   const [loading, setLoading] = useState(true);
   const [showAllComments, setShowAllComments] = useState(false);
+  const navigation = useNavigation();
 
   useEffect(() => {
     fetchComments();
 
-    const refreshInterval = setInterval(fetchComments, 1000); // Fetch comments every 1 seconds
+    const refreshInterval = setInterval(fetchComments, 1000); // Fetch comments every 1 second
 
     return () => clearInterval(refreshInterval); // Clear the interval when the component unmounts
   }, []);
@@ -47,6 +44,10 @@ const Comments = ({ postId }) => {
     }
   };
 
+  const navigateToUserProfile = (userId) => {
+    navigation.navigate('Contacts');
+  };
+
   const toggleShowAllComments = () => {
     setShowAllComments(!showAllComments);
  
@@ -69,10 +70,12 @@ const Comments = ({ postId }) => {
 
   const renderItem = ({ item }) => (
     <View style={styles.commentContainer}>
-      <Image
-        source={item.userImage ? { uri: item.userImage } : require('../../assets/avatarVide.png')}
-        style={styles.profileImage}
-      />
+      <TouchableOpacity onPress={() => navigateToUserProfile(item.userId)} style={styles.touchableContainer}>
+        <Image
+          source={item.userImage ? { uri: item.userImage } : require('../../assets/avatarVide.png')}
+          style={styles.profileImage}
+        />
+      </TouchableOpacity>
       <View style={styles.commentContent}>
         <Text style={styles.username}>{item.username}</Text>
         <Text style={styles.commentText}>{item.content}</Text>
