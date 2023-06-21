@@ -1,5 +1,5 @@
 import React, { useState } from "react"
-import { View, Text, TouchableOpacity, SafeAreaView, ActivityIndicator, StyleSheet, Alert } from "react-native"
+import { View, Text, TouchableOpacity, SafeAreaView, StyleSheet, Alert } from "react-native"
 import * as ImagePicker from 'expo-image-picker'
 import axios from "axios"
 import { v4 as uuidv4 } from "uuid";
@@ -12,11 +12,13 @@ import Camera from "../../components/Camera/Camera";
 import InputField from "../../components/InputField/InputField"
 import AuthButton from "../../components/AuthButton/AuthButton"
 import SignupSuccess from "../../components/SignupSuccess/SignupSuccess"
-import { server_url } from "../../secret";
+import Spinner from "../../components/Spinner/Spinner";
 
+// styles imports
 import modal from "../../styles/modalBackground.styles"
-import SpinnerStyles from "../../styles/ActivityIndicator.styles"
 
+// secret variables imports
+import { server_url } from "../../secret";
 
 // this function will let the user pick an image from his phone to upload as a profile picture
 const ConfirmSignup = () => {
@@ -98,6 +100,8 @@ const ConfirmSignup = () => {
 
     const id = await AsyncStorage.getItem("currentUser")
 
+    setIsLoading(true)
+
     await axios.put(`${server_url}/users/nextSignup`,{
       id: id,
       image: imageUrl,
@@ -106,6 +110,7 @@ const ConfirmSignup = () => {
       role: selected
     })
 
+    setIsLoading(false)
     setSignupSuccess(true) // showing sign up success modal
   }
 
@@ -156,11 +161,7 @@ const ConfirmSignup = () => {
         </>
       }
 
-      {isLoading && 
-        <View style={SpinnerStyles.container}>
-          <ActivityIndicator size={70} color="09E4AF"/>
-        </View>
-      }
+      {isLoading && <Spinner/>}
 
     </SafeAreaView>
   )

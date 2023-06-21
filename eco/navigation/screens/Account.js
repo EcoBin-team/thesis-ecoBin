@@ -35,7 +35,7 @@ const ProfileDetails = () => {
   // const [updatedUser, setUpdatedUser] = useState(null);
   const navigation = useNavigation();
   const route = useRoute();
-  // const updatedUser = route.params?.updatedUser
+ 
 
   const pickImage = async () => {
     // asking for the user's permission to access his image library
@@ -68,7 +68,7 @@ const ProfileDetails = () => {
         resolve(xhr.response);
       };
       xhr.onerror = function (e) {
-        console.log(e);
+       
         reject(new TypeError('Network request failed'));
       };
       xhr.responseType = 'blob';
@@ -105,7 +105,7 @@ const ProfileDetails = () => {
     }
   };
 
-  console.log(userData);
+
 
 
 
@@ -131,7 +131,7 @@ const ProfileDetails = () => {
 
   useEffect(() => {
     fetchUserDetails();
-  }, []);
+  }, [userDetails]);
 
   const handleTransaction = () => {
     navigation.navigate('Transaction', {
@@ -147,16 +147,16 @@ const ProfileDetails = () => {
     <View style={styles.container}>
       <View>
         <View style={styles.profileImageContainer}>
-          <Image
-            source={
-              imageUrl !== ''
-                ? { uri: imageUrl }
-                : userDetails?.image
-                ? { uri: userDetails.image }
-                : require('../../assets/avatarVide.png')
-            }
-            style={styles.profileImage}
-          />
+        <Image
+          source={
+            updateImage // Use 'updateImage' state instead of 'imageUrl'
+              ? { uri: imageUrl }
+              : userDetails?.image
+              ? { uri: userDetails.image }
+              : require('../../assets/avatarVide.png')
+          }
+          style={styles.profileImage}
+        />
           <TouchableOpacity style={styles.cameraIcon} onPress={pickImage}>
             <FontAwesome name="camera" size={24} color="white" />
           </TouchableOpacity>

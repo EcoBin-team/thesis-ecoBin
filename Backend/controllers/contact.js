@@ -12,6 +12,7 @@ module.exports = {
     .from('conversations')
     .select('id, users')
     .contains('users', [id])
+    .order("updated_at", { ascending: false })
 
     if(error){
       return res.send(error)
@@ -22,14 +23,15 @@ module.exports = {
     const contacts = [] // contacts array that will be used in the response
 
     for(const conversation of conversations){
-      const userId = conversation.users.find(user => user !== id)
+      // picking out of the array the id of the user that is not the current user
+      const userId = conversation.users.find(user => user !== id) 
 
       // fetching latest chat message details
       const { data: chats, err } = await supabase
       .from("chats")
       .select("created_at, message")
       .eq("conversation", conversation.id)
-      .order("created_at", { ascending: false})
+      .order("created_at", { ascending: false })
       .limit(1)
       .single()
 
@@ -52,7 +54,7 @@ module.exports = {
       contacts.push({
         id: conversation.id,
         user: data,
-        chat: chats,
+        chat: !chats ? "" : chats
       })
     }
 

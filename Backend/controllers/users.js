@@ -1,4 +1,12 @@
-const { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword } = require("firebase/auth")
+const { 
+  getAuth,
+  createUserWithEmailAndPassword,
+  signInWithEmailAndPassword,
+  sendPasswordResetEmail,
+  reauthenticateWithCredential,
+  updatePassword,
+  EmailAuthProvider
+} = require("firebase/auth")
 
 const { app, storage } = require("../firebase/FirebaseApp")
 const supabase = require("../supabase/Supabase_Connect")
@@ -171,5 +179,62 @@ getUserById: async (req, res) => {
     }
   },
 
+  // a search for users used to look for contacts in the messaging feature
+  search: async (req,res) => {
+    const { query } = req.query
+
+    const { data, error } = await supabase
+    .from("users")
+    .select("*")
+    .ilike("name", `%${query}%`)
+    .limit(20)
+
+    if(error){
+      return res.send(error)
+    }
+
+    res.send(data)
+  },
+
+  // a backend function to send a reset password link to the user's email, in case the user forgot his password
+  reset: async (req,res) => {
+
+    try {
+      const { email } = req.params
+  
+      const auth = getAuth()
+      await sendPasswordResetEmail(auth, email)
+  
+      res.send("email sent.")
+    }
+
+    catch(error){
+      const errorCode = error.code
+      res.send(errorCode)
+    }
+  },
+
+  // backend function to change a user's password
+  changePassword: async (req,res) => {
+
+    try{
+      const { currentPassword, newPassword } = req.body
+  
+      const user = getAuth().currentUser
+      const credentials = EmailAuthProvider.credential(user.email, currentPassword)
+  
+      // reauthenticating the user with the credentials given
+      await reauthenticateWithCredential(user, credentials)
+  
+      // updating the password
+      await updatePassword(user, newPassword)
+
+      res.send("password updated.")
+    }
+    catch(error){
+      const errorCode = error.code
+      res.send(errorCode)
+    }
+  }
 
 }

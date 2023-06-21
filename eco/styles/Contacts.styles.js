@@ -23,6 +23,19 @@ const styles = StyleSheet.create({
     position: "absolute",
     top: 20,
     left: 40
+  },
+  createChat: {
+    height: 40,
+    width: 40,
+  },
+  createChatButton: {
+    marginLeft: "auto",
+    marginRight: 10
+  },
+  createContainer: {
+    flex: 1,
+    alignSelf: "flex-end",
+    marginRight: 10
   }
 })
 

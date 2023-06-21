@@ -23,7 +23,9 @@ import Guide from './component/Guide'
 import FAQ from './component/FAQ'
 import Transaction from './navigation/screens/Transaction'
 import Conversation from "./navigation/screens/Conversation";
-import ProfileUser from "./components/ProfileUser/ProfileUser";
+import CreateConversation from "./navigation/screens/CreateConversation";
+import ForgotPassword from "./navigation/screens/ForgotPassword";
+import ChangePassword from "./navigation/screens/ChangePassword";
 
 const Stack = createStackNavigator();
 
@@ -52,12 +54,12 @@ const App = () => {
     <NavigationContainer>
       <Stack.Navigator> 
     
-
+{/* 
        <Stack.Screen
           name="LaunchPage"
           component={LaunchPage}
           options={{ headerShown: false }}
-        />
+        /> */}
        <Stack.Screen
           name="Home"
           component={Home}
@@ -97,12 +99,27 @@ const App = () => {
           options={{ headerShown: false }}
         />
         <Stack.Screen
+          name="ForgotPassword"
+          component={ForgotPassword}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="ChangePassword"
+          component={ChangePassword}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
           name="Contacts"
           component={Contacts}
           options={{ headerShown: false }}
         />
         <Stack.Screen
-          name="Conversations"
+          name="CreateConversation"
+          component={CreateConversation}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="Conversation"
           component={Conversation}
           options={{ headerShown: false }}
         />

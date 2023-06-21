@@ -5,6 +5,7 @@ import { useNavigation } from '@react-navigation/native';
 import { Feather } from '@expo/vector-icons';
 import { UserContext } from '../MainContainer';
 import { useRoute } from '@react-navigation/native';
+import { server_url } from "../../secret";
 
 export default function OptionScreen({ navigation }) {
   const userData = useContext(UserContext);
@@ -13,7 +14,7 @@ export default function OptionScreen({ navigation }) {
   
   const fetchUserDetails = async () => {
     try {
-      const response = await fetch(`http://10.0.2.2:3000/users/user/${userData.id}`);
+      const response = await fetch(`${server_url}/users/user/${userData.id}`);
       const data = await response.json();
       setUserDetails(data);
     } catch (error) {
@@ -23,9 +24,15 @@ export default function OptionScreen({ navigation }) {
 
   useEffect(() => {
     fetchUserDetails();
-  }, []);
+  }, [userDetails]);
 
-  console.log(userDetails);
+  
+  const handleGuide = () => {
+    navigation.navigate('Guide');
+  };
+  const handleRecycle = () => {
+    navigation.navigate('Recycle');
+  };
   
   const handleExchange = () => {
     navigation.navigate('Exchange', { userId: userData.id });
@@ -40,6 +47,7 @@ export default function OptionScreen({ navigation }) {
   const handleShopping = () => {
     navigation.navigate('shopping', {  userId: userData.id, balance:userDetails.balance });
   };
+  
   return (
     <View style={styles.container}>
       <Image source={require('../../assets/nature.jpg')} style={styles.backgroundImage} />
@@ -65,7 +73,7 @@ export default function OptionScreen({ navigation }) {
 
       <View style={styles.group}>
       
-      <Image source={require('../../assets/Vector1.png')} style={styles.vector} />
+      <Image source={require('../../assets/vector.png')} style={styles.vector} />
       <View style={styles.balance}>
       <Text style={styles.text1}>Selection</Text>
       
@@ -77,7 +85,9 @@ export default function OptionScreen({ navigation }) {
         <TouchableOpacity onPress={handleExchange}>
         <Image source={require('../../assets/Exchange.png')} style={styles.imageOption} />
         </TouchableOpacity>
-        <Image source={require('../../assets/Recycle(1).png')} style={styles.imageOption}/>
+        <TouchableOpacity onPress={handleRecycle}>
+          <Image source={require('../../assets/Recycle(1).png')} style={styles.imageOption} />
+          </TouchableOpacity>
         <TouchableOpacity onPress={handleNearby}>
           <Image source={require('../../assets/Nearby.png')} style={styles.imageOption} />
           </TouchableOpacity>
@@ -94,7 +104,9 @@ export default function OptionScreen({ navigation }) {
           </TouchableOpacity>
 
 
-          <Image source={require('../../assets/cat5.png')} style={styles.imageOption}/>
+          <TouchableOpacity onPress={handleGuide}>
+            <Image source={require('../../assets/cat5.png')} style={styles.imageOption} />
+          </TouchableOpacity>
         </View>
       </View>
     </View>
@@ -109,7 +121,11 @@ const styles = StyleSheet.create({
     backgroundColor: 'gray',
   },
   header: {
+    position: 'absolute',
     backgroundColor: 'white',
+    top: '10%',
+    left: '40%',
+    transform: [{ translateX: -100 }],
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
@@ -127,7 +143,8 @@ const styles = StyleSheet.create({
  text1:{
     alignItems: 'center',
     color: '#6CC51D',
-    top:-30,
+    marginTop:40,
+    
     fontSize: 30,
     fontWeight: 'bold',
     marginLeft: 10,
@@ -135,7 +152,7 @@ const styles = StyleSheet.create({
   text2:{
     alignItems: 'center',
     color: '#6CC51D',
-    top:-25,
+    
     fontSize: 20,
     fontWeight: 'bold',
     marginLeft: 10,
@@ -174,18 +191,18 @@ const styles = StyleSheet.create({
   group: {
     
     alignItems: 'center',
-    marginTop: 250,
+    marginTop: 350,
     backgroundColor:'#F2F3F7',
   },
   firstRow: {
-    top:-40,
+    top:-60,
     flexDirection: 'row',
     justifyContent: 'space-between',
     marginTop: 20,
   },
   secondRow: {
     marginVertical:30,
-    top:-40,
+    top:-60,
     flexDirection: 'row',
     justifyContent: 'space-between',
     marginTop: 20,

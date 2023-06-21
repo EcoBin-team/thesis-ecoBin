@@ -18,7 +18,7 @@ const Likes = ({ postId }) => {
     try {
       const response = await fetch(`http://10.0.2.2:3000/likes/post/${postId}`);
       const data = await response.json();
-    
+
 
       if (Array.isArray(data)) {
         const likesWithUserDetails = await Promise.all(
@@ -60,7 +60,7 @@ const Likes = ({ postId }) => {
   }
 
   const remaininglikesCount = likes.length - visiblelikes.length;
-  
+
   const renderItem = ({ item }) => (
     <View style={styles.commentContainer}>
       <Image
@@ -69,7 +69,7 @@ const Likes = ({ postId }) => {
       />
       <View style={styles.commentContent}>
         <Text style={styles.username}>{item.username}</Text>
-       
+
       </View>
     </View>
   );

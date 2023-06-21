@@ -5,7 +5,7 @@ const LogoBackground = ({ signup, login }) => {
   return (
     <Image 
       source={require("../../assets/LogoBackground.png")}
-      style={{position: "absolute", bottom: signup ? 360 : (login ? 310 : 190)}}/>
+      style={{position: "absolute", bottom: signup ? 420 : (login ? 400 : 190)}}/>
   )
 }
 

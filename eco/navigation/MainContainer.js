@@ -9,9 +9,10 @@ import DetailsScreen from './screens/DetailsScreen';
 import Account from './screens/Account';
 import Recycle from './screens/Recycle';
 import Option from './screens/Option'
+import Contacts from './screens/Contacts';
 
 const NewsName = "News";
-const detailsName = "Details";
+const ContactsName = "Contacts";
 const RecycleName = 'Recycle';
 const OptionName = "Option";
 const AccountName = 'Account';
@@ -38,8 +39,8 @@ function MainContainer() {
 
               if (rn === NewsName) {
                 iconName = focused ? 'home' : 'home-outline';
-              } else if (rn === detailsName) {
-                iconName = focused ? 'list' : 'list-outline';
+              } else if (rn === ContactsName) {
+                iconName = focused ? 'md-chatbox-ellipses-outline' : 'md-chatbox-ellipses-outline';
               } else if (rn === RecycleName) {
                 return <CustomRecycleIcon />;
               } else if (rn === OptionName) {
@@ -59,8 +60,10 @@ function MainContainer() {
           }}
         >
           <Tab.Screen name={NewsName} component={News} />
-          <Tab.Screen name={detailsName} component={DetailsScreen} />
+
+          <Tab.Screen name={ContactsName} component={Contacts} options={{ headerShown: false }} />
           <Tab.Screen name={RecycleName} component={Recycle} options={{ tabBarLabel: () => null }} />
+
           <Tab.Screen name={OptionName} component={Option} />
           <Tab.Screen name={AccountName} component={Account} />
         </Tab.Navigator>
