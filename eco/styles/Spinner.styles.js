@@ -8,7 +8,8 @@ const styles = StyleSheet.create({
     left: 0,
     bottom: 0,
     display: "flex",
-    justifyContent: "center"
+    justifyContent: "center",
+    backgroundColor: "rgba(0,0,0,0.1)"
   },
   loaderContainer: {
     justifyContent: 'center',

@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { View, Text, SafeAreaView, TextInput, ScrollView } from "react-native"
 import axios from "axios";
+import { useNavigation } from "@react-navigation/native";
 import Icon from "react-native-vector-icons/FontAwesome"
 
 // common components imports
@@ -31,6 +32,7 @@ const Nearby = () => {
   const [query,setQuery] = useState("") // query that the user has written in the text field
   const [data,setData] = useState([]) // depots fetched from depots table
   const [isLoading,setIsLoading] = useState(false)
+  const navigation = useNavigation()
   
   useEffect(() => {
     if(query !== ""){
@@ -57,7 +59,7 @@ const Nearby = () => {
       <View style={{backgroundColor: "white"}}>
 
         <View style={styles.upperContainer}>
-          <BackButton style={{margin: 15}}/>
+          <BackButton style={{margin: 15}} fn={() => navigation.goBack()}/>
           <Text style={styles.nearby}>Nearby</Text>
         </View>
 

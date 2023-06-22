@@ -65,6 +65,10 @@ const Signup = () => {
       Alert.alert("Signup Failed", "Please provide a stronger password.")
     }
     
+    else if(response.data === "auth/email-already-in-use"){
+      Alert.alert("Signup Failed", "This email is already in use.")
+    }
+    
     else{
       setDone(true) // changes a state to show the sign up success modal
       await AsyncStorage.setItem("currentUser", response.data)
