@@ -21,6 +21,10 @@ const Contacts = () => {
   const [contacts,setContacts] = useState([])
   const [isLoading,setIsLoading] = useState(false)
   const navigation = useNavigation()
+  
+  useEffect(() => {
+    getConversations()
+  },[])
 
   useEffect(() => {
     if(!query.length){
@@ -66,6 +70,7 @@ const Contacts = () => {
       </View>
 
       <View>
+        {!contacts.length && !isLoading && <Text style={styles.contactsPlaceholder}>No Contacts Found</Text>}
         {contacts.map((e,i) => {
           return <Contact key={i}
             conversation={e.id} 

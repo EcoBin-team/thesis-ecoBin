@@ -36,6 +36,13 @@ const styles = StyleSheet.create({
     flex: 1,
     alignSelf: "flex-end",
     marginRight: 10
+  },
+  contactsPlaceholder: {
+    alignSelf: "center",
+    fontFamily: "MontserratBold",
+    fontSize: 22,
+    margin: 20,
+    color: "#bdbdbd"
   }
 })
 
