@@ -4,6 +4,7 @@ import { useRoute, useNavigation } from '@react-navigation/native';
 import { Ionicons } from '@expo/vector-icons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
+import Spinner from '../Spinner/Spinner';
 
 const UserProfile = () => {
   const route = useRoute();
@@ -11,9 +12,9 @@ const UserProfile = () => {
   const [userData, setUserData] = useState(null);
   const fadeAnim = useState(new Animated.Value(0))[0];
   const navigation = useNavigation();
+  const [isLoading, setIsLoading] = useState(true)
 
   useEffect(() => {
-    // Fetch user data using Axios
     axios
       .get(`https://ecobin.onrender.com/users/user/${userId}`)
       .then(response => {
@@ -23,35 +24,31 @@ const UserProfile = () => {
           duration: 1000,
           useNativeDriver: true,
         }).start();
+        setIsLoading(false)
       })
       .catch(error => {
         console.error(error, userId);
+        setIsLoading(false)
       });
   }, [userId]);
+  if (isLoading) {
+    return <Spinner />
+  }
 
   if (!userData) {
     return <Text>Loading...</Text>;
   }
   const handleFollowUser = async () => {
     try {
-      // Retrieve the current user's ID from AsyncStorage
       const currentUserData = await AsyncStorage.getItem('currentUser');
       const currentUser = JSON.parse(currentUserData);
       const currentUserId = currentUser.id;
-  
-      // Make a POST request to follow the user
-      axios
-        .post(`https://1922.168.131.198:3000/users/${currentUserId}/follow/${userId}`)
-        .then(response => {
-          // Handle the success response as needed
-          console.log('User followed successfully');
-        })
-        .catch(error => {
-          // Handle the error response as needed
-          console.error('Error following user:', error);
-        });
+      const response = await axios.post(
+        `http://192.168.24.198:3000/users/${userId}/follow/${currentUserId}`
+      );
+      console.log(response.data)
     } catch (error) {
-      console.error('Error retrieving current user:', error);
+      console.error(error);
     }
   };
   
