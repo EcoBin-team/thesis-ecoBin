@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { View, Text, FlatList, ActivityIndicator, Image, StyleSheet, TouchableOpacity } from 'react-native';
+import axios from 'axios';
 import { server_url } from '../../secret';
 import { useNavigation } from '@react-navigation/native';
 
@@ -12,23 +13,22 @@ const Comments = ({ postId }) => {
   useEffect(() => {
     fetchComments();
 
-    const refreshInterval = setInterval(fetchComments, 1000); // Fetch comments every 1 second
+    const refreshInterval = setInterval(fetchComments, 1000);
 
-    return () => clearInterval(refreshInterval); // Clear the interval when the component unmounts
+    return () => clearInterval(refreshInterval);
   }, []);
 
   const fetchComments = async () => {
     try {
-      const response = await fetch(`${server_url}/feeds/${postId}/comments`);
-      const data = await response.json();
-      // console.log(data);
+      const response = await axios.get(`${server_url}/feeds/${postId}/comments`);
+      const data = response.data;
 
       if (Array.isArray(data)) {
         const commentsWithUserDetails = await Promise.all(
           data.map(async (comment) => {
-            console.log(comment)
-            const userResponse = await fetch(`${server_url}/users/user/${comment.userid}`);
-            const userData = await userResponse.json();
+            const userResponse = await axios.get(`${server_url}/users/user/${comment.userid}`);
+            const userData = userResponse.data;
+
             return { ...comment, username: userData.name, userImage: userData.image };
           })
         );
@@ -45,12 +45,11 @@ const Comments = ({ postId }) => {
   };
 
   const navigateToUserProfile = (userId) => {
-    navigation.navigate('Contacts');
+    navigation.navigate('UserProfile', { userId });
   };
 
   const toggleShowAllComments = () => {
     setShowAllComments(!showAllComments);
- 
   };
 
   if (loading) {
@@ -70,7 +69,7 @@ const Comments = ({ postId }) => {
 
   const renderItem = ({ item }) => (
     <View style={styles.commentContainer}>
-      <TouchableOpacity onPress={() => navigateToUserProfile(item.userId)} style={styles.touchableContainer}>
+      <TouchableOpacity onPress={() => navigateToUserProfile(item.userid)} style={styles.touchableContainer}>
         <Image
           source={item.userImage ? { uri: item.userImage } : require('../../assets/avatarVide.png')}
           style={styles.profileImage}
@@ -88,18 +87,18 @@ const Comments = ({ postId }) => {
       {comments.length === 0 ? (
         <Text>No comments found.</Text>
       ) : (
-        <React.Fragment>
+        <>
           <FlatList
             data={visibleComments.reverse()}
             keyExtractor={(item) => item.id.toString()}
             renderItem={renderItem}
           />
           {remainingCommentsCount > 0 && !showAllComments && (
-            <Text style={styles.showMoreText} onPress={toggleShowAllComments} >
+            <Text style={styles.showMoreText} onPress={toggleShowAllComments}>
               Show more ({remainingCommentsCount} more comments)
             </Text>
           )}
-        </React.Fragment>
+        </>
       )}
     </View>
   );
@@ -142,7 +141,7 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     marginVertical: 10,
     color: '#868889',
-    // textDecorationLine: 'underline',
+    
   },
 });
 

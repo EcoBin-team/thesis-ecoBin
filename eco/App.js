@@ -26,6 +26,7 @@ import Conversation from "./navigation/screens/Conversation";
 import CreateConversation from "./navigation/screens/CreateConversation";
 import ForgotPassword from "./navigation/screens/ForgotPassword";
 import ChangePassword from "./navigation/screens/ChangePassword";
+import UserProfile from "./components/UserProfile/UserProfile";
 
 const Stack = createStackNavigator();
 
@@ -166,6 +167,13 @@ const App = () => {
           component={Account}
           options={{
             title: 'Account',
+             headerShown: false }}
+        />
+        <Stack.Screen
+          name="UserProfile"
+          component={UserProfile}
+          options={{
+            title: 'UserProfile',
              headerShown: false }}
         />
         

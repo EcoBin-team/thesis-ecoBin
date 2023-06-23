@@ -10,6 +10,7 @@ const feedsRouter = require("./routes/routerfeeds")
 const cartRouter = require("./routes/routerCart")
 const depotRouter = require("./routes/depotRouter")
 const codeRouter = require("./routes/codeRouter")
+const followRouter = require("./routes/followRouter")
 
 app.use(express.urlencoded({ extended: true, limit: "10mb" }))
 app.use(express.json({limit: "10mb"}))
@@ -27,6 +28,7 @@ app.use("/", feedsRouter)
 app.use("/", depotRouter)
 app.use('/', cartRouter)
 app.use('/codes',codeRouter)
+app.use('/',followRouter)
 
 
 

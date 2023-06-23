@@ -52,6 +52,10 @@ const Conversation = (props) => {
     setFetched(true)
     setIsLoading(false)
   }
+  const navigateToUserProfile = (userId) => {
+      console.log();
+    navigation.navigate('UserProfile', { userId });
+  };
 
   return(
     <SafeAreaView style={{flex: 1, marginTop: 50}}>
@@ -60,7 +64,9 @@ const Conversation = (props) => {
         <TouchableOpacity onPress={() => navigation.navigate("Contacts")}>
           <Image source={require("../../assets/ChatBack.png")}/>
         </TouchableOpacity>
+        <TouchableOpacity onPress={() =>navigateToUserProfile(currentUser.id)}>
         <Image source={{uri: image}} style={styles.image}/>
+        </TouchableOpacity>
         <Text style={styles.name}>{name}</Text>
       </View>
 

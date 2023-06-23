@@ -1,93 +1,134 @@
-import React from 'react';
-import { View, Text, StyleSheet,ScrollView,Image,TouchableOpacity } from 'react-native';
-import Icon from 'react-native-vector-icons/Ionicons';
-const FAQ = ({navigation}) => {
+import React, { useEffect, useState } from 'react';
+import { View, Text, StyleSheet, ScrollView, Animated, TouchableOpacity } from 'react-native';
+import axios from 'axios';
+
+const FAQ = () => {
+  const [faqs, setFaqs] = useState([]);
+  const [expanded, setExpanded] = useState({});
+
+  const fadeAnim = new Animated.Value(0);
+  const slideAnim = new Animated.Value(3000);
+
+  useEffect(() => {
+    fetchFAQs();
+    fadeIn();
+    slideIn();
+  }, []);
+
+  const fetchFAQs = async () => {
+    try {
+      const response = await axios.get('http://192.168.1.100:3000/helps/faqs');
+      setFaqs(response.data);
+      setExpanded({});
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const fadeIn = () => {
+    Animated.timing(fadeAnim, {
+      toValue: 1,
+      duration: 1000,
+      useNativeDriver: true,
+    }).start();
+  };
+
+  const slideIn = () => {
+    Animated.timing(slideAnim, {
+      toValue: 1,
+      duration: 3333, 
+      useNativeDriver: true,
+    }).start();
+  };
+
+  const toggleAnswer = (faqId) => {
+    setExpanded((prevExpanded) => ({
+      ...prevExpanded,
+      [faqId]: !prevExpanded[faqId],
+    }));
+  };
+
+  const getQuestionContainerStyle = (faqId) => {
+    const isExpanded = expanded[faqId];
+
+    return {
+      marginBottom: 16,
+      backgroundColor: '#ffffff',
+      borderRadius: 8,
+      padding: 16,
+      shadowColor: '#000000',
+      shadowOffset: { width: 0, height: 2 },
+      shadowOpacity: 0.3,
+      shadowRadius: 2,
+      elevation: 2,
+      transform: [
+        {
+          translateX: slideAnim.interpolate({
+            inputRange: [-200, 0],
+            outputRange: [0, 0],
+          }),
+        },
+      ],
+      alignItems: 'center',
+    };
+  };
+
   return (
-    <View>
-     <View style={styles.headerContainer}>
-      <TouchableOpacity onPress={() => navigation.goBack()}>
-        <Icon style={styles.headerIcon} name="arrow-back" size={24} color="#000000" />
-      </TouchableOpacity>
-     <Text style={styles.title}>FAQ</Text>
-     
-    </View>
-    <ScrollView>
-    
-         <View style={styles.container}>
-      <Image source={require('../assets/faq2.png')} style={styles.image} />
-    </View>
-    <View style={styles.container}>
-      <Text style={styles.heading}>FAQ</Text>
+    <ScrollView contentContainerStyle={styles.container}>
+      <Animated.Text style={[styles.title, { opacity: fadeAnim }]}>
+        Frequently Asked Questions
+      </Animated.Text>
 
-      <View style={styles.questionContainer}>
-        <Text style={styles.question}>What is RuntahPedia?</Text>
-        <Text style={styles.answer}>
-          RuntahPedia is an online waste buying and selling application (Recycling platform). RuntahPedia connects waste producers (households, businesses, and offices) with the nearest local collectors, making it easier to sell waste.
-        </Text>
-      </View>
-
-      <View style={styles.questionContainer}>
-        <Text style={styles.question}>How is RuntahPedia different from a Waste Bank or other waste management services?</Text>
-        <Text style={styles.answer}>
-          RuntahPedia is not a garbage pick-up service company. It aims to provide more value by ensuring that the garbage picked up by their partners gets recycled instead of being thrown into the landfill. RuntahPedia offers trash-selling services and a recycling program where everything gets recycled again.
-        </Text>
-      </View>
-
-      
-
-    </View>
+      {faqs.map((faq) => (
+        <TouchableOpacity
+          key={faq.id}
+          style={[styles.questionContainer, getQuestionContainerStyle(faq.id)]}
+          onPress={() => toggleAnswer(faq.id)}
+          activeOpacity={0.8}
+        >
+          <Text style={styles.question}>{faq.question}</Text>
+          {expanded[faq.id] && <Text style={styles.answer}>{faq.answer}</Text>}
+        </TouchableOpacity>
+      ))}
     </ScrollView>
-    </View>
   );
 };
 
-
 const styles = StyleSheet.create({
-    headerContainer: {
-        display:'flex',
-        width: '100%',
-        position: 'relative',
-        flexDirection: 'row',
-        alignItems: 'center',
-        justifyContent: 'center',
-        paddingHorizontal: 16,
-        height: 64,
-        backgroundColor: 'white',
-        elevation: 4, // Add shadow on Android
-        shadowColor: '#000000', // Add shadow on iOS
-        shadowOpacity: 0.3,
-        shadowOffset: { width: 0, height: 2 },
-     top:30,
-      },
-      title: {
-        color: '#2DCC70',
-        fontSize: 25,
-        fontWeight: 'bold',
-       
-      },
-      headerIcon:{
-        left: -110,
-      },
   container: {
-    top:100,
-    flex: 1,
+    flexGrow: 1,
     padding: 16,
+    backgroundColor: '#f7f7f7',
   },
-  heading: {
+  title: {
     fontSize: 24,
     fontWeight: 'bold',
     marginBottom: 16,
+    textAlign: 'center',
+    color: '#8ff180',
   },
   questionContainer: {
+    width: '100%',
+    maxWidth: 400,
     marginBottom: 16,
+    backgroundColor: '#ffffff',
+    borderRadius: 8,
+    padding: 16,
+    shadowColor: '#000000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.3,
+    shadowRadius: 2,
+    elevation: 2,
   },
   question: {
     fontSize: 18,
     fontWeight: 'bold',
     marginBottom: 8,
+    color: 'black',
   },
   answer: {
     fontSize: 16,
+    color: 'gray',
   },
 });
 
