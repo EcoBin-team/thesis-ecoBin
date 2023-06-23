@@ -39,6 +39,7 @@ const AboutUs = () => {
 
 const styles = StyleSheet.create({
   container: {
+    top: 120,
     flex: 1,
     padding: 16,
   },

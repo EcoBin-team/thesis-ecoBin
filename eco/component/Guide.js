@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { View, Text, Image, StyleSheet, ScrollView, Animated } from 'react-native';
 import axios from 'axios';
-
+import { server_url } from '../secret';
 const GuidePage = () => {
   const [guides, setGuides] = useState([]);
   const fadeAnim = useState(new Animated.Value(0))[0];
@@ -13,7 +13,7 @@ const GuidePage = () => {
 
   const fetchGuides = async () => {
     try {
-      const response = await axios.get('http://192.168.1.100:3000/helps/guides');
+      const response = await axios.get(`http://10.0.2.2:3000/helps/guides`);
       setGuides(response.data);
     } catch (error) {
       console.error(error);
@@ -57,11 +57,12 @@ const GuidePage = () => {
 
 const styles = StyleSheet.create({
   container: {
+   
     flex: 1,
     padding: 16,
   },
   title: {
-    top : 20 ,
+    top : 60 ,
     fontSize: 24,
     fontWeight: 'bold',
     marginBottom: 16,
@@ -73,6 +74,7 @@ const styles = StyleSheet.create({
     marginBottom: 16,
   },
   stepContainer: {
+    top:80,
     flexDirection: 'row',
     marginBottom: 24,
   },

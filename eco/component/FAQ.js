@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { View, Text, StyleSheet, ScrollView, Animated, TouchableOpacity } from 'react-native';
 import axios from 'axios';
-
+import { server_url } from '../secret';
 const FAQ = () => {
   const [faqs, setFaqs] = useState([]);
   const [expanded, setExpanded] = useState({});
@@ -17,7 +17,7 @@ const FAQ = () => {
 
   const fetchFAQs = async () => {
     try {
-      const response = await axios.get('http://192.168.1.100:3000/helps/faqs');
+      const response = await axios.get(`http://10.0.2.2:3000/helps/faqs`);
       setFaqs(response.data);
       setExpanded({});
     } catch (error) {
@@ -96,6 +96,7 @@ const FAQ = () => {
 
 const styles = StyleSheet.create({
   container: {
+    top:60,
     flexGrow: 1,
     padding: 16,
     backgroundColor: '#f7f7f7',

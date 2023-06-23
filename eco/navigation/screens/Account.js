@@ -105,6 +105,14 @@ const ProfileDetails = () => {
     }
   };
 
+  const handleChangePassword = () => {
+    navigation.navigate('ChangePassword', {
+      userDetails: {
+        id: userDetails?.id,
+      },
+      // Add the updatedUser parameter
+    });
+  };
 
 
 
@@ -118,6 +126,14 @@ const ProfileDetails = () => {
     });
   };
 
+  const handleAboutUs = () => {
+    navigation.navigate('AboutUs', {
+      userDetails: {
+        id: userDetails?.id,
+      },
+      // Add the updatedUser parameter
+    });
+  };
 
 
 
@@ -188,22 +204,24 @@ const ProfileDetails = () => {
         </View>
 
         <View style={styles.info}>
-          <MaterialIcons name="shopping-cart" size={24} color="gray" />
-          <Text style={styles.infoTitle}>My Orders</Text>
+          
+          <Text style={styles.infoTitle}>
+            <FontAwesome name="lock" size={24} color="gray" /> Change Password
+          </Text>
           <TouchableOpacity
             style={styles.infoButton}
-            onPress={() => console.log('onPressMyOrders')}
+            onPress={handleChangePassword}
           >
             <MaterialIcons name="keyboard-arrow-right" size={24} color="gray" />
           </TouchableOpacity>
         </View>
 
         <View style={styles.info}>
-          <MaterialIcons name="notifications" size={24} color="gray" />
-          <Text style={styles.infoTitle}>Notifications</Text>
+          <MaterialIcons name="info" size={24} color="gray" />
+          <Text style={styles.infoTitle}>About Us</Text>
           <TouchableOpacity
             style={styles.infoButton}
-            onPress={() => console.log('onPressNotifications')}
+            onPress={handleAboutUs }
           >
             <MaterialIcons name="keyboard-arrow-right" size={24} color="gray" />
           </TouchableOpacity>
@@ -299,7 +317,7 @@ const styles = StyleSheet.create({
     borderRadius: 8,
   },
   signOutButtonText: {
-    left: 20,
+    left: 270,
     marginLeft: 8,
     fontSize: 16,
     fontWeight: 'bold',

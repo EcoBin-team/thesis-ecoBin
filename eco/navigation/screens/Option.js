@@ -189,7 +189,7 @@ const styles = StyleSheet.create({
     marginLeft: 10,
   },
   group: {
-    
+    top: 30,
     alignItems: 'center',
     marginTop: 350,
     backgroundColor:'#F2F3F7',

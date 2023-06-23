@@ -27,6 +27,7 @@ import CreateConversation from "./navigation/screens/CreateConversation";
 import ForgotPassword from "./navigation/screens/ForgotPassword";
 import ChangePassword from "./navigation/screens/ChangePassword";
 import UserProfile from "./components/UserProfile/UserProfile";
+import AboutUs from "./component/AboutUS";
 
 const Stack = createStackNavigator();
 
@@ -91,6 +92,11 @@ const App = () => {
       <Stack.Screen
           name="Guide"
           component={Guide}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="AboutUs"
+          component={AboutUs}
           options={{ headerShown: false }}
         />
         
