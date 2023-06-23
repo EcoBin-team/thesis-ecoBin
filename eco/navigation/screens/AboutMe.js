@@ -109,7 +109,7 @@ const AboutMe = () => {
   return (
     <View style={styles.page}>
       <View style={styles.container}>
-        <BackButton style={{ top: -80 }} fn={() => navigation.goBack()} />
+        {/* <BackButton style={{ top: -80 }} fn={() => navigation.goBack()} /> */}
 
         <View style={styles.personInfo}>
           <Text style={styles.title}>
@@ -151,12 +151,7 @@ const AboutMe = () => {
           </View>
         </View>
 
-        <View style={styles.changePassword}>
-          <Text style={styles.title}>
-            <FontAwesome name="lock" size={18} color="black" /> Change Password
-          </Text>
-          {/* Password input fields */}
-        </View>
+     
 
         <View style={styles.saveButton}>
           <TouchableOpacity onPress={handleSaveSettings}>

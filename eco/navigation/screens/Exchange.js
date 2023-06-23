@@ -48,12 +48,13 @@ const Exchange = () => {
       <View style={styles.card}>
         <Image
           source={{
-            uri: 'https://img.freepik.com/premium-vector/loyalty-program-banner-with-colored-line-flat-icons-collect-bonuses-get-gifts_108855-3445.jpg?w=2000',
+            uri: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQrSGu2kDpmuN__DGeBCRT2eTXga3PsnFiyXcO5lW1VtOpAEWNDNA4gXBHIRVNygZ1S-Gg&usqp=CAU',
           }}
           style={styles.image}
         />
+<Text >Forfait Flexi 25Go Ooredoo</Text>
         <View style={styles.cardContent}>
-          <Text style={styles.points}>1000 Points</Text>
+          <Text style={styles.points}>500 Points</Text>
           <TouchableOpacity style={styles.button} onPress={handleExchange}>
             <Text style={styles.buttonText}>Exchange</Text>
           </TouchableOpacity>
@@ -68,6 +69,7 @@ const Exchange = () => {
           />
         )}
       </View>
+      
     </View>
   );
 };
