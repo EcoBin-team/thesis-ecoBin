@@ -9,7 +9,7 @@ const Likes = ({ postId }) => {
   useEffect(() => {
     fetchlikes();
 
-    const refreshInterval = setInterval(fetchlikes, 7000); // Fetch comments every 1 seconds
+    const refreshInterval = setInterval(fetchlikes, 7000); // Fetch likes every 1 seconds
 
     return () => clearInterval(refreshInterval); // Clear the interval when the component unmounts
   }, []);

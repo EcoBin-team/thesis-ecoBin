@@ -2,7 +2,9 @@ import React, { useEffect, useState } from 'react';
 import { View, Text, FlatList, ActivityIndicator, Image, StyleSheet, TouchableOpacity } from 'react-native';
 import axios from 'axios';
 import { server_url } from '../../secret';
+
 import { useNavigation } from '@react-navigation/native';
+
 
 const Comments = ({ postId }) => {
   const [comments, setComments] = useState([]);
@@ -17,11 +19,17 @@ const Comments = ({ postId }) => {
 
     return () => clearInterval(refreshInterval);
   }, []);
-
+ 
   const fetchComments = async () => {
     try {
+
+      const response = await fetch(`${server_url}/feeds/${postId}/comments`);
+      const data = await response.json();
+      console.log(data);
+
       const response = await axios.get(`${server_url}/feeds/${postId}/comments`);
       const data = response.data;
+
 
       if (Array.isArray(data)) {
         const commentsWithUserDetails = await Promise.all(
@@ -141,7 +149,7 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     marginVertical: 10,
     color: '#868889',
-    
+
   },
 });
 

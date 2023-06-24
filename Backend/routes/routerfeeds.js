@@ -6,6 +6,10 @@ router.get('/feeds/:id', getOneFeed);
 
 // GET all feeds
 router.get('/feeds', getAllFeeds);
+
+
+router.post('/feeds/post', createFeed);
+
 // comment
 router.post('/feeds/:id/postComment',postComment);
 router.get('/feeds/:id/comments', getAllComments);
