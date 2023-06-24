@@ -19,13 +19,12 @@ const io = new Server(server)
 io.on("connection", socket => {
   console.log("user connected", socket.id)
 
-  socket.on("send_message", data => {
-    console.log(data)
-    socket.to(data.conversation).emit("receive_message", data)
+  socket.on("join_room", data => {
+    socket.join(data)
   })
 
-  io.on("disconnect", () => {
-    console.log("user disconnected", socket.id)
+  socket.on("send_message", data => {
+    socket.to(data.conversation).emit("receive_message", data)
   })
 })
 

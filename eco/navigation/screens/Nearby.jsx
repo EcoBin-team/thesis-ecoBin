@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { View, Text, SafeAreaView, TextInput, ScrollView } from "react-native"
 import axios from "axios";
+import { useNavigation } from "@react-navigation/native";
 import Icon from "react-native-vector-icons/FontAwesome"
 
 // common components imports
@@ -31,11 +32,14 @@ const Nearby = () => {
   const [query,setQuery] = useState("") // query that the user has written in the text field
   const [data,setData] = useState([]) // depots fetched from depots table
   const [isLoading,setIsLoading] = useState(false)
+  const navigation = useNavigation()
   
   useEffect(() => {
-    setTimeout(() => {
-      searchDepot()
-    }, 200) // adding delay so the server doesn't overload
+    if(query !== ""){
+      setTimeout(() => {
+        searchDepot()
+      }, 200) // adding delay so the server doesn't overload
+    }
   },[query])
 
   // search function to filter depots according to the query written by the user
@@ -43,7 +47,7 @@ const Nearby = () => {
 
     setIsLoading(true) // showing loading indicator
 
-    const response = await axios.get(`${server_url}/depots/searchDepot?query=${query}`)
+    const response = await axios.get(`${server_url}/depot/search?query=${query}`)
     setData(response.data) // sets data state to the returned depots from the server
 
     setIsLoading(false) // hiding loading indicator
@@ -55,7 +59,7 @@ const Nearby = () => {
       <View style={{backgroundColor: "white"}}>
 
         <View style={styles.upperContainer}>
-          <BackButton style={{margin: 15}}/>
+          <BackButton style={{margin: 15}} fn={() => navigation.goBack()}/>
           <Text style={styles.nearby}>Nearby</Text>
         </View>
 
@@ -70,8 +74,7 @@ const Nearby = () => {
 
       </View>
 
-      <ScrollView style={{height: "60%"}} contentContainerStyle={{flexGrow: 1}}>
-        
+      <ScrollView style={query === "" ? {height: "0%"} : {height: "60%"}} contentContainerStyle={{flexGrow: 1}}>
         <View style={styles.scrollContainer}>
           {isLoading && <Text style={styles.loadingText}> Finding place...</Text>}
           {!data.length && !isLoading && <Text style={styles.placeholderScroll}>Nearby depot center</Text>}
@@ -89,7 +92,7 @@ const Nearby = () => {
 
       </ScrollView>
       
-      <Map mapRegion={mapRegion} setMapRegion={setMapRegion} userRegion={userRegion} setUserRegion={setUserRegion}/>
+      <Map mapRegion={mapRegion} setMapRegion={setMapRegion} userRegion={userRegion} setUserRegion={setUserRegion} query={query}/>
     </SafeAreaView>
   )
 }

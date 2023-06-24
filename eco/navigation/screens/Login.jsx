@@ -1,20 +1,19 @@
 import React, { useState } from "react";
-import { View, Text, SafeAreaView, Image, Alert, ActivityIndicator, TouchableOpacity } from "react-native"
+import { View, Text, SafeAreaView, Image, Alert, TouchableOpacity } from "react-native"
 import { useNavigation } from "@react-navigation/native";
 import axios from "axios"
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
+// common components imports
 import InputField from "../../components/InputField/InputField";
 import BackButton from "../../components/BackButton/BackButton";
-import Facebook from "../../components/LoginWith/Facebook";
-import Google from "../../components/LoginWith/Google";
 import AuthButton from "../../components/AuthButton/AuthButton";
-import { server_url } from "../../secret";
-
-import SpinnerStyles from "../../styles/ActivityIndicator.styles";
-import styles from "../../styles/Signup.styles";
-import LogoBackground from "../../components/Logo/LogoBackground";
 import Logo from "../../components/Logo/Logo1";
+import LogoBackground from "../../components/Logo/LogoBackground";
+import Spinner from "../../components/Spinner/Spinner";
+
+// secret variables imports
+import { server_url } from "../../secret";
 
 const Login = () => {
 
@@ -31,7 +30,6 @@ const Login = () => {
 
   // login function to set the user's id and token in the localstorage
   const handleSubmit = async () => {
-    // navigation.navigate('News');
     // regular expressions to check inputs with
     const regexpEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
 
@@ -82,19 +80,19 @@ const Login = () => {
 
           <View style={{marginTop: 70}}>
             <Logo/>
-            <InputField placeholder="Email address" fn={setEmail} styling={{marginTop: 60}}/>
-            <InputField placeholder="Password" fn={setPassword} isPassword={true}/>
-            <AuthButton text="Sign In" fn={handleSubmit} style={styles.auth}/>
+            <InputField placeholder="Email address" fn={setEmail} styling={{marginTop: 150}}/>
+            <InputField placeholder="Password" fn={setPassword} isPassword={true} styling={{marginBottom: 30}}/>
+            <AuthButton text="Sign In" fn={handleSubmit} style={{marginTop: 40,width: 300, height: 50.53,borderRadius: 38,}}/>
+
+            <TouchableOpacity onPress={() => navigation.navigate("ForgotPassword")} style={{marginBottom: 150, marginTop: 10, alignSelf: "center"}}>
+            <Text style={{fontFamily: "MontserratRegular", color: "#A1A4B2"}}>Forgot your password?</Text>
+            </TouchableOpacity>
           </View>
 
         </View>
       </View>
 
-      {isLoading && 
-        <View style={SpinnerStyles.container}>
-          <ActivityIndicator size={70} color="09E4AF"/>
-        </View>
-      }
+      {isLoading && <Spinner/>}
 
     </SafeAreaView>
   )

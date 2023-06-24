@@ -23,6 +23,11 @@ import Guide from './component/Guide'
 import FAQ from './component/FAQ'
 import Transaction from './navigation/screens/Transaction'
 import Conversation from "./navigation/screens/Conversation";
+import CreateConversation from "./navigation/screens/CreateConversation";
+import ForgotPassword from "./navigation/screens/ForgotPassword";
+import ChangePassword from "./navigation/screens/ChangePassword";
+import UserProfile from "./components/UserProfile/UserProfile";
+import AboutUs from "./component/AboutUS";
 
 const Stack = createStackNavigator();
 
@@ -51,8 +56,8 @@ const App = () => {
     <NavigationContainer>
       <Stack.Navigator> 
     
-
-       {/* <Stack.Screen
+{/* 
+       <Stack.Screen
           name="LaunchPage"
           component={LaunchPage}
           options={{ headerShown: false }}
@@ -89,10 +94,25 @@ const App = () => {
           component={Guide}
           options={{ headerShown: false }}
         />
+        <Stack.Screen
+          name="AboutUs"
+          component={AboutUs}
+          options={{ headerShown: false }}
+        />
         
          <Stack.Screen
           name="Signup"
           component={Signup}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="ForgotPassword"
+          component={ForgotPassword}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="ChangePassword"
+          component={ChangePassword}
           options={{ headerShown: false }}
         />
         <Stack.Screen
@@ -101,7 +121,12 @@ const App = () => {
           options={{ headerShown: false }}
         />
         <Stack.Screen
-          name="Conversations"
+          name="CreateConversation"
+          component={CreateConversation}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="Conversation"
           component={Conversation}
           options={{ headerShown: false }}
         />
@@ -150,6 +175,14 @@ const App = () => {
             title: 'Account',
              headerShown: false }}
         />
+        <Stack.Screen
+          name="UserProfile"
+          component={UserProfile}
+          options={{
+            title: 'UserProfile',
+             headerShown: false }}
+        />
+        
       </Stack.Navigator>
     </NavigationContainer>
   );

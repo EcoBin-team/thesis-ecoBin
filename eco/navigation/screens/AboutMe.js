@@ -3,6 +3,8 @@ import { View, TextInput, TouchableOpacity, StyleSheet, Text, Alert } from 'reac
 import { useRoute, useNavigation } from '@react-navigation/native';
 import { FontAwesome } from '@expo/vector-icons';
 import BackButton from "../../components/BackButton/BackButton";
+import { server_url } from '../../secret';
+
 
 const AboutMe = () => {
   const navigation = useNavigation();
@@ -25,7 +27,7 @@ const AboutMe = () => {
 
   const fetchUserDetails = async () => {
     try {
-      const response = await fetch(`http://10.0.2.2:3000/users/user/${userDetails.id}`);
+      const response = await fetch(`${server_url}/users/user/${userDetails.id}`);
       const data = await response.json();
       setName(data.name);
       setPhone(data.phone);
@@ -47,7 +49,7 @@ const AboutMe = () => {
 
     try {
       setIsLoading(true);
-      const response = await fetch(`http://10.0.2.2:3000/users/updateUser/${userDetails.id}`, {
+      const response = await fetch(`${server_url}/users/updateUser/${userDetails.id}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -107,7 +109,7 @@ const AboutMe = () => {
   return (
     <View style={styles.page}>
       <View style={styles.container}>
-        <BackButton style={{ top: -80 }} fn={() => navigation.goBack()} />
+        {/* <BackButton style={{ top: -80 }} fn={() => navigation.goBack()} /> */}
 
         <View style={styles.personInfo}>
           <Text style={styles.title}>
@@ -149,12 +151,7 @@ const AboutMe = () => {
           </View>
         </View>
 
-        <View style={styles.changePassword}>
-          <Text style={styles.title}>
-            <FontAwesome name="lock" size={18} color="black" /> Change Password
-          </Text>
-          {/* Password input fields */}
-        </View>
+     
 
         <View style={styles.saveButton}>
           <TouchableOpacity onPress={handleSaveSettings}>

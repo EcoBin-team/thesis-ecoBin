@@ -18,7 +18,31 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     margin: 10,
     fontFamily: "MontserratMedium",
-    paddingLeft: 20
+  },
+  searchVector: {
+    position: "absolute",
+    top: 20,
+    left: 40
+  },
+  createChat: {
+    height: 40,
+    width: 40,
+  },
+  createChatButton: {
+    marginLeft: "auto",
+    marginRight: 10
+  },
+  createContainer: {
+    flex: 1,
+    alignSelf: "flex-end",
+    marginRight: 10
+  },
+  contactsPlaceholder: {
+    alignSelf: "center",
+    fontFamily: "MontserratBold",
+    fontSize: 22,
+    margin: 20,
+    color: "#bdbdbd"
   }
 })
 

@@ -1,31 +1,26 @@
 import React, { useState } from "react";
-import { View, Text, SafeAreaView, Image, ActivityIndicator, Alert } from "react-native"
+import { View, Text, SafeAreaView, Image, Alert, TouchableOpacity } from "react-native"
 import { useNavigation } from "@react-navigation/native";
 import axios from "axios";
 import CheckBox from "@react-native-community/checkbox" // TODO: add a checkbox
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
-// components imports
+// common components imports
 import InputField from "../../components/InputField/InputField";
 import BackButton from "../../components/BackButton/BackButton";
 import AuthButton from "../../components/AuthButton/AuthButton";
 import LogoBackground from "../../components/Logo/LogoBackground";
+import Spinner from "../../components/Spinner/Spinner";
 
 // secret file import
 import { server_url } from "../../secret"; 
 
 // styles imports
-import SpinnerStyles from "../../styles/ActivityIndicator.styles"
 import ConfirmSignup from "./ConfirmSignup";
 import Logo from "../../components/Logo/Logo1";
 import styles from "../../styles/Signup.styles"
 
 const Signup = () => {
-
-  // hiding header
-  React.useLayoutEffect(() => {
-    navigation.setOptions({ headerShown: false })
-},[navigation])
 
   const navigation = useNavigation()
   const [name,setName] = useState("")
@@ -34,9 +29,12 @@ const Signup = () => {
   const [isChecked,setIsChecked] = useState(false)
   const [isLoading,setIsLoading] = useState(false)
   const [done,setDone] = useState(false)
+  const [hidden,setHidden] = useState(true)
   const regexpName = /[a-z]/gi
 
   const handleSubmit = async () => {
+
+    if(name.length < 5 || email.len)
 
     setIsLoading(true)
 
@@ -57,9 +55,18 @@ const Signup = () => {
       Alert.alert("Signup Failed", "Please provide a correct email format.")
     }
 
+    // if the user didn't write a password he will get an alert
+    else if(response.data === "auth/missing-password"){
+      Alert.alert("Signup Failed", "Please provide a password.")
+    }
+
     // alert when password written is weak
     else if(response.data === "auth/weak-password"){
       Alert.alert("Signup Failed", "Please provide a stronger password.")
+    }
+    
+    else if(response.data === "auth/email-already-in-use"){
+      Alert.alert("Signup Failed", "This email is already in use.")
     }
     
     else{
@@ -85,9 +92,14 @@ const Signup = () => {
 
             <View style={{marginTop: 70}}>
               <Logo/>
-              <InputField placeholder="Full Name" fn={setName} styling={{marginTop: 60}}/>
+              <InputField placeholder="Full Name" fn={setName} styling={{marginTop: 120}}/>
               <InputField placeholder="Email address" fn={setEmail}/>
-              <InputField placeholder="Password" fn={setPassword} isPassword={true}/>
+              <View>
+                <InputField placeholder="Password" fn={setPassword} isPassword={hidden}/>
+                <TouchableOpacity onPress={() => setHidden(!hidden)} style={{position: "absolute", top: 40, right: 20}}>
+                  <Image source={require("../../assets/ShowPassword.png")}/>
+                </TouchableOpacity>
+              </View>
               <AuthButton text="Sign Up" fn={handleSubmit} style={styles.auth}/>
             </View>
 
@@ -95,11 +107,7 @@ const Signup = () => {
 
         </View>
 
-        {isLoading && 
-          <View style={SpinnerStyles.container}>
-            <ActivityIndicator size={70} color="09E4AF"/>
-          </View>
-        }
+        {isLoading && <Spinner/>}
 
       </>
 

@@ -35,7 +35,7 @@ const ProfileDetails = () => {
   // const [updatedUser, setUpdatedUser] = useState(null);
   const navigation = useNavigation();
   const route = useRoute();
-  // const updatedUser = route.params?.updatedUser
+ 
 
   const pickImage = async () => {
     // asking for the user's permission to access his image library
@@ -68,7 +68,7 @@ const ProfileDetails = () => {
         resolve(xhr.response);
       };
       xhr.onerror = function (e) {
-        console.log(e);
+       
         reject(new TypeError('Network request failed'));
       };
       xhr.responseType = 'blob';
@@ -105,7 +105,15 @@ const ProfileDetails = () => {
     }
   };
 
-  console.log(userData);
+  const handleChangePassword = () => {
+    navigation.navigate('ChangePassword', {
+      userDetails: {
+        id: userDetails?.id,
+      },
+      // Add the updatedUser parameter
+    });
+  };
+
 
 
 
@@ -118,6 +126,14 @@ const ProfileDetails = () => {
     });
   };
 
+  const handleAboutUs = () => {
+    navigation.navigate('AboutUs', {
+      userDetails: {
+        id: userDetails?.id,
+      },
+      // Add the updatedUser parameter
+    });
+  };
 
 
 
@@ -131,7 +147,7 @@ const ProfileDetails = () => {
 
   useEffect(() => {
     fetchUserDetails();
-  }, []);
+  }, [userDetails]);
 
   const handleTransaction = () => {
     navigation.navigate('Transaction', {
@@ -147,16 +163,16 @@ const ProfileDetails = () => {
     <View style={styles.container}>
       <View>
         <View style={styles.profileImageContainer}>
-          <Image
-            source={
-              imageUrl !== ''
-                ? { uri: imageUrl }
-                : userDetails?.image
-                ? { uri: userDetails.image }
-                : require('../../assets/avatarVide.png')
-            }
-            style={styles.profileImage}
-          />
+        <Image
+          source={
+            updateImage // Use 'updateImage' state instead of 'imageUrl'
+              ? { uri: imageUrl }
+              : userDetails?.image
+              ? { uri: userDetails.image }
+              : require('../../assets/avatarVide.png')
+          }
+          style={styles.profileImage}
+        />
           <TouchableOpacity style={styles.cameraIcon} onPress={pickImage}>
             <FontAwesome name="camera" size={24} color="white" />
           </TouchableOpacity>
@@ -188,22 +204,24 @@ const ProfileDetails = () => {
         </View>
 
         <View style={styles.info}>
-          <MaterialIcons name="shopping-cart" size={24} color="gray" />
-          <Text style={styles.infoTitle}>My Orders</Text>
+          
+          <Text style={styles.infoTitle}>
+            <FontAwesome name="lock" size={24} color="gray" /> Change Password
+          </Text>
           <TouchableOpacity
             style={styles.infoButton}
-            onPress={() => console.log('onPressMyOrders')}
+            onPress={handleChangePassword}
           >
             <MaterialIcons name="keyboard-arrow-right" size={24} color="gray" />
           </TouchableOpacity>
         </View>
 
         <View style={styles.info}>
-          <MaterialIcons name="notifications" size={24} color="gray" />
-          <Text style={styles.infoTitle}>Notifications</Text>
+          <MaterialIcons name="info" size={24} color="gray" />
+          <Text style={styles.infoTitle}>About Us</Text>
           <TouchableOpacity
             style={styles.infoButton}
-            onPress={() => console.log('onPressNotifications')}
+            onPress={handleAboutUs }
           >
             <MaterialIcons name="keyboard-arrow-right" size={24} color="gray" />
           </TouchableOpacity>
@@ -299,7 +317,7 @@ const styles = StyleSheet.create({
     borderRadius: 8,
   },
   signOutButtonText: {
-    left: 20,
+    left: 270,
     marginLeft: 8,
     fontSize: 16,
     fontWeight: 'bold',
