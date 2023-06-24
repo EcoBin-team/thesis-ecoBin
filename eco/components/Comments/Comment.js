@@ -2,11 +2,6 @@ import React, { useEffect, useState } from 'react';
 import { View, Text, FlatList, ActivityIndicator, Image, StyleSheet } from 'react-native';
 import { server_url } from '../../secret';
 
-
-
-
-
-
 const Comments = ({ postId }) => {
   const [comments, setComments] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -19,12 +14,12 @@ const Comments = ({ postId }) => {
 
     return () => clearInterval(refreshInterval); // Clear the interval when the component unmounts
   }, []);
-
+ 
   const fetchComments = async () => {
     try {
       const response = await fetch(`${server_url}/feeds/${postId}/comments`);
       const data = await response.json();
-      // console.log(data);
+      console.log(data);
 
       if (Array.isArray(data)) {
         const commentsWithUserDetails = await Promise.all(
@@ -139,7 +134,7 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     marginVertical: 10,
     color: '#868889',
-    // textDecorationLine: 'underline',
+  
   },
 });
 

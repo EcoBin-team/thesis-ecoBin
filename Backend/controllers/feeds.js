@@ -213,4 +213,4 @@ const createFeed = async (req, res) => {
 
 
 
-module.exports = { getOneFeed, getAllFeeds, postComment, getAllComments, postLike, deleteLike, getAllLikesByPostId,createFeed  }
+module.exports = { getOneFeed, getAllFeeds, postComment, getAllComments, postLike, deleteLike, getAllLikesByPostId, createFeed }

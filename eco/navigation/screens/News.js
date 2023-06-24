@@ -13,7 +13,6 @@ import {
   Dimensions,
 } from 'react-native';
 import { AntDesign } from '@expo/vector-icons';
-import { useRoute } from '@react-navigation/native';
 import { useNavigation } from '@react-navigation/native';
 import { UserContext } from '../MainContainer';
 import axios from 'axios';
@@ -30,7 +29,6 @@ function News() {
 
  
   const userData = useContext(UserContext);
-  const navigation = useNavigation();
   const [data, setData] = useState([]);
   const [show, setShow] = useState(false);
   const [showlike, setShowlike] = useState(false);
@@ -47,18 +45,19 @@ function News() {
   
 
 
-
+//get the details of the user
   const fetchUserDetails = async () => {
     try {
       const response = await fetch(`${server_url}/users/user/${userData.id}`);
       const data = await response.json();
-      // console.log('User details:', data);
+      console.log('User details:', data);
       setUserDetails(data);
     } catch (error) {
       console.log('Error fetching user details:', error);
     }
   };
 
+  
   const fetchData = async () => {
     try {
       const response = await axios.get(`${server_url}/feeds`);
@@ -114,7 +113,7 @@ function News() {
     }
   };
   
-  
+  //post comment
   const handlePostComment = async (postId) => {
     setCommentText("");
     try {
@@ -136,11 +135,11 @@ function News() {
 
       const data = await response.json();
       console.log('Comment posted successfully:', data);
-      // Optionally, you can show a success message or navigate to another screen
+     
       
     } catch (error) {
       console.error('Error posting comment:', error);
-      // Show an error message to the user
+
       Alert.alert('Error posting comment', error.message);
     }
   };
